@@ -110,8 +110,8 @@
     left: 28px;
     z-index: 999;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-end;
     gap: 8px;
   }
   #settings-panel {
@@ -124,13 +124,13 @@
     gap: 10px;
     opacity: 0;
     pointer-events: none;
-    transform: translateY(10px);
+    transform: translateX(-10px);
     transition: opacity 0.25s, transform 0.25s;
   }
   #settings-panel.open {
     opacity: 1;
     pointer-events: auto;
-    transform: translateY(0);
+    transform: translateX(0);
   }
   .panel-row {
     display: flex;
@@ -2147,6 +2147,7 @@
 
 <!-- 설정 패널 -->
 <div id="settings-wrap">
+  <button id="gear-btn" onclick="toggleSettings()">⚙</button>
   <div id="settings-panel">
     <div class="panel-row">
       <span class="panel-label">글씨</span>
@@ -2158,7 +2159,6 @@
       <button class="ctrl-btn mode-btn" id="modeBtn" onclick="toggleMode()">🌙 다크모드</button>
     </div>
   </div>
-  <button id="gear-btn" onclick="toggleSettings()">⚙</button>
 </div>
 
 <!-- TOP 버튼 -->
