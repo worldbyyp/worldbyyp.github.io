@@ -138,7 +138,7 @@
 </div>
 
 <div class="bgm-wrap">
-  <button class="bgm-btn" id="bgmBtn" onclick="toggleBGM()">▶ BGM 재생</button>
+  <button class="bgm-btn" id="bgmBtn" onclick="toggleBGM()">▶</button>
 </div>
 
 <div class="content">
@@ -2277,13 +2277,13 @@
       if (player && player.playVideo) {
         player.playVideo();
       }
-      btn.textContent = '　■　';
+      btn.textContent = '■';
       isPlaying = true;
     } else {
       if (player && player.stopVideo) {
         player.stopVideo();
       }
-      btn.textContent = '　▶　';
+      btn.textContent = '▶';
       isPlaying = false;
     }
   }
