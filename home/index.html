@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE WORLD BY YP</title>
+<style>
+  @font-face {
+    font-family: 'NeoDunggeunmo';
+    src: url('/fonts/DungGeunMo.ttf') format('truetype');
+  }
+  html, body, * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
+  }
+  a:hover, a:hover *, .menu-img-btn:hover, .menu-img-btn:hover *,
+  .bottom-btn:hover, .bottom-btn:hover * {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  html, body {
+    width: 100vw; height: 100vh;
+    background: #0b0b14; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wrap {
+    position: relative;
+    width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+  video {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    object-fit: contain;
+  }
+  .menu {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 0;
+    z-index: 10;
+    opacity: 0;
+    background: #0b0b14;
+    animation: fadeIn 1s ease forwards;
+    animation-delay: 8s;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; pointer-events: none; }
+    to { opacity: 1; pointer-events: auto; }
+  }
+  .menu-img-btn {
+    display: block;
+    text-decoration: none;
+    position: relative;
+    line-height: 0;
+  }
+  .menu-img-btn:hover img.normal { display: none !important; }
+  .menu-img-btn:hover img.hover-img { display: block !important; }
+  .bottom-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    line-height: 0;
+  }
+  .bottom-btn {
+    display: block;
+    text-decoration: none;
+    position: relative;
+    line-height: 0;
+  }
+  .bottom-btn:hover img.normal { display: none !important; }
+  .bottom-btn:hover img.hover-img { display: block !important; }
+  .bottom-static { display: block; line-height: 0; }
+  .video-overlay {
+    position: absolute;
+    width: min(100vw, calc(100vh * 4 / 3));
+    height: min(100vh, calc(100vw * 3 / 4));
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    pointer-events: none !important;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+    animation-delay: 8s;
+    font-family: 'NeoDunggeunmo', monospace;
+    color: #ffffff;
+  }
+  .video-overlay * { pointer-events: none !important; }
+  .corner {
+    position: absolute;
+    width: 2.5vw; height: 2.5vw;
+    border-color: #ffffff; border-style: solid; border-width: 0;
+  }
+  .corner.tl { top: 5%; left: 5%; border-top-width: 2px; border-left-width: 2px; }
+  .corner.tr { top: 5%; right: 5%; border-top-width: 2px; border-right-width: 2px; }
+  .corner.bl { bottom: 5%; left: 5%; border-bottom-width: 2px; border-left-width: 2px; }
+  .corner.br { bottom: 5%; right: 5%; border-bottom-width: 2px; border-right-width: 2px; }
+  .play-label {
+    position: absolute;
+    top: calc(5% + 2.5vw + 6px);
+    left: calc(5% + 1.5vw);
+    font-size: 1.4vw;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.85);
+  }
+  .clock {
+    position: absolute;
+    bottom: calc(5% + 2.5vw + 6px);
+    left: calc(5% + 1.5vw);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .clock .label { font-size: 1.44vw; letter-spacing: 2px; color: rgba(255,255,255,0.7); }
+  .clock .datetime { display: flex; flex-direction: row; gap: 1.5vw; }
+  .clock .date, .clock .time { font-size: 1.44vw; letter-spacing: 2px; }
+  @media (max-aspect-ratio: 4/3) {
+    .corner { width: 5vw; height: 5vw; }
+    .corner.tl { top: 4%; left: 4%; }
+    .corner.tr { top: 4%; right: 4%; }
+    .corner.bl { bottom: 4%; left: 4%; }
+    .corner.br { bottom: 4%; right: 4%; }
+    .play-label { top: calc(4% + 5vw + 6px); left: calc(4% + 3vw); font-size: 3vw; }
+    .clock { bottom: calc(4% + 5vw + 6px); left: calc(4% + 3vw); }
+    .clock .label { font-size: 2.88vw; }
+    .clock .date, .clock .time { font-size: 2.88vw; }
+    .clock .datetime { gap: 3vw; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <video autoplay muted playsinline webkit-playsinline>
+    <source src="https://res.cloudinary.com/dcaiskf8f/video/upload/main1_p7ealh.mp4" type="video/mp4">
+  </video>
+
+  <div class="menu">
+    <a class="menu-img-btn" href="/fic/" style="margin-bottom: 80px;">
+      <img class="normal" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803181/main-fic-basic_ivxb1u.png" alt="FIC"
+           style="display:block; width:20vw; max-width:200px; height:auto;">
+      <img class="hover-img" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803181/main-fic-mouse_cylcnv.png" alt="FIC hover"
+           style="display:none; width:20vw; max-width:200px; height:auto;">
+    </a>
+    <a class="menu-img-btn" href="/art/" style="margin-bottom: 80px;">
+      <img class="normal" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803180/main-art-basic_dttgcg.png" alt="ART"
+           style="display:block; width:20vw; max-width:200px; height:auto;">
+      <img class="hover-img" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803180/main-art-mouse_yn3tpz.png" alt="ART hover"
+           style="display:none; width:20vw; max-width:200px; height:auto;">
+    </a>
+    <div class="bottom-group">
+      <div class="bottom-static">
+        <img src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803181/main-botton-1_f4ktjg.png" alt="바텀1"
+             style="display:block; width:30vw; max-width:400px; height:auto;">
+      </div>
+      <a class="bottom-btn" href="https://theworldofyp.web.app" target="_blank">
+        <img class="normal" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803181/main-botton-2_wqd1pm.png" alt="바텀2"
+             style="display:block; width:30vw; max-width:400px; height:auto;">
+        <img class="hover-img" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803180/main-botton-2-mouse_l5ubmz.png" alt="바텀2 hover"
+             style="display:none; width:30vw; max-width:400px; height:auto;">
+      </a>
+      <a class="bottom-btn" href="https://theworldofyp.web.app" target="_blank">
+        <img class="normal" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803180/main-botton-3_cndqwx.png" alt="바텀3"
+             style="display:block; width:30vw; max-width:400px; height:auto;">
+        <img class="hover-img" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803180/main-botton-3-mouse_yz3r4t.png" alt="바텀3 hover"
+             style="display:none; width:30vw; max-width:400px; height:auto;">
+      </a>
+    </div>
+  </div>
+
+  <div class="video-overlay">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+    <div class="play-label">▶ PLAY</div>
+    <div class="clock">
+      <div class="label">YP WEBZINE</div>
+      <div class="datetime">
+        <div class="date" id="clockDate"></div>
+        <div class="time" id="clockTime"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function updateClock() {
+    var now = new Date();
+    var y = now.getFullYear();
+    var mo = String(now.getMonth()+1).padStart(2,'0');
+    var d = String(now.getDate()).padStart(2,'0');
+    var h = String(now.getHours()).padStart(2,'0');
+    var mi = String(now.getMinutes()).padStart(2,'0');
+    var s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('clockDate').textContent = y + '.' + mo + '.' + d;
+    document.getElementById('clockTime').textContent = h + ':' + mi + ':' + s;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
