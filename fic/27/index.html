@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리가 잃어버린 것에 대하여</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #222222;
+    --header-bg: #0b0b14;
+    --btn-wrap-bg: #0b0b14;
+    --footer-bg: #0b0b14;
+  }
+  .dark-mode {
+    --bg: #0b0b14;
+    --text: #ffffff;
+    --header-bg: #111120;
+    --btn-wrap-bg: #111120;
+    --footer-bg: #111120;
+  }
+
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }
+  html, body {
+    background: var(--bg);
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 16px;
+    line-height: 2;
+    color: var(--text);
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default;
+    transition: background 0.3s, color 0.3s;
+  }
+  .header, .btn-wrap, .footer {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
+  }
+  .content { cursor: default !important; }
+  a, button {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+
+  /* 진행바 */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: #888888;
+    z-index: 9999;
+    transition: width 0.1s;
+  }
+
+  /* 헤더 */
+  .header {
+    background: var(--header-bg);
+    color: #ffffff;
+    text-align: center;
+    padding: 60px 20px 50px;
+    transition: background 0.3s;
+  }
+  .header-img-wrap {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .header-img-placeholder {
+    font-size: 28px;
+    color: #555555;
+    /* 이미지 생기면 아래로 교체:
+    <img src="★이미지주소★" alt="" style="width:80px; height:auto;"> */
+  }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
+  .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
+  .header .trigger { font-size: 13px; color: #888888; }
+
+  /* BGM — BGM 없는 작품은 .bgm-wrap 째로 삭제 */
+  .bgm-wrap {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 0;
+    transition: background 0.3s;
+  }
+  .bgm-btn {
+    width: 48px;
+    height: 32px;
+    border: 1px solid #cccccc;
+    background: transparent;
+    color: #888888;
+    font-size: 14px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .bgm-btn:hover { border-color: #888888; color: #555555; }
+
+  /* 톱니바퀴 + 패널 */
+  #settings-wrap {
+    position: fixed;
+    bottom: 36px;
+    left: 28px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #settings-panel {
+    background: rgba(30, 30, 40, 0.82);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  #settings-panel.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .panel-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .panel-label {
+    font-size: 10px;
+    color: #888888;
+    font-family: 'Nanum Gothic', sans-serif;
+    width: 28px;
+    user-select: none !important;
+  }
+  .ctrl-btn {
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: #cccccc;
+    font-family: 'Nanum Gothic', sans-serif;
+    padding: 3px 10px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .ctrl-btn.font-sm { font-size: 10px; }
+  .ctrl-btn.font-md { font-size: 12px; }
+  .ctrl-btn.font-lg { font-size: 15px; }
+  .ctrl-btn.mode-btn { font-size: 13px; width: 100%; justify-content: center; }
+  .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); color: #ffffff; }
+  #gear-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  #gear-btn:hover {
+    background: rgba(40, 40, 55, 0.8);
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* 본문 */
+  .content {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s, font-size 0.2s;
+  }
+  .content p { margin-bottom: 0; min-height: 1.4em; }
+  .content p.empty { height: 1.4em; }
+  em { font-style: italic; }
+  strong { font-weight: 700; }
+
+  /* 하단 버튼 */
+  .btn-wrap {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    padding: 120px 0 90px;
+    background: var(--btn-wrap-bg);
+    transition: background 0.3s;
+  }
+  .btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 28px;
+    border: 1px solid #555555;
+    background: transparent;
+    color: #cccccc;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    font-family: 'Nanum Gothic', sans-serif;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .btn:hover { border-color: #ffffff; color: #ffffff; }
+  .btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+  /* 푸터 */
+  .footer {
+    background: var(--footer-bg);
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: #ffffff;
+    font-family: 'Nanum Gothic', sans-serif;
+    transition: background 0.3s;
+  }
+
+  /* TOP 버튼 */
+  #top-btn {
+    position: fixed;
+    bottom: 36px;
+    right: 28px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 11px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 1; pointer-events: auto; }
+  #top-btn:hover {
+    background: rgba(40, 40, 55, 0.8);
+    color: rgba(255,255,255,0.9);
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 22px; }
+    .content { padding: 30px 18px 50px; }
+  }
+</style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+<!-- 진행바 -->
+<div id="progress-bar"></div>
+
+<!-- ★BGM 있는 경우만: YouTube ID를 E244Db-Cd5I 자리에 넣기. 없으면 이 블록 삭제★ -->
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
+  <iframe id="ytplayer"
+    src="https://www.youtube.com/embed/JTeKpWp8Psw?enablejsapi=1&autoplay=0"
+    allow="autoplay" allowfullscreen>
+  </iframe>
+</div>
+
+<!-- 헤더 -->
+<div class="header">
+  <div class="header-img-wrap">
+    <div class="header-img-placeholder">★</div>
+    <!-- 이미지 생기면 위 div 지우고 아래 주석 해제:
+    <img src="★이미지주소★" alt="" style="width:80px; height:auto;">
+    -->
+  </div>
+  <h1>우리가 잃어버린 것에 대하여</h1>
+  <div class="author">track</div>
+  <div class="trigger">*Trigger Warning :종교</div>
+</div>
+
+<!-- BGM 버튼 — BGM 없으면 이 블록 삭제 -->
+<div class="bgm-wrap">
+  <button class="bgm-btn" id="bgmBtn" onclick="toggleBGM()">▶</button>
+</div>
+
+
+
+<!-- 본문 시작 -->
+<div class="content">
+
+<p><em>“Selig sind die Vergesslichen, denn sie werden auch mit ihren Dummheiten fertig.”</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>—</em><em> Friedrich Nietzsche</em></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><em>“망각하는 자는 축복을 받는다. 자신이 잃어버린 것마저 잊을 수 있으므로.”</em></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>우리가 잃어버린 것에 대하여</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>폐쇄지구</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>지독한 두통은 한순간도 떠나질 않았다. 숨을 몰아쉴 때마다 예리한 것으로 뇌를 쑤시는 듯한 그 고통은 숨을 내쉴 때면 지독하게 괴로웠다. 어떤 때에는 들어간 것도 없는 빈속에서 신물이 쏟아져 나올 만큼, 그리고 어떤 때에는 차라리 총으로 제 머리를 그대로 갈겨버리고 싶을 만큼 두통은 지독하고도 지독했다. 하지만 그러지 못했던 이유는 언제 바닥이 날지 모르는 총알 하나가 아쉬웠던 것도 아니었고, 그렇다고 간절할 정도로 살고 싶었던 것도 아니었다. 그저 강영현은 떠올려야 했다. 그가 잃어버린 것을. 무언가 잃은 것이 분명한 그 어떤 것을 다시 떠올려야만 했다. 그뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>짧은 밤이 지나갔다. 눈을 뜨고 또렷하지 않은 시야로 오래된 먼지가 부유하는 고요한 공간이 들어오자마자 벌떡 몸을 일으켜 조용한 내부를 살폈다. 깨진 스테인드글라스를 통해 들어오는 누런 빛이 굴절되고 부서졌다. 대부분이 엉망진창인 예배당의 잔해 위에서.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 냉기가 그대로 올라오는 바닥 위에 누워 있었다. 얼마나 잤는지는 알 수 없지만, 그 시간이 그다지 길지 않은 것은 확실했다. 이곳에서는 시간을 가늠하기가 쉽지 않았다. 시계는 사치였다. 대략적인 시간을 알 수 있는 방법은 해의 위치를 이용하는 것뿐이었지만, 그곳은 항상 안개와 흙먼지가 하늘을 가리고 있었기 때문에 정확한 시간을 알 수 없었다. 해가 뜨고, 지는 것 또한 정확하지 않다. 그곳에서는 확실한 것이 하나 없었다. 그래서 폐쇄지구라고 불렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그곳은 사방이 뚫린 감옥이었다. 정확하게는 사방이 높은 장벽으로 개미 한 마리 나올 수 없도록 철저히 통제된, 그로 인해 그 안에서 죽어간 사람들의 수는 아직도 정확하게 확인이 되지 않은 악명 높은 제한구역이었으나 그건 100년도 넘은 이야기였으며 현재는 안전구역에 들어갈 수 없는 사람들이 살기 위해 몰래 숨어 들어오거나, 안전구역에서 추방된 사람들이 버려지는 곳, 혹은 안전구역에서 도망친 사람들이 향하는 유일한 곳이 되었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>폐쇄지구, 갈 곳 없는 사람들의 유일한 종착점.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>어느 날 갑자기 눈을 떴을 때 이곳이었다. 이곳이 폐쇄지구라는 것도, 자신의 이름이 강영현이라는 것도 그는 떠올리지 못했다. 머릿속엔 아무것도 없었다. 정말 그 어떤 것도 남아 있질 않았다. 꼭 일부러 모든 기억이 지워지기라도 한 것처럼. 어떤 것도 생각나지 않았다. 그저 지독한 두통뿐이었다. 무언가를 떠올리기 위해서 애를 쓸수록 두통은 뇌수를 후벼파는 것처럼 지독해질 뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하필이면 비가 오고 있었다. 흙이 가득 섞인 오염된 비였다. 짙은 먹구름이 낀 하늘에서 떨어지는 비가 온몸으로 쏟아지고 있었고 강영현은, 그 자리에 누워 한참 동안 그 하늘을 올려다보며 생각했다. 어디서부터 시작해야 할까. 무엇을 시작해야 할까. 무엇을 위해서 어떤 것을 시작해야 하나.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이름도 생각이 나지 않는 상황에서 떠올릴 법한 생각은 아니었건만, 그래도 무언가를 해야 한다고 생각했다. 그렇지 않으면 어떤 악성 물질이 섞여 있는지 모를 이 비를 맞으며 어딘지도 모르는 이 길거리에 드러누워 이대로 죽는 것밖에는 할 수 있는 게 없었으니까. 적어도 죽을 순 없었다. 여기에서. 두 번째로 든 생각이었다. 손과 발을 움직여 보았다. 다행히 고통이 느껴지진 않았다. 몸의 군데군데에 힘을 주어보았다. 뻐근하게 느껴지는 부위가 있었지만 움직이지 못할 정도는 아니었다. 후우, 한숨을 내쉰 후 몸을 반쯤 일으켰다. 언제부터 비가 오고 있었던 것인지 모르겠지만 온몸이 젖어 있었다. 입고 있는 옷은 그 어떤 것도 유추해 낼 수 없는 검은 상의와 검은 하의, 낡고 검은 워커를 발에 신고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>몸의 여기저기를 더듬었다. 목에 늘어진 목걸이가 잡혀 한껏 끌어당겨 보았을 때는 처음 보는 펜던트가 달려 있었다. 작은 원판 위에 세 개의 가는 철로 만든 막대가 갈퀴처럼 달려 있었다. 이건 뭐지. 도저히 알 수가 없었다. 그것 외에 상황을 파악하거나 과거를 떠올릴 수 있는 건 안쪽 손목에 새겨진 여덟 개의 숫자뿐이었다. 90142218. 비에 젖은 눈가를 훔치며 한참을 쳐다봐도 여전히 떠오르는 것이 없었다. 구공일사이이일팔. 구공일사이이일팔. 그 알 수 없는 숫자를 중얼거리며 다리를 움직였고, 바닥을 디뎠고, 몸을 일으켜 세웠다. 질척한 바닥을 딛고 일어선 그 순간부터 다시 모든 것이 시작되었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>폐쇄지구에 현재 얼마나 많은 사람들이 숨어 살고 있는지에 대해서는 알 수 없었다. 폐쇄지구는 말 그대로 버려진 도시였으므로 제대로 기능하진 않더라도, 반쯤은 부서졌지만 시도 때도 없이 쏟아지는 비나 흙바람을 피할 수 있는 건물들이 적진 않았다. 하지만 그 어느 것 하나 빈 건물은 없었다. 적게는 몇 명 많게는 수십, 수백 명이 우글거리는 건물들에서 은신하며 살아가는 사람들은 그 누구도 폐쇄지구에 갑자기 나타난 강영현에게 호의적이지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현 또한 그들에게 호의적일 수는 없었다. 버려진 땅은 그 존재만으로도 태초의 것과 같았다. 오늘 비를 피해 숨었던 건물이 영원한 거처가 될 수 없었다. 끝없이 헤매야 했으며, 살기 위해 먹을 것을 수렵해야 했고, 또한 정제되지 않은 폭력이 없이는 살아남을 수 없는 말 그대로 태초의 공간.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>쓰러져 있던 공간에서 벗어나자마자 누군가가 공격을 해왔다. 날아드는 칼날의 움직임은 한눈에 봐도 훈련되지 않은 즉흥적인 움직임이었다. 한눈에 알아볼 수 있었다. 그리고 그 칼날을 피하고 공격을 돌려주는 강영현의 움직임은 너무나 자연스러웠다. 상대방을 무력화시키는 것은 그러기로 마음을 먹기도 전에 끝이 났다. 그의 손에서 칼을 빼앗았으며, 그에게 밟힌 채 발밑에서 꿈틀거리는 남자를 보며 생각했다. 나는 이 사람을 죽일 수 있나. 생각보다 답은 간단했다. 충분히 가능하다. 그렇다면 나는 이 사람을 죽여야 하나. 답을 내리는 것은 어렵지 않았다. 그럴 이유가 없다. 그렇다면 나는 이자에게서 무엇을 알아내야 하나.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그것은 머릿속에서 또 다른 답을 내기도 전에 입을 통해 먼저 빠져나갔다. 여기가 어딘지 물었으며, 폐쇄지구라는 대답을 들었을 때 또 관자놀이를 후비는 듯한 지독한 두통이 머리를 잠식했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>폐쇄지구가 어디냐는 질문은 하지 않았다. 애초에 여기가 어디냐는 질문 또한 그들에게는 의아한 질문이었을 것이다. 폐쇄지구는 그런 곳이었으니까. 어쩌면 세상의 끝. 세상에 갈 곳이 없는 이들이 모일 수밖에 없는 곳에서 이곳이 어디냐 물으면 어디라고 대답할 것인가.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>대신 강영현은 무력화된 그 남자에게서 필요한 것으로 판단되는 모든 것을 가져왔다. 그가 휘둘렀던 칼과 무기가 될 만한 모든 것들, 주머니가 제법 많이 달렸지만 냄새가 나는 외투마저도. 그는 별다른 저항도 하지 않았다. 그것이 곧 그곳의 규칙이라는 것을 강영현은 빠르게 깨달았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하루. 그 하루만 해도 셀 수 없는 공격이 있었고 그 공격을 처리해 낼수록 점점 달려드는 사람의 수는 적어졌으며, 강영현이 그 폐쇄지구 안에서 돌아다닐 수 있는 범위 또한 넓어졌다. 또 하루, 공격은 없어지진 않았으나 전날의 어중이떠중이들과는 달랐다. 그다음 하루. 하루가 반복될 때마다 강영현에게 남은 건 쓸 만한 무기들과 타인과 공유하지 않는 다 쓰러져 가는 예배당이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>어지간한 사람들은 더 이상 강영현에게 달려들지 않는다. 폐쇄지구는 철저한 약육강식의 원초적인 시스템을 따르고 있었으며 크고 작은 그룹들이 있었다. 혼자의 몸으로 그렇게 폐쇄지구를 돌아다니는 것은 강영현 말고는 없었다. 첫날은 강영현이 강하다는 것을 그들 모두가 깨닫기에 충분한 시간이었고, 둘째 날은 그런 강영현을 무너뜨려 그들이 속한 그룹이 강하다는 것을 증명하고자 했으나 그러지 못한다는 것을 깨닫기에 충분한 시간이었다. 그리고 셋째 날부터는 폭력과 회유로 강영현을 자신의 그룹으로 끌어들이려는 대다수의 시도가 통하기는커녕 똑같은 폭력으로 되돌아갈 뿐이었다. 그리고 며칠이 지났는지 모른다. 이제는 강영현에게 섣불리 다가오는 사람들은 없었으며, 강영현은 폐쇄지구의 대부분 흐름을 습득했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 시간 동안 새하얗던 머릿속에는 조각조각의 기억들이 산발적으로 흩어지고 있었다. 끊임없이 이어지는 목적 없는 폭력과 그 폭력에 대응하는 신체의 자연적인 반응 덕분인지 군복을 입고 있는 몇 가지 기억의 조각들은 놀랍지도 않았다. 대부분은 어떠한 임무의 와중이었던 것이었지만 워낙 단편적이고 배경이나 환경 또한 달랐기 때문에 연결하기는 어려웠다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>기억은 산산조각 난 유리 조각처럼 너무 작았고 부분적이었기 때문에 강영현은 그것들을 하나하나 파악하는 데만 해도 시간이 걸릴 수밖에 없었다. 눈을 뜨고 있을 때는 그것조차도 힘들었다. 폭력이 반복되는 하루가 축적될수록 강영현이라고 멀쩡할 수는 없었다. 크고 작은 상처들이 몸 여기저기에 흔적처럼 남았다. 하지만 그 상처들의 고통이 아니라 끊임없는 두통이 강영현에게 있어 정상적인 사고를 더디게 만들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>두통은 꼭 무언가를 떠올리지 못하게 방해라도 하는 것처럼, 머리를 헤집으려 노력할 때마다 더 심해졌다. 폐쇄지구에 들어온 이후 한 순간도 주변에 대한 경계를 늦출 수 없었으며, 두통은 끊임이 없었고, 또 대충 처치해 놓은 신체의 상처들이 걷잡을 수 없어질 때 강영현은 쓰러지듯 잠이 들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>물론 며칠의 반복된 폭력과 어느 날 불현듯 나타난 그를 쉽게 건드릴 수 없다는 것을 폐쇄지구에 살고 있는 사람들이 직접 겪고, 소문으로 듣고, 눈으로 보았다고 하더라도 아무런 백업도 없이 그렇게 잠이 드는 것은 어쩌면 자살 행위나 다름이 없었다. 그건 강영현도 충분히 알고 있었다. 하지만 강영현은 어쩔 수 없다는 생각을 하기도 전에, 오히려 어떠한 저항을 할 수도 없는 채로 무방비하게 잠에 빠져드는 순간이 있다는 것을 몇 번이 반복되고 나서야 깨달을 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>꿈이라고 해서 그렇게 도움이 되는 것은 아니었다. 그저 산발적으로 조각난 기억의 몇 조각이 이어진 잔상을 보는 것 정도일 뿐이었다. 그리고 대부분의 꿈이 그렇듯 그것들은 불안정하며 지극히 주관적이었기 때문에 잠에서 깨어난 강영현은 그것들이 구성하는 정확한 자신의 과거보다도 그 과거가 품고 있는 어떠한 감정 따위를 희미하게 인식하고 기억해 낼 뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 우습게도 그런 감정들은,</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>예배당의 깨어진 스테인드글라스를 통해 들어오는 누런 햇빛, 그리고 깨지지 않은 스테인드글라스를 통해 굴절되어 들어오는 바랜 붉은, 푸른, 초록, 노란빛들을 멍하니 바라보며 강영현은 생각했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그리움, 따위의 것들을. 잃어버린 어떤 것에 대한 처절한 상실감 따위의 것들을. 그리고, 누군가를….</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>철컥, 강영현은 자리에서 벌떡 일어나 주머니에 넣어두었던 권총을 꺼내 어딘가를 향해 겨눴다. 겨냥과 장전은 동시였다. 흐트러짐 없이 뻗은 어깨와 팔을 따라간 시선의 끝이 단호하게 한 곳을 응시한다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>언제부터 거기에 있었던 것인지는 알 수 없다. 눈을 가릴 만큼 길게 이마를 덮은 머리와 다소 마른 몸, 입고 있는 옷은 평범해서 특별한 것도 없었다. 하지만, 강영현은 바로 알 수 있었다. 그는 폐쇄지구의 사람이 아니다. 폐쇄지구에 속할 수 없는 사람이다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 동시에 강영현은 그가 자신에게 있어서 이제껏 만났던 폐쇄지구의 사람들과 달리 위협이 되지 않으리라는 것도 알았다. 단지 그가 겉보기에도 약해 보였고, 심지어 건강이 매우 좋지 않아 보이는 것뿐만은 아니었다. 그냥, 그런 생각이 들었다. 적어도 내게 위험한 인물은 아니다. 그리고 더 나아가, 어쩌면 강영현은 그를 오래전부터 알고 있다는 이상한 기시감 또한 느꼈다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그럼에도 불구하고 그를 향한 총구는 움직이지 않는다. 그리고 그는 자신을 향한 총구를 똑바로 응시하면서도 피하거나 겁을 먹지도 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 강영현은 자신의 모든 본능적 판단에도 불구하고 빠른 결정을 내렸다. 이곳은 폐쇄지구이며, 폐쇄지구에서 만나는 모든 인물은 강영현과는 상관이 없는 사람이었다. 강영현은 그들과 최대한 접촉을 하지 않는 것이 그들에게 있어서도 좋을 것으로 생각했다. 강영현은 군인이었음이 분명했고, 폐쇄지구에 들어왔다는 것은 그가 적어도 적법적인 이유는 아닐 것이었다. 폐쇄지구는 어지간하면 군인들이 개입하지 않는 무법지대였으며, 군인이 폐쇄지구에 들어오는 이유는 단 하나뿐이었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“볼일 없으면 여기서 나가.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>도망친 군인은 위험한 존재다. 비록 강영현은 자신이 무엇으로부터, 왜 도망쳤는지조차 기억해 내지 못하고 있지만. 그의 조각난 기억의 파편 또한 그가 도망칠 이유가 있는 것으로 보이지도 않았지만 어쨌든, 강영현은 도망친 군인이다. 도망을 치지 않았다면 폐쇄지구에 들어올 이유도 없었을 테니까. 그러니 강영현은 어지간하면 폐쇄지구에서의 누구와도 엮이고 싶지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이 예배당은, 이상하게도 처음부터 누구도 점유하고 있지 않은 곳이었다. 천장의 반이 허물어져 비가 자주 오는 폐쇄지구에서 그다지 효용성이 없는 장소이기도 했지만, 남은 절반의 천장 밑은 그럭저럭 지낼 만했고, 긴 의자들은 거의가 부서져 있었으나 하나 정도는 몸을 누이기에도 나쁘진 않았다. 부서져 있는 것들을 모아 불을 땔 수도 있었으며, 모든 것을 훔쳐 가고 태울 수 있는 건 태우기 바쁜 이 폐쇄지구에서도 부서진 스테인드글라스 밑에 걸린 거대한 십자가와 예수상은 여전했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이 권총에는 총탄이 세 개 남아 있고, 나는 총탄을 쓸데없는데 버리고 싶은 생각이 없어.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“그러니까 나가.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>마지막 경고였다. 강영현의 어깨는 여전히 단단하게 그가 있는 곳을 향해 팔을 치켜들고 있었다. 총구를 빤히 바라보던 그는 고개를 돌려 부서진 잔해와도 같은 예배당을 둘러보았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“신을 믿어?”</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 그는 강영현에게 물었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그럴 리가. 하지만 강영현은 그 말을 입 밖으로 내뱉지는 않았다. 그는 애초에 강영현의 대답을 기대하지 않았던 것인지, 아니면 말하지 않아도 그 대답을 알고 있는 것인지 알 수 없었으나 강영현의 대답을 기다리지 않고 이어 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“난 믿어.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“그러니 여긴 내 공간이야.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 그의 얼굴을 응시한다. 그는 여전히 강영현의 총에는 어떠한 두려움도 없이, 반이 부서져 바닥으로 무너져 내리고 반만 엉성하게 자리를 잡은 의자로 타박타박 다가가 앉았다. 그리고 그는 손을 모았고, 고개를 들어 강영현이 등지고 있는 스테인드글라스를 응시한다. 강영현의 머리 위로 쏟아지는 빨간, 노란, 파란, 초록의 굴절된 빛 너머의 십자가에 매달린 예수상을 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그의 움직임을 따라 시선을 움직이던 강영현의 손가락 끝이 한 번 더 방아쇠를 지그시 눌렀으나 이내 총을 바닥으로 내렸다. 철컥, 슬라이드를 푼 권총을 다시 주머니로 쑤셔 넣고 난 강영현은 옆에 있던 의자 위로 주저앉았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그들은 이내 같은 곳을 바라보고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 산란하게 부서지는 여러 색깔의 빛의 향연을 멍하니 바라보다가 허공에 대고 물었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“기도는 왜 하는 거지?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>아주 잠깐의 침묵 후 등 뒤에서 작은 목소리가 들려왔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“감사하려고.”</p>
+<p class="empty">&nbsp;</p>
+<p>“뭘?”</p>
+<p class="empty">&nbsp;</p>
+<p>“적어도 하나 정도는 생각대로 됐으니까.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>문득 떠오른 것이 있었다. 강영현은 신을 믿지 않는다. 그건 강영현뿐만이 아니었다. 강영현이 살았던 세상에는 더 이상 신이 없었다. 인류의 역사는 태초부터 태양을 신으로 여겼고, 달을 신으로 여겼으며, 그 외에 이해할 수 없는 많은 것들을 신으로 여겼고, 그렇게 여러 신을 믿었다고 했다. 좌절한 사람들, 슬픈 사람들뿐만 아니라 너무 많이 가진 사람들, 너무 많이 행복한 사람들조차도 그들의 좌절과 슬픔과 부와 행복을 신이 주신 것으로 받아들였다고 했다. 하지만 강영현의 세상에는 신이 존재하지 않았다. 그들을 살아남게 만든 것은 신이 아니었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>종교가 사라진 세상. 그것이 강영현의 세상이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 다시 스테인드글라스의 부서지는 빛을 받는 예수상을 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그게 신 덕분이라고 생각해?”</p>
+<p class="empty">&nbsp;</p>
+<p>“글쎄.”</p>
+<p class="empty">&nbsp;</p>
+<p>“그런데 왜 기도를 하는데?”</p>
+<p class="empty">&nbsp;</p>
+<p>“앞으로도 도와달라고.”</p>
+<p class="empty">&nbsp;</p>
+<p>“뭐를.”</p>
+<p class="empty">&nbsp;</p>
+<p>대답이 없었다. 강영현이 고개를 돌렸을 때, 그가 앉아 있던 자리는 비어 있었다. 강영현은 한참을 그 자리를 바라보다가 다시 고개를 돌려 예수상을 바라보았다. 한참을 그렇게. 알 수 없는 상실감이 또다시 몰려왔고, 아주 잠시 가셨던 지긋지긋한 두통이 다시 시작되고 있었다. 여전히 꿈속인 건가. 강영현은 그렇게 생각하며 눈을 감았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>해가 뜨고 졌다. 그 한 번의 순환을 하루라고 한다면 강영현이 폐쇄지구에서 눈을 뜬 지 벌써 이주일 째였다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 폐쇄지구에 난입한 새로운 변수였다. 강영현은 최대한 그들의 시스템에 개입할 생각이 없었지만 그렇다고 굶어 죽거나 맞아 죽을 생각도 없었거니와, 자기 자신도 이해할 수 없는, 정의라고 하기엔 편협하고 그렇다고 양심이라고 하기엔 거창한 불의의 상황에서 누군가를 구하는 것 또한 피할 수가 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>쓸데없는 오지랖이었다고는 생각한다. 이곳은 약한 존재는 살아갈 수 없는 폐쇄지구였으며, 강영현은 이제껏 수도 없이 이곳의 규칙을 목격하고 방관했다. 그런데 왜 그랬던 걸까. 강영현의 절반도 안 되는 것 같은 꼬맹이가 혼자의 몸으로 이곳을 배회하고, 그를 잡아먹을 듯이 구는 그보다 강한 자들에게 당장 죽을 수도 있을 게 분명한데도 온몸으로 들이받는 광경을 왜 그냥 두고 보지 못하고 넘어갔을까. 그러다가 방심했다. 칼은 몇 번이고 막아내고 되돌려줬으나 무리 중 하나가 쏜 총에서 쏘아진 총알은 피하지 못했다. 치명적이진 않았다. 다만 팔을 스치고 지나가 피가 제법 났고, 강영현은 별로 쓰고 싶지 않았던 총알 하나를 낭비했다. 무리는 쓰러진 자기 동료들을 버리고 벌레가 흩어지듯 도망가 버렸다. 그리고 강영현이 구하고자 했던, 정말 구하고자 했던 것인지는 알 수 없으나 그 아이마저도 어디론가 사라진 후였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>상처가 심하진 않았지만 피가 제법 많이 났다. 그리고 강영현은 조금 피곤했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>어지간하면 예배당을 나서지 않았으나, 오늘은 구해놓은 식량이 다 떨어졌기 때문에 어쩔 수 없이 나선 것이었지만 별로 소득은 없었다. 게다가 피를 잔뜩 흘렸으니 피곤함만 더해졌다. 예배당으로 돌아와서 강영현은 그나마 성한 의자 하나를 선택해 그 위에 누웠다. 상처를 치료할 힘이 없었던 건지, 아니면 그것마저도 귀찮았던 것인지 알 수 없었으나 그대로 강영현은 그렇게 누렇고 희미한 예배당의 허공을 응시하다가 느리게 눈을 감았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>어떤 것의 기척에 눈을 떴던 것은 얼마 후였다. 사실 시간이 얼마나 지났는지도 모르겠다. 폐쇄지구는 여전히 시간을 가늠하기 힘들다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>눈꺼풀이 무겁다. 겨우 눈을 떴을 때는 예배당 내부에 여전히 누런 햇빛과 그 안을 부유하는 무거운 먼지들이 가득했다. 그리고 강영현은 바닥에 눕혀져 있었다. 그 옆에 앉아 강영현의 팔에 붕대를 감고 있는 누군가에게로 시선을 돌렸다. 그의 옆에는 피가 잔뜩 묻어 있는 거즈들이 쌓여 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“피가 많이 났어. 이 정도면 수혈이 필요할 수도 있는데. 그건 여기선 불가능해.”</p>
+<p class="empty">&nbsp;</p>
+<p>뭔가 말을 하고 싶지만 목구멍에 모래라도 뿌려놓은 것처럼 칼칼했다. 목소리가 잘 나오지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“죽진 않을 거야. 그래도 내가 두고 볼 순 없어서.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>마른 손은 꽤 야무지게 붕대를 마무리했다. 강영현은 그제야 바닥에서 냉기가 덜 느껴지는 것을 느낀다. 모든 감각이 느리게 돌아오고 있었다. 압박하여 묶은 붕대로 인해 총상이 있었던 부위의 고통도 심했다. 하지만 못 견딜만한 것도 아니었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그저 강영현은 옆에 주저앉아 있는 그를 바라보았다. 상처 처치를 마친 그는 그 자리에 여전히 앉은 채로 강영현을 보고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…넌 여기서 사는 거야, 뭐야.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>잔뜩 갈라진 목소리가 그에게 물었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“여기서 살진 않아.”</p>
+<p class="empty">&nbsp;</p>
+<p>“그러면 뭔데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“여기 올 순 있지.”</p>
+<p class="empty">&nbsp;</p>
+<p>“무슨 소린지 모르겠네.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하아, 깊게 한숨을 내뱉으며 강영현은 성한 쪽 팔을 들어 눈을 가렸다. 누런 햇빛이 거슬리는 건 아니었지만 여전히 피곤함이 느껴졌다. 아픔 때문인지는 모르겠지만 조금은 지치기도 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“여긴 어떻게 왔어?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 여전히 눈을 가린 채로 그에게 물었다. 그는 대답이 없다가 질문을 돌렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“넌 어떻게 왔는데?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>한숨과도 같은 숨소리 끝에 강영현은 대답했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“기억 안 나.”</p>
+<p class="empty">&nbsp;</p>
+<p>“아무것도?”</p>
+<p class="empty">&nbsp;</p>
+<p>“그래. 아무것도.”</p>
+<p class="empty">&nbsp;</p>
+<p>“이름은 기억나?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그의 목소리는 꼭 강영현의 심장 어딘가를 어루만지는 것처럼 느껴졌다. 어쩌면 그만큼 강영현은 자신이 많이 지쳤기 때문일지도 모른다고 생각했다. 폐쇄지구의 한중간에서, 누군지도 모르는 사람과 그 어떤 경계심도 없이 이렇게 대화한다는 건 현재 상황에서는 합리적이지 않은 행동이었으며, 강영현은 여전히 제대로 된 것이 기억나지 않는 편이었으나 자신이 그런 합리적이지 않은 행동을 저지르는 성격이 아니라는 것을 어렴풋하게 알고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“기억이 나지 않았는데, …기억났어.”</p>
+<p class="empty">&nbsp;</p>
+<p>“이름이 뭔데?”</p>
+<p class="empty">&nbsp;</p>
+<p>“강영현.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그는 말이 없었다. 이번에도 그때처럼 사라진 건가. 어쩌면 지금 나는 또 꿈을 꾸고 있는 걸까. 강영현은 세 번 숨을 천천히 들이마시고 내쉬었다. 그리고 천천히 눈을 가린 팔을 내렸다. 그는 여전히 그 자리에 앉아 강영현을 내려다보고 있었다. 창백한 얼굴, 저번보다도 훨씬 더 병색이 짙어진 눈가.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>무언가를 말하고 싶은 표정이다. 동시에 말하고 싶지 않은 표정이기도 하다. 강영현은 그런 그를 어떠한 말도 덧붙이지 않고 그저 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“기억을 찾고 싶어?”</p>
+<p class="empty">&nbsp;</p>
+<p>“그래야 할 것 같은데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“왜?”</p>
+<p class="empty">&nbsp;</p>
+<p>“뭔가를 잃어버린 것 같아서.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그는 작게 한숨을 쉬는 것처럼 숨을 내뱉었다. 그의 마른 어깨가 낮아졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“기억이 나지 않는 데에는 이유가 있다고 생각하지 않아?”</p>
+<p class="empty">&nbsp;</p>
+<p>“그럴지도.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>여전히 상처는 욱신거렸다. 숨을 내쉴 때마다 입 밖으로 흩어지는 숨은 뜨거웠다. 아무래도 염증이 생긴 것 같았다. 강영현은 다시 가물가물 눈이 감기기 시작했다. 그러다가 고개를 돌려 다시 그를 보고 물었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“넌 뭐야?”</p>
+<p class="empty">&nbsp;</p>
+<p>그는 대답하지 않은 채 강영현을 바라보기만 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“넌, 아무래도 꿈인 건가.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 그렇게 중얼거리며 눈을 감았다. 다시 꿈, 조각난 꿈속으로 휘말려 들어갔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>꿈은 여전히 모호하다. 시간이나 장소가 연결된 기억의 조각들이라면 유추라도 해 볼 수 있겠지만 뒤죽박죽이었다. 시점도 배경도 모든 것이. 모든 것들이 빠르게 지나가거나 혹은 너무 느리게 지나갔다. 빠른 건 빠른 것대로, 느린 것은 느린 것대로 어떤 것이든 잡아낼 수조차 없었다. 그저 보고 있는 것이었지만 그것은 눈을 타고 들어와 그대로 어디론가로 새어버리는 것 같은 느낌이었다. 마치 머리에 커다란 구멍이라도 생긴 것 같이, 모든 것들은 강영현이 알 수 없는 곳으로 흘러 나가버렸다. 잡을 틈도 없이.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 꿈에서 어떤 순간에는 군인이었으며, 어떤 순간에는 사막에서 손님이 한 명도 오지 않는 바를 운영하는 평범한 남자이기도 했다. 그리고 어떤 순간에는….</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 눈을 떴다. 무거운 먼지가 허공을 천천히 부유한다. 지금이 낮인지, 밤인지 마지막으로 눈을 감았을 때부터 얼마나 시간이 지났는지 알 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>꿈을 꾸고 난 후에는 머리가 더욱 아파져 왔다. 뭔가 잊었던 기억이 떠오를 것 같은 순간이면 더욱 심해졌다. 강영현은 본인이 고통에 제법 익숙하며, 잘 견딘다는 것을 알게 되었지만 지금처럼 두통이 난동을 부릴 때에는 좀처럼이면 참을 수가 없었다. 거친 숨이 튀어나왔다. 이를 꽉 물어 턱에 힘이 잔뜩 들어간 채로 몸을 웅크렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>한참 동안 그렇게 고통에 시달렸다. 어쩌면 그 고통이 익숙해지기를 기다리는 시간이기도 했다. 그래서 알지 못했다. 누군가의 손이 강영현의 허리춤에 파고든 것을. 등 뒤로 어떠한 온기가 닿아오고 있다는 것을.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>평소였다면 분명 그 기척을 느꼈을 때부터 반사적으로 그를 밀쳐냈든지, 아니면 다시 총을 찾아 겨눴을 것이었겠지만 강영현의 두통은 그가 그런 식으로 반응할 수 없게 만들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그저 허리를 파고든 마른 팔을 인지했을 때, 강영현은 어쩌면 익숙한 어떤 것을 느꼈다. 이를테면 안도와 비슷한 그 어떤 감정. 그리고 희미한 손이 고통으로 인해 높아진 심장의 박동을 가라앉히는 것처럼 그의 가슴 언저리를 토닥였을 때 강영현은 생각했다. 이런 적이 언젠가 있었던 것 같다고.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>굽어진 강영현의 등으로 그가 이마를 기댔다. 고통으로 인해 등의 근육들이 꿈틀거리는 것이 고스란히 느껴졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 자신의 허리를 끌어안고 가슴을 토닥이는 마른 손가락을 흐릿한 시선을 바라보고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“도대체 넌, …누구야.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>악다문 잇새로 고통이 섞인 신음과 함께 혼잣말과도 같은 말이 흩어졌다. 심장께를 토닥이던 희미한 움직임이 천천히 멈췄다. 이마가 닿은 등으로 얕은 숨이 퍼졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>멈춘 손이 희미해진다. 허리를 감싸고 있던 가벼운 압박감이 흐릿해진다. 이내 등 뒤로 느껴지던 누군가의 온기 또한 사라졌다. <em>난 꿈이야.</em> 그가 그런 말을 한 건지, 아니면 강영현이 그런 말을 듣고 싶었던 건지 알 수가 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그다음부터는 그를 대하는 것이 이전보다는 편해졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>세 개의 부서진 장의자를 사이에 두고 그는 스테인드글라스와 십자가를 등진 강영현을 바라보고 있었으며, 강영현은 그를 바라보고 있었다. 사실 그가 강영현을 보고 있는 것인지, 아니면 그 너머의 죽은 종교의 흔적을 바라보고 있는 것인지는 알 수 없었다. 강영현은 내내 목에 걸고 있던 목걸이를 손에 쥔 채로 그것을 내려다보며 대꾸하고 있었으며, 그는 여전히 기도하듯 손을 모으고 있었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그럼 왜 여기로 들어왔는지는 기억이 나?”</p>
+<p class="empty">&nbsp;</p>
+<p>“아니.”</p>
+<p class="empty">&nbsp;</p>
+<p>“예상되는 것도 없어?”</p>
+<p class="empty">&nbsp;</p>
+<p>“아마, 도망쳤겠지.”</p>
+<p class="empty">&nbsp;</p>
+<p>그가 나타나면 강영현은 이런저런 말을 붙였다. 말하지 않으면 그가 사라질 것 같아서. 꿈일 게 분명한 그를 이렇게도 붙잡고 싶은 게 이상한 것 같으면서도 머릿속 어딘가에서는 그렇지 않으면 안 될 것만 같은 느낌이 들었다. 하지만 말을 할 것이 없었다. 아무것도 기억나는 게 없어서 말할 수 있는 것이 한정되어 있었다. 그래서 강영현은 두서없는 제 머릿속 기억의 조각들을 털어놓았다. 그를 붙잡고자, 동시에 그 조각들을 어떻게든 이어 붙여보고자.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“무엇으로부터?”</p>
+<p class="empty">&nbsp;</p>
+<p>“뭔가 잘못을 했겠지. 내가 군인이라면. 탈영했다는 뜻이니까. 그게 아니라면, 그래도 뭔가 잘못된 일에 연루가 됐겠지. 밖의 세상이 어떤 세상인지에 대해서는 정확하게 기억나는 것도 없지만.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그는 여전히 불현듯 나타났다가 사라졌다. 하지만 그는 다시 나타날 때도, 그리고 사라질 때도 특별한 기색을 내비치지 않았으며 항상 그 자리에 있었던 것처럼 굴었다. 하지만 강영현은 어느 순간부터 그를 기다리고 있었던 것 같기도 하다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“정복, 전쟁, 기근, 죽음.”</p>
+<p class="empty">&nbsp;</p>
+<p>그는 여전히 두 손을 부여잡은 채 강영현을, 강영현의 너머에 있는 예수상을 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“옛날에 성경이라는 게 있었다고 해. 예수를 믿는 사람들의 성서였는데. 성경의 마지막 장에서 종말의 징조라고 설명되어 있었대. 그 네 가지가. 순서대로 오고 나면 종말이 올 거라고.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>꼭 옛날얘기를 하는 것처럼 그는 강영현에게 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“돌연변이가 태어났어. 수백 년 전에. 돌연변이는 그전에도 언제나 있었겠지. 그런데 그 돌연변이는 특이했어. 신체의 어디가 정상적이지 않았던 것도 아니고, 정신적으로 문제가 있던 것도 아니었거든. 그냥, 그 전의 인류는 가지고 있지 않았던 새로운 능력을 가지고 있었어. 그런 돌연변이가 한 명이 아니라 동시다발적으로 나타났어. 각기 다른 능력을 가지고 있었고, 어떤 돌연변이는 동시에 여러 가지 능력을 가지고 있기도 했고. 확실하게 말할 수 있는 건 그렇게 태어난 돌연변이들은 기존의 인류보다 훨씬 강했다는 거지.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>인류는 새로이 나타난 돌연변이들을 어떻게 구분하고 정의하여야 할지 쉽사리 합의에 도달하지 못했다. 그들을 새로운 인재로 파악하는 국가도 있었으며, 그들을 새로운 신성한 존재, 즉 신으로 여기는 국가도 있었다. 그리고 그들을 철저한 적으로 규정하고 탄압하는 국가 또한 있었다. 그 모든 국가는 합의에 이르지 못했으며, 돌연변이들은 그렇게 신성화됨과 동시에 탄압당했다. 그렇게 합의되지 않은 돌연변이에 대한 각국의 대응 방식에 대하여 돌연변이 사이에서도 그들을 달리 대하는 국가들과 마찬가지로 전 세계의 흐름에 순응하려는 자들과 저항하는 자들로 나뉘게 되었다. 순응하려는 자들은 그 누구의 신경도 거스르지 않았으나, 저항하는 자들은 눈에 띄게 마련이다. 그리고 눈에 띄는 저항을 억누르는 가장 쉬운 방법은 폭력이었다. 전 세계적이고 동시다발적으로 발생한 돌연변이에 대한 테러와 폭압, 그 과정에서 생존을 위한 저항이 반복적으로 부딪쳤다. 결국 돌연변이들은 몰리고, 또 몰렸다. 그렇게 몰린 돌연변이들을 하나로 모은 구심점이 된 자는 돌연변이 간의 합의를 이루었다. 이렇게 당하고 살 수는 없다고. 그렇다면 우리가, 정복을 하자고.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 대대적인 전쟁이 발생했다. 인간과 돌연변이 간의 전쟁. 누가 알았을까. 국가 간의 알력 다툼으로 세계 3차 대전이 벌어질 위기는 2차 대전이 종전된 이후로도 끊임없이 발생했으나, 진짜 세계 3차 대전이라고 부를 수 있는, 전 지구상으로 벌어진 전쟁이 돌연변이라 불리던 신인류와, 그 전 수천 년을 지구 생태계의 최상위를 점하고 있던 구인류 간의 처절한 전쟁이 될 줄은.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>어느 것 하나 온전한 것이 없었다. 그때까지 인류가 이룩한 눈부신 과학적 발전은 구인류의 능력으로 닿을 수 없었던 한계를 돌파해 낸 돌연변이, 신인류의 능력에는 닿지 못했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>일방적인 학살로 끝날 줄로만 알았던 전쟁은 지독하게 오랜 세월 동안 이어졌다. 신인류도, 구인류도 예상하지 못했던 소모전과 공방전이었다. 인류의 찬란했던 모든 것들이 사라졌다. 인류는 다시 시간을 되돌린 것처럼 많은 것을 잃었다. 그럼에도 불구하고 수천 년을 지구 위에서 군림하던 구인류는 쉽게 멸망할 생각이 없었다. 그들은 신인류를 회유했고 유인했고 농락했다. 분노한 신인류 사이에 아주 작은 틈이 생길 수 있을 만큼. 그리고 아주 똑똑하고 비열하게 그 빈틈을 공략했다. 신인류는 두 개의 그룹으로 나뉘었다. 그때까지 지구 위에 살아가던 인류의 절반이 전쟁을 통해 죽었을 때야, 이제 더 이상 국가의 의미가 모호해지고 살아남은 이들을 규합하기 위해 설립된 공동정부로 투항하는 정부군과 여전히 그들에게 저항하는 반군. 여전히 지속되고 있는 전쟁. 미래를 생각하지 않고 퍼붓는 공격으로 인해 그나마 살아남은 사람들마저 살아남을 수 없는 생태계의 파괴, 그로 인해 발생한 당연한 기근. 수많은 죽음.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“정복, 전쟁, 기근, 죽음.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“종말.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그의 목소리는 꼭 어떠한 노랫소리처럼 들리는 것 같다고 생각했다. 시를 읊는 것 같다고 느껴지기도 했으며, 또 어떤 순간에는 그 목소리가 아주 익숙하다는 생각을 하기도 했다. 꼭, 오래전부터 알고 지냈던 사이처럼.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 그리고 어느 순간부터 그 길고도, 강영현에게는 별로 와닿지 않는 이야기를 하는 그를 바라보고 있었다. 그는 여전히 기도하듯 손을 모은 채로, 기도하는 것과 같이 그 이야기를 강영현에게 털어놓듯, 어쩌면 고백하듯이. 또 어쩌면 자신의 고해를 성사하듯이 내뱉고 난 후 강영현의 눈을 마주 보았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“도망쳐.”</p>
+<p class="empty">&nbsp;</p>
+<p>그는 그렇게 말했다. 강영현은 생각했다. 그는 어쩌면, 그 말을 하고 싶어서 강영현의 앞에 나타난 것일지도 모르겠다고.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“네가 기억하지 못하는 세상은 기억하지 않아도 상관없는 세상이야.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“그러니까, 도망쳐.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 그런 그를 바라보다가 손끝으로 의미 없이 돌리고 있던 펜던트를 다시 한번 돌렸다. 그때, 펜던트의 원판에 달라붙어 있던 얇은 막대가 검지 손끝에 의해 퉁겨졌다. 그것이 그렇게 퉁겨질 만큼 유연한 것이라는 것은 이번에 알았다. 그리고 그것이 퉁겨지면서 난 소리. 특정한 음. 그것을 듣자마자 강영현은 동시에 관자놀이를 파고드는 신물 나는 두통이 몰려와 미간을 잔뜩 찌푸리며 펜던트를 움켜쥐었다. 그것은 우연히 발생한 소음이 아니라 목적을 가진 정확한 음이었다. 그리고 강영현의 뇌는 지독한 두통으로 헤집어지면서도 강영현이 다시 한번 그 펜던트의 조각을 튕기도록 손가락을 움직였다. 익숙한 하나의 음. 동시에 다른 조각을 튕겨내는 다른 음. 움직이는 강영현의 손은 지극히 익숙하고 당연하다. 하나, 둘, 셋, 넷, 다섯, 여섯. 여섯 개의 낯설지만 익숙한 음이 연달아 이어졌을 때 펜던트의 손을 쥐고 있던 강영현의 손을 그보다도 작은 손이 부여잡았다. 차가운 손이었다. 어찌나 세게 붙잡았는지 펜던트의 모양이 그대로 강영현의 손을 파고들 정도였다. 어쩌면 그만큼이나 간절하게.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“도망치라고.”</p>
+<p class="empty">&nbsp;</p>
+<p>“도대체 무슨….”</p>
+<p class="empty">&nbsp;</p>
+<p>“도망쳐, 영현아.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그와 동시에 폐쇄지구를 무너뜨릴 것 같이 강렬한 사이렌 소리가 울려 퍼지기 시작했다. 강영현은 그 소리로부터 기시감을 느꼈다. 그리고 그를 쳐다보았다. 그는 손등이 하얗게 바랠 정도로 꽉 강영현의 손을 쥔 채였으나 점점 그 손의 힘이 사라지고 있었다. 희미해지고 있다. 그가 일렁이고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“도망쳐, 제발.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>깜빡깜빡, 오래된 영화필름이 빛을 먹고 그 선명함을 잃어가는 것과 같이, 그의 모습이 점점 희미하게 사라지기 시작했다. 도망쳐, 그 말이 머릿속의 모든 두통과 잡생각을 밀어내고 유일하게 자리 잡기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그때부터 강영현은 그 낡고 어쩌면 안락하기도 했으며, 그의 마지막 은신처였던 예배당을 등진 채로 비가 쏟아지는 폐쇄지구로 뛰어나갔다. 여전히 추적추적하고 오염된 비가 내리고 있었다. 있는 줄도 몰랐던 폐쇄지구의 중간지점에 있던 오래된 고탑에서 강렬하게 빛나는 서치라이트가 눈이 부신 빛을 쏟아내며 사방으로 돌아가고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현의 머리는 여전히 지긋지긋한 두통이 잠식한 채였으나 그는 아무런 생각이 없었다. 그저 본능적으로 뛰었다. 빛이 자신에게 가까워질 때는 부서진 건물의 잔해 뒤에 숨었으며, 그사이 가빠지는 숨을 골랐고, 폐쇄지구를 빠져나가기 위한 여러 가지 방법을 생각했다. 한순간 머릿속 어딘가에서 봇물이 터지는 것과도 같이 폐쇄지구에 대하여 자신이 알고 있었던, 아마 잊고 있었을 게 분명하지만 이미 알고 있었고 어쩌면 이 순간을 위하여 학습하였을 여러 가지 정보가 떠오르기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>피신처로 폐쇄지구를 선택한 이유는, 폐쇄지구는 어지간하면 정부군이 개입하지 않는 무법지대였기 때문이었다. 정부군은 폐쇄지구를 뒤질 만큼 여유로운 상황이 아니다. 게다가 강영현 하나 찾자고 폐쇄지구를 뒤지는 일은 정부군에게 있어서는 번거로운 일이었다. 그리고 폐쇄지구는 강영현에게 있어서 그 어떤 지역보다도 익숙한 곳이었다. 강영현은 최대한 안전 구역으로부터 멀리 달아나야 했다. 또한 강영현은 가장 마지막에 잡혀야 한다. 최대한 시간을 끌 수 있을 만큼 끈 이후에. 그들이 약속한 시점에.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>누구와 약속을 했지.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 시야를 흩트리는 비에 잔뜩 젖어 눈가를 닦으며 생각했다. 여전히 지독한 두통이 뇌를 들쑤셨다. 하지만 한 번 봇물이 터진 기억은 두서없이 강물처럼 흘러내렸다. 어떠한 음성이 떠오른다. 난 네가 이렇게까지 하는 거 싫어. 익숙한 음성이다. 아주 익숙한 음성. 내가 해야 돼. 나라서 할 수 있는 일이야. 그리고 강영현은 그에게 그렇게 말했다. 그리고 떠오른다. 평소 표정이라고는 크게 드러나지도 않는, 그 하얗고 경직된 얼굴이 조금은 허물어진 것이. 그리고 그 커다란 눈에 가득 담긴 주저와 걱정이. 죽지 마. 그는 명령했다. 절대 죽으면 안 돼. 강영현은 그 명령을 목숨과도 같이 지킬 생각으로 고개를 끄덕였다. 그리고 그 명령은 지금도 유효했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>흐릿한 얼굴이다. 흐릿하지만 강영현은 이제 알 수 있다. 그 얼굴이 누구의 것이었는지. 어느 날 불현듯 나타난 그. 자신의 기억과는 전혀 다른 모습이었고, 심지어 너무 아파 보였기 때문에 신경이 쓰였던 그 병색이 가득하고 하얀 얼굴. 꿈이라 생각했던 그.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>도망쳐. 제발. 그가 사정하듯 말한 그 말을 강영현은 생각한다. 어두운 하늘 위로 헬기 소리가 들리기 시작했다. 강영현의 머리는 빠르게 회전한다. 견디기 힘든 두통을 밀어내며 생각하고 또 생각한다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>폐쇄지구를 거쳐 다른 곳으로 도망을 가야 했다. 원래 계획대로라면. 하지만 그는 강영현의 꿈처럼 나타나 도망가라고 했다. 그리고 그의 잃어버린 기억을 헤집어놓지도 않았다. 그대로 잊으라는 듯이. 잊고 뒤도 돌아보지 말고 도망가라는 듯이. 그렇다면, 어쩌면.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>헬기에서 뛰어내린 인력이 폐쇄지구로 몰려든다. 강영현은 지닌 권총 한 자루를 꺼내 손에 쥐고 탄창을 확인한다. 단 두 발. 두 발로 뭘 할 수 있을까. 충분히 훈련된 군인들을 뚫고 도망을 쳐야 하는가. 여러 가지 생각을 떠올린다. 지금 있는 곳에서부터 폐쇄지구를 벗어날 수 있는 경로, 계획대로 끝까지 최대한 시간을 벌어 도망을 치는 것, 그리고 자꾸만 본능이 이끄는 다른 생각. 어쩌면 계획이 틀어졌을 수도 있다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>머리는 도망쳐야 한다고 생각하지만, 기억을 비집고 나온 그 목소리가 자꾸만 강영현을 주저하게 했다. 죽지 마. 그의 마지막 명령이 심장을 찔러댔다. 죽지 마. 강영현은 죽을 수 없고, 동시에 본능을 반하는 의지가 차오른다. 그러므로 여기서 더 이상 도망을 치면 안 된다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>후, 강영현은 단 두 발 남은 탄창의 방아쇠를 당겼다가 다시 실린더를 풀고는 바닥으로 던졌다. 그러고 난 후 그는 어떠한 주저함도 없이 어둠 속에서 벗어나 서치라이트가 밝히고 있는 장소로 나아갔다. 저벅, 저벅. 발걸음을 뗄 때마다 질척한 진흙이 워커로 달라붙는 느낌이 선연했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>서치라이트가 그의 움직임을 포착했고, 눈 부신 빛이 그의 몸 위로 쏟아졌다. 그리고 동시에, 여러 개의 붉은 레이저가 강영현의 머리와 심장을 겨냥했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 잔뜩 젖은 두 눈을 들어 서치라이트를 응시하며 두 손을 들었다. 항복의 의미였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“강영현 대위 발견, 강영현 대위 발견, 체포하라.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>동시에 등 뒤에서 달려든 누군가에 의해 진흙이 철벅이는 바닥으로 무릎이 꿇렸으며, 그대로 결박당했다. 강영현은 여전히 자신을 비추고 있는 서치라이트의 눈을 찌를 듯한 빛을 쏘아보았다. 도망쳐, 제발. 귓속에서는 여전히 그 간절한 목소리가 들리고 있었으나, 강영현의 입가는 비틀어진 채 웃고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>센트럴</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><em>시민 여러분, 안심하십시오! 정부는 여러분의 안전을 위해 단 한순간도 멈추지 않습니다. 우리 정부 소속의 모든 에스퍼는 그들의 모든 능력을 아낌없이 바쳐, 센트럴을 지구상 가장 견고하고 안전한 요새로 구축했습니다. 또한, 센트럴 밖 모든 안전 구역에서의 평화는 정부와 에스퍼의 헌신적인 희생으로 완벽히 유지되고 있습니다. 불필요한 걱정은 접어두고, 각자의 자리에서 맡은 바 소임을 다하십시오. 다만, 잊지 마십시오. 경계하고 의심하십시오. 우리의 평화와 안녕을 끊임없이 위협하는 반군의 음모를! 단 하나의 작은 위협이라도 발견하는 즉시, 지체 없이 신고하여 주십시오. 우리의 안전은, 우리 모두의 절대적인 책임입니다! 위대한 센트럴 정부를 믿으십시오!</em></p>
+<p class="empty">&nbsp;</p>
+<p>강영현이 폐쇄지구로부터 벗어나 벌써 몇 개의 안전구역을 관통했는지는 정확하게 기억나지 않았다. 강영현이 탄 이송 트럭은 아주 작은 창을 제외하고는 사방이 막혀 있었다. 가끔 스쳐 지나가는 창밖의 풍경을 응시할 여유가 있었던 것인지, 아니면 강영현이 두 손과 발목에 굵은 사슬로 연결된 두꺼운 구속구가 매달려 있고, 그의 양옆으로 무장한 군인이 강영현이 움직일 틈도 없이 강영현의 양옆에 버티고 서 있었기 때문에 그럴 여유를 부리는 것을 허용해 주었는지는 몰라도 그는 그렇게 한 뼘 정도밖에 안 되는 창으로 들어오는 밖을 바라보고 있었다. 밤과 낮, 낮과 밤. 몇 번의 해가 지고 뜰 때까지 차는 움직였다. 물론 중간에 멈출 때도 있었지만 강영현을 호송하는 자들이 교대하거나 쉬는 시간일 뿐이었으며, 그들은 강영현에게 최소한의 인간다움만을 허락했을 뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 붙잡힌 자신의 처지를 그대로 수용하는 것으로 보였다. 자신의 손목을 묵직하게 내리누르는 구속구를 풀어달라는 요청도, 그들의 폭력적인 대응에도 별다른 반응이 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그런 것처럼 보였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 강영현의 머리는 그 어느 때보다도 빠르게 회전하고 있었다. 여전히 그의 뇌수를 파내는 듯한 지긋지긋한 두통과 싸워가며 강영현은 머리를 굴렸다. 조각난 기억을 연결하고, 연결하지 못하는 것들은 선후관계를 파악하기 위해 애썼다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 생각하고 또 생각했다. 자신이 잃어버린 것에 대하여. 그가 무엇을 잃어버렸는지에 대하여.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>센트럴 구역으로 가기 위해서 지나가야 하는 구역은 많았다. 말 그대로 센트럴은 가장 중심부였다. 수백 년간 지속되고 있는 전쟁으로 인해 대부분이 황폐해진 지역 중에서도 가장 안전한 지대. 그곳을 중심으로 인간들이 살아가고 있는 지역들이 꼭 센트럴이란 요새와 그 요새를 둘러싼 방벽처럼 방사형으로 퍼져 있었다. 센트럴은 모두의 안전한 공존을 위하여 당연하다는 듯이 살아남은 인간들의 자유를 저당 잡았다. 인간들은 그렇게 저당 잡히듯 빼앗기고 나서야 자유의 참된 의미를 깨달았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 이전에는 자유라 여기지 않았던 것마저도 사실은 자유였다는 사실을.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>자고 싶을 때 잠이 들 수 있는 자유, 먹고 싶은 것을 마음껏 먹을 수 있는 자유, 살고 싶은 곳에서 살 수 있는 자유, 사유할 수 있는 자유, 노동에 비례하는 경제적 가치를 창출하고 그것을 소유할 수 있는 자유, 누군가와 어울릴 자유, 누군가를 사랑할 수 있는 자유, 누군가와 가족을 구성할 수 있는 자유 또한 누군가를 싫어할 자유, 증오할 자유, 싸울 수 있는 자유.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 모든 자유는 안전이란 이름과 함께 맞바꿔졌다. 그들의 자유는 모두의 안전이, 모두가 이전처럼 살아갈 수 있을 때까지 박탈당했다. 그리고 안타깝게도 그 박탈은 그 자유를 기억할 수 있는 자들이 모두 죽을 때까지, 그들이 죽고 그들의 자녀들이 살아갈 때까지도 지속되고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>언뜻 인간들은 자유의 진정한 가치를 잊은 듯했다. 그저 살아가야 해서 살아갈 뿐, 더 이상 예전의 세상을 기억하는 자는 없는 것으로 보였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 인간의 유전자에는 자유를 향한 갈망이 새겨져 있음이 분명하다. 인간은 그 모든 것을 잊어도, 그 모든 것이 없이 자랐어도 언젠가는 그것을 간절히 원하고, 다시 쟁취하고자 하는 욕망에 사로잡히게 된다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 욕망을 자극하는 것은 반군이었고, 반군은 끊임없이 살아남은 인간들에게 그들이 잃었던, 또는 그들이 단 한 번도 가지지 못했던 자유를 떠올리게 했고, 잊지 않게 했고, 원하게 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>동시에 반군은 센트럴 내에서 인간들의 안전을 위한다는 목적으로 살아남은 인간 위에 군림하며 그들의 자유를 저당 잡아 얻은 권력과 부를 누리며 살아가는 인류 공동정부와 정부군을 공격했다. 반군은 주장한다. 저들을 무너뜨려야 한다. 그래야 우리는 예전처럼 살아갈 수 있다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>구역을 지나갈 때마다 특정한 시간대에 똑같은 메시지가 구역 내에 방송되고 있다는 사실은 어렵지 않게 깨달을 수 있었다. 강영현은 여전히 속박당한 채로 마지막 안전구역에서 벗어나 드디어 센트럴로 진입했다. 우습게도 손바닥만 한 밖으로 지나친 작은 창밖의 빠르고 일시적인 풍경에서도 센트럴과 가까워질수록 그 황폐함과 경직성이 조금씩 나아지는 것이 느껴졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>센트럴은 손바닥만 한 창으로도 이전의 구역과 다름을 확실하게 알 수 있었다. 무엇보다도 눈이 부셨다. 말 그대로 눈이 부셨다. 질척하고 어둡고, 모래바람이 가득했던 폐쇄지구에서 벗어난 강영현의 눈에, 구역을 지나갈 때마다 느껴지던 그 황폐함과 경직성에 익숙해진 강영현의 눈에 센트럴의 모든 것은 반짝이는 것처럼 느껴졌다. 그 이질적인 반짝임과 화려함.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 그 모든 것이 낯설지 않았다. 그리고 강영현은 생각했다. 나는 이곳으로부터 도망쳤구나. 나는 여기에 속해 있었던 사람이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>조각난 기억 속 군인의 기억을 더듬는다. 자신이 입고 있던 군복에 있던 견장과 자신을 호송하는 군인들의 견장을 비교한다. 똑같은 것이 하나도 없었다. 단순한 결과를 도출할 수 있었다. 자신은 적어도 그들보다 높거나, 낮은 지위이다. 하지만 강영현은 자신의 위치가 그들보다 높은 쪽일 것이라고 확신한다. 그들은 강영현을 가혹하게 대하면서도 은연중에 강영현과 눈을 마주치는 것을 피했고 그에게 직접적인 폭력을 가하지는 않았다. 하지만 그 모든 것은 강영현을 호송하던 차가 어떤 빛나고 높은 건물로 들어가면서 달라졌다. 차가 멈췄고 뒷문이 열리며 강영현은 짐짝처럼 끌려 나왔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현의 등을 쿡쿡 찔러대는 장총의 감각이 선연했다. 강영현은 외부와 똑같이 빛나고 틈 하나 없을 것만 같은 차가운 회색의 복도를 걸었으며, 어떤 공간에 들어가서는 몸을 수색한다는 목적 하에 몸에 남은 것이 하나도 없도록 입고 있던 누더기와 같은 옷과 신발을 모두 벗어야 했다. 하지만 어떤 군인의 손이 강영현의 목에 걸려 있던 펜던트에 닿았을 때 강영현은 그에게로 주먹을 내질렀다. 덕분에 한차례 소동이 발생했다. 강영현은 맨몸으로도 그들과 대적했다. 오히려 서너 명의 군인들은 총으로 무장을 했음에도 손발이 자유로워진 강영현에게 상대가 되지 못했다. 강영현은 가장 효율적인 움직임으로 그들이 붙잡고 있는 장총을 하나하나 빼앗아 빠른 속도로 탄창을 분리해 바닥으로 던졌으며, 부아가 치민 그들의 주먹을 손쉽게 피해 가며 그들의 얼굴과 복부에 주먹과 발을 내질렀다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>다만, 강영현은 폐쇄지구에서 너무 오래 숨어 지냈으며, 숨어 지내는 동안도 편하게 지내진 못했다. 굶주림과 각종 공격에 노출된 덕에 강영현의 몸은 그 이전에 어땠는지는 기억이 나지 않았어도 훨씬 취약해져 있었다. 따라서 강영현이 아무리 잘 훈련된 군인이라고 하더라도, 그의 몸이 상대방을 어떻게 하면 가장 효율적으로 공격하고 공격을 막아내는 데에 본능적인 학습이 되어 있더라도 수적인 열세를 이겨내기에는 신체적으로 많이 약해진 상태였다. 몇 번의 주먹과 발길질이 반복된 끝에 강영현은 그에게 얻어맞아 잔뜩 성이 난 상대방들에게 제압당해 바닥에 엎드린 채 결박당했다. 거친 숨이 트여나오며 상처가 가득한 등 근육이 씨근댔고, 강영현의 관자놀이에는 권총이 겨눠져 있었다. 누군가의 손이 강영현의 목에 걸린 펜던트에 손을 가져다 댔을 때,</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>삐이― 귀를 찌르는 듯한 소음이 내부를 가득 채웠다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>[그냥 둬. 소독 후에 이동시켜.]</p>
+<p class="empty">&nbsp;</p>
+<p>차갑고 감정 없는 목소리가 들렸다. 그 목소리를 들은 군인들은 욕을 짓씹으며 결박하고 있던 강영현의 몸에서 손을 풀고 몸을 일으켰다. 강영현은 바닥으로 밀쳐졌을 때 머리를 부딪혔는지 쉽사리 정신을 차리기 어려웠다. 하지만 그는 거친 손들에 의해서 다시 일으켜졌고, 벽으로 밀쳐졌다. 아무것도 없는 매끈한 벽이었음에도 다 낫지 않은 상처로 고통이 느껴졌지만 이를 악물고 참아냈다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 숨을 한 번 내쉬기도 전에 강영현의 전신으로 폭력과도 같은 물이 쏟아졌다. 그냥 물은 아니었다. 소독약 냄새가 나기도 했으며, 어떤 것들이 섞여 있는지도 모를 것들. 강영현은 그것이 잔뜩 오염된 폐쇄지구의 비와 다를 것이 무엇인지에 대해 생각하며 그것들을 온몸에 뒤집어썼다. ‘소독’은 한참 동안 이루어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>물이 뚝뚝 흐르는 강영현은 군인들의 거친 인도에 따라 바로 옆에 있는 탈의실로 보이는 듯한 곳으로 이동했다. 그곳에서 강영현은 곱게 접혀 있는 군복 한 벌과 군화를 확인했고, 군인들이 감시하는 가운데 물이 뚝뚝 흐르는 몸 위로 아무렇지 않게 옷을 입었다. 옷이 젖어 드는 것은 강영현도 군인들도 상관하지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 후로 그는 다시 사방이 새하얗고 미러 글라스가 커다랗게 한쪽 벽에 나 있는 방이었다. 강영현은 그곳이 심문실일 것이라고 생각했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>군인들은 강영현을 두고 사라졌다. 그리고 그렇게 긴 시간이, 강영현에게는 충분히 두통과 싸워가며 생각하고 더듬고, 또 사색할 시간이 이어졌다. 어쩌면 그러고도 남을 만큼의 지루하고 긴 시간이.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>얼마나 시간이 지났는지는 모르겠다. 그들은 하루 두 번 식사를 주었으나 강영현은 식사에는 거의 손을 대지 않았다. 물은 조금 마셨지만 그것도 최소한의 양이었다. 하루, 이틀? 글쎄, 강영현은 폐쇄지구로부터 눈을 뜬 이후로 시간의 개념이 자신이 자연스럽게 인지하고 있는 그 어떤 것과는 달리 흘러가는 것 같다고 생각했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>언제까지고 닫혀 있어서, 아마도 이곳은 심문을 위한 장소가 아니라 자신의 감옥인지에 대해서 생각하게 되었을 즈음 영원히 열리지 않을 것만 같던 문이 열렸다. 문을 통해 들어온 두 명의 군인은 강영현을 이곳까지 데려오고, 또 강영현을 ‘소독’시키고 이 심문실에 가둔 자들과는 사뭇 달랐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그들이 입고 있는 제복은 일반 군인들이 입는 군복이 아니었다. 정제되고 각이 잡힌 제복. 어깨의 견장 또한 강영현이 센트럴로 오면서 보았던 군인들과는 달랐다. 그 두 사람들은 들어와 강영현의 맞은편에 앉았고 강영현의 건조한 시선은 그 두 사람을 뚫어져라 관찰했다. 그들은 말이 없이 착석한 후에도 강영현의 시선을 피하지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“강영현 대위.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>마르고 나이가 더 많은 쪽이 강영현을 불렀다. 강영현은 대꾸하지 않았다. 대위라는 정보만을 삼킨 채, 여전히 그들을 관찰하고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“강영현 대위는 현재 반역 및 탈영 혐의로 체포됐으며, 앞으로 관련 혐의를 수사할 예정이다. 이의가 있나.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>대위. 어느 정도 지위가 있을 것이라고는 생각했지만 대위는 의외다. 동시에 생각한다. 처음엔 아무것도 기억하지 못하고 있을 것이라고 생각했었지만 정말 아무것도 기억하지 못하는 건 아니라고. 그저 엉망진창으로 뒤죽박죽되어 있을 뿐이었다. 꼭 잔뜩 엉켜 어느 부분을 풀어야 할지 알 수 없는 실타래처럼.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>지금도 그러했다. 대위라는 직함이 가지고 있는 군내에서의 위치를 강영현은 알고 있다. 그저 자신이 대위라는 사실을 기억하지 못하고 있을 뿐이었다. 하지만 대위라는 실마리가 잡히자, 강영현은 자신의 머릿속에서 조각났던 기억의 몇 조각을 이어 붙일 수 있었다. 팀원 서넛과 함께 임무를 수행했던 기억. 흔한 임무는 아니었다. 강영현은 특수한 임무를 수행 중이었으며, 강영현의 수행 능력은 제법 인정을 받는 쪽이었을 거다. 어딘가에 침투했으며, 전투와 비슷한 경험도 많았고, 또한….</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 말을 한 나이 든 남자의 옆에 더 젊은 남자가 앉아 있는 것을 관찰한다. 어렵지 않게 강영현은 그의 얼굴에 서린 일말의 걱정을 기민하게 알아챈다. 여전히 그의 이름이나 얼굴이 기억나는 것은 아니다. 하지만 그의 말투는 사무적이었고, 그의 얼굴은 경직되어 있었으나 그는 강영현을 걱정하고 있다. 그것은 아마도 그가 강영현과 함께 한 시간이 그만큼 길었기 때문일 것이다. 그는 강영현을 잘 알고 있다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 생각했다. 그들에게서 얻은 것으로 자신의 조각난 기억을 기워내야 했다. 여기에서 모든 것은 결정이 나야 한다. 그래야 강영현은 비로소 자신이 이제 다시 어디로 향해야 할지, 어떤 것을 되찾아야 할지 알 수 있게 될 것이라고 확신했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“제 혐의를 정확하게 말해 주십시오.”</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 오랫동안 말을 하지 않아 잔뜩 갈라진 목소리로 처음 입을 열었다. 그들은 그 질문을 내뱉은 강영현을 쳐다보고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“무슨 소리지?”</p>
+<p class="empty">&nbsp;</p>
+<p>“말 그대로입니다. 제가 무슨 잘못을 저지른 건지 말해달라는 겁니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“혐의를 부인하는 건가?”</p>
+<p class="empty">&nbsp;</p>
+<p>“혐의를 기억하지 못하는 겁니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>아주 짧은 침묵이 흘렀다. 젊은 군인이 물었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“기억이 나지 않는다는 말은,”</p>
+<p class="empty">&nbsp;</p>
+<p>“기억이 없습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“어떤 기억이,”</p>
+<p class="empty">&nbsp;</p>
+<p>“폐쇄지구에서 깨어날 때부터 모든 기억이 없었습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>나이 든 군인이 물었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이름은 기억하고 있지 않나.”</p>
+<p class="empty">&nbsp;</p>
+<p>“폐쇄지구에서 생활하는 동안 떠올랐습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“그 외에는.”</p>
+<p class="empty">&nbsp;</p>
+<p>“기억이 없습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>나이 든 군인과 젊은 군인은 잠시 서로를 바라보았다. 그리고 강영현은 그들이 말은 하지 않아도 무슨 생각을 하고 있는지 쉽게 유추할 수 있었다. 그들은 믿지 않는다. 사실이 그렇다. 누구라도 그럴 것이다. 어떠한 범죄를 저지른 자가, 기억이 나지 않는다고 대답하는 것은 너무 쉬운 변명이다. 하지만 강영현은 지금 그것밖에 없었다. 그게 사실이었으며, 그것으로부터 시작해야 하는 것이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“대위님의 혐의는 분명합니다. 대위님은 지속적으로 반군에 정부군의 기밀정보를 제공했으며, 탈영했고 체포됐습니다. 그로 인해 센트럴은 명백한 위험에 노출되었고, 우리는 정확한 경위를 파악하여 위험을 바로잡아야 할 의무가 있습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 여전히 건조한 시선으로 그들을 바라보았다. 혐의. 그들은 혐의란 말을 반복하고 있었다. 어떤 행위가 혐의로 지칭된다는 것은 혐의를 확정할 증거가 없다는 뜻이며, 그들은 현재 강영현으로 인해 그 혐의를 입증할 증거를 찾아야 한다. 그것이 강영현에게 즉결 처분이 내려지지 않은 이유였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 ‘센트럴의 위험’이라는 표현에 대해서 강영현은 생각한다. 정부군과 반군의 지긋지긋하고 오래된 전쟁. 그로 인해 모든 것이 황폐해졌고 황폐해진 세상은 회복될 틈이 없다. 둘 중 누군가가 이기지 않는 한 세상은 계속 멈춘 채로 머물 것이다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 센트럴의 위험이라는 말은 명확하지 않다. 강영현이 정부군을 배신해 반군으로 등을 돌렸다 한들, 강영현이 다룰 수 있는 정보의 범위 내에서 센트럴에 직접적인 ‘위험’을 가할 정도의 정보가 있었을까. 이미 정부군과 반군의 전쟁은 너무 지저분하고 복잡해져서 고작 ‘정보’ 하나가 가지고 있는 위험성이 센트럴에 직접적인 영향을 끼칠 리는 없을 것이다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇다면 무엇이지. 강영현이 센트럴에 가한 ‘위험’이라는 것은.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“다시 한번 말하지만 저는 아무것도 기억하고 있지 않습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 여러 가지 생각을 뒤로하며 자신이 해야 하는, 그리고 할 수밖에 없는 대답을 반복한다. 그들은 여전히 강영현을 관찰하는 듯 바라보고 있었으나 강영현은 아무런 표정도 보이지 않는 채 그 자리에 앉아 있을 뿐이었다. 강영현의 모든 것에서는 거짓의 기미가 보이지 않을 것이다. 그것이 사실이었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그렇다면 다른 방법이 필요하겠군.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>나이 든 군인은 빠르게 결론을 냈다. 다른 방법은 여러 가지겠지. 누군가의 입을 열어 진실을 파악하는 것에는 여러 가지 방법이 있었다. 하지만 세상이 아무리 변했다 한들 고전적인 방법은 여전히 존재했으며, 변한 세상에 걸맞은 방법도 있을 것이다. 강영현은 어떤 방법을 들이대더라도 그들이 원하는 바는 이루지 못하리라는 것을 안다. 그 과정 중에서 제 머릿속에 산재한 조각난 기억이 다시 하나가 되더라도 강영현의 입에서 그들이 원하는 것은 뱉어지지 않을 것이다. 강영현은 그만큼 준비가 된 상태다. 준비는 이미 그들에게 잡힐 때부터 됐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>끼익, 나이 든 군인이 일어나며 조용한 공간에 의자가 끌리는 소음이 요란하게 울렸다. 하지만 옆의 의자는 움직이지 않았다. 젊은 군인은 그에게 허락을 구했다. 저는 조금만 더 심문을 계속하고 싶습니다. 의미가 없는 행위였을 것이 뻔했지만 나이가 든 남자는 알아서 하라는 듯 고개를 끄덕인 채 새하얀 심문실을 빠져나갔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>다시 심문실에는 공허한 침묵이 찾아들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>젊은 군인은 닫힌 문을 한 번 바라본 후 고개를 돌려 강영현에게 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“시간이 별로 없습니다, 대위님.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 강영현이 예상했던 것과 같이 그는 강영현에게 강영현은 기억하지 못하는 어떠한 친밀감을 가지고 있었다. 그래서 그는 그에게 주어진 임무에 걸맞지 않은 행위를 하려고 했고 강영현은 그런 그를 막지 않는다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“정말 아무것도 생각이 나지 않으십니까?”</p>
+<p class="empty">&nbsp;</p>
+<p>“전혀.”</p>
+<p class="empty">&nbsp;</p>
+<p>“아무것도요?”</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 고개를 끄덕였다. 젊은 군인은 작게 한숨을 내쉬었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“저도 기억을 못 하시는군요.”</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 지금의 상황이 전형적인 심리전임을 알았다. 강압적인 심문자와 친근하게 굴며 협조적인 심문자. 그들의 상반된 태도로 인하여 강영현의 긴장을 풀게 하고 강영현에게서 어떤 것이라도 캐내려는 의도. 안타깝게도 강영현은 그런 것들에 넘어갈 만큼 멍청하지도, 순진하지도 않았다. 지금 눈앞에 있는 그가 순전한 선의라 하더라도 강영현은 현재 모두를 의심해야 했다. 믿을 수가 없고, 그렇기 때문에 자신이 가진 패를 쉽게 드러낼 순 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아무래도 괜찮습니다. 다만, 지금 상황이 별로 좋지 않아요. 상부에서는 즉결 처분까지도 고려하고 있습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“왜 바로 즉결 처분을 하지 않는 거지?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그는 입을 다물었다. 말하려고 했으나, 그것까지 말할 순 없었던 것인지 아니면 그 또한 강영현과 동일한 이유로 그가 가진 정보를 강영현에게 모두 보일 수 없는 것이었는지도 모른다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“내게 말할 수 있는 것만 말해봐. 빨리. 시간이 없으니까.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>작게 한숨을 내쉰 그가 설명했다. 강영현과 그는 같은 부대에 소속되어 있었으며, 같은 소대로 함께 임무를 수행하던 전우였다. 그는 강영현과 대부분의 시간을 함께 공유했으며 그 시간 동안 강영현이 반군과 연관된 어떠한 기미도 알아채지 못했다. 그는 강영현을 믿었다. 강영현은 그럴 만한 군인이 아니다. 하지만 상부는 의견이 다르다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“상부에서는 왜 그렇게 나를 의심하는 건데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“임무가 있었습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“어떤?”</p>
+<p class="empty">&nbsp;</p>
+<p>“특별할 건 없었습니다. 생포한 반군의 무의식에 침투해 그가 갖고 있는 정보를 취득하는 임무였습니다. 여느 때와 다를 것도 없었어요. 무의식의 저항도 어렵지 않게 뚫었고….”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그의 설명을 듣던 강영현은 그에게는 당연한 것이 자신에게는 기억의 부재라는 사유로 쉽게 이해되지 않는다는 사실을 깨달았다. 그렇다고 그의 설명을 막을 순 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“정보 수집 과정에 김원필 에스퍼와 대위님과 나머지 대원들이 갈라졌고,”</p>
+<p class="empty">&nbsp;</p>
+<p>“…김원필?”</p>
+<p class="empty">&nbsp;</p>
+<p>“김원필 에스퍼도 기억하지 못하십니까?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필. 김원필. 강영현은 그 익숙하지만 낯선 이름을 속으로 되뇌었다. 하지만 그는 거기까지 물을 뿐 더 이상의 말은 해 주지 않는다. 하지 않는 것이 아니라 할 수 없다는 것을 강영현은 어렵지 않게 이해할 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그다음.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…네. 그다음은, 저희 모두 생포한 반군의 무의식의 공격을 받았고 동시에 튕겨 나왔습니다. 동시에, 센트럴에도 동시다발적인 반군의 공격이 있었죠.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>정보를 이해할 수 있는 기본적인 상식이 없는 경우에 정보는 무의미하다. 강영현에게 있어 지금이 그랬다. 그래도 강영현은 젊은 군인이 말한 정보를 한 글자도 놓치지 않고 머릿속에 저장했다. 강영현은 굳이 그 반군의 공격으로 인해 어떤 피해가 있었는지를 묻지 않았다. 그들이 기를 쓰고 강영현을 찾았고, 결국 체포해 낸 것을 보면 어지간히 열을 받은 게 분명했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>뭔가가 있었다. 그들이 말하는 것과 같이 강영현이 기밀정보를 훔쳐내 반군에게는 유용하고 정부군에게는 불리한 상황을 만들었을 수도 있었을 것이며, 어쩌면 강영현은 눈앞의 젊은 군인이 믿는 것처럼 억울하게 그 모든 상황을 뒤집어썼을 수도 있다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필. 강영현은 하지만 자꾸만 신경을 거스르는 그 이름을 떠올린다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필, 김원필, 김원필.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이상하게 폐쇄지구에서 만났던 그가 생각났다. 김원필. 뭔가 잊어선 안 될 이름이라는 생각이 들었다. 김원필, 어쩌면 그 이름이, 강영현이 잃었던 그 어떤 것인지도 모른다는 생각까지 도달할 즈음.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>끼익, 문이 열렸다. 그리고 누군가가 들어온다. 눈이 마주쳤다. 강영현의 머리가 다시금 잊을 뻔했던 두통으로 뒤덮였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>문을 열고 나타나는 사람의 얼굴은 강영현이 유일하게 알고 있는 얼굴이다. 폐쇄지구에서 눈을 뜬 이후로 눈을 뜨기 이전의 모든 것들이 조각조각 기억나고 그 시간을 함께 공유했던 누구도 기억나지 않았고, 눈을 뜨고 난 후에 기억하는 얼굴은 단 하나뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>꿈. 그 자신을 꿈이라 칭했던 그 사람.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>생각해 보니 이름도 묻지 않았다. 당연했다. 그저 꿈이라고 생각했으니까. 자신의 꿈이 불러일으킨 일종의 환각이라고 생각했으니까. 강영현의 그 어떤 시간에도 존재하지 않는 사람일 것이라고 너무 쉽게 단정했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 머리를 파고드는 두통을 이를 악문 채 참아냈고 그 고통이 겉으로 드러나지 않도록 부단히 노력했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그러는 동안 반듯한 베레모를 쓴 채로 그 내부에 있는 누구보다 가장 높은 견장을 어깨에 단 채 구김 하나 없는 제복을 입고 뚜벅뚜벅 걸어와 그의 맞은편에 앉은 익숙하지만 익숙하지 않은 그 누군가를 응시한다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>작게 숨을 내쉰 채 함께 강영현을 응시하는 그의 반듯하고 짙은 눈썹, 그리고 감정이 섞이지 않은 객관적인 눈빛, 그 눈빛을 담고 있는 우주와도 같은 커다란 눈. 동그란 코끝. 단호하게 다물린 입술.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“강영현 대위.”</p>
+<p class="empty">&nbsp;</p>
+<p>도망쳐. 자신을 향해 경고하듯, 어쩌면 사정하듯 말하던 그 간절한 꿈의 목소리가 그를 부른다. 어떠한 사감도 없는 건조한 목소리로.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 천천히 눈을 감았다 떴고, 천천히 숨을 들이마셨다가 내쉬기를 반복한다. 순간적으로 일어난 마음속의 동요를 숨기기 위함이었다. 흔들렸다. 확실히 흔들리고 있었다. 그가 등장한 후부터. 강영현의 마음은 걷잡을 수 없이 흔들리고 동요하고 있었다. 그의 눈을 마주하기가 쉽지 않았다. 지금 느끼고 있는 이 혼란함의 기원은 무엇인가. 강영현은 무엇 때문에 혼란스러워하고 있는 것인가.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“대략적인 설명은 들었으리라 생각합니다. 기억을 잃었다는 얘기 또한 들었습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>지극히 사무적인 어조로 말하는 그의 목소리가 강영현의 머릿속을 두통과 함께 마음껏 휘젓고 있었다. 강영현은 같은 박자로 숨을 내쉬고 들이마시기를 반복한다. 마음속으로 숫자를 센다. 하나, 둘, 숨을 들이쉬고, 셋, 넷. 숨을 내쉬고. 불현듯 어떤 목소리가 떠오른다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>현실과 무의식을 구분하기 힘들 때면, 천천히 숨부터 쉬어. 거기부터 시작이야. 무의식은 현실과 너무 닮았기 때문에 구분하는 것 자체가 불가능해. 그러니 가장 중요한 건 내 자신을 인식하는 거야. 숨을 내쉬고, 다시 숨을 들이마시고. 그 과정 중에 내가 여기에 있다는 것. 나는 거짓이 아니라는 것부터 인지하면서 시작하는 거야.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>숨을 쉬어. 지금 여기서 숨을 쉬고 내뱉는 건 나야. 강영현은 그 목소리를 따라 천천히 숨을 내쉬고 들이마시기를 반복한다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“당신이 나를 기억하든 말든 이젠 중요한 일이 아닙니다. 나는 이제부터 당신이 거짓말을 하고 있는지, 당신이 어떤 것을 숨기고 있는지 파악할 예정입니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>돌연변이, 이제는 에스퍼라고 불리는 그들은 각자 다른 능력이 있었다. 인간의 신체를 뛰어넘어, 인간의 정신 능력을 뛰어넘어 그들의 능력은 기존의 인간을 훨씬 뛰어넘었다. 그중엔 그런 능력을 가진 사람도 있었다. 인간의 정신을 자유자재로 드나들 수 있으며, 정신의 그 너머 무의식의 세계에서 숨겨진 것들을 파헤치는 것도, 또한 그 무의식에는 존재하지 않는 것을 심어내고 그에 따라 인간의 생각을 조종할 수 있는. 정신계 에스퍼. 그들은 드림워커라 불렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>드림워커. 그 단어가 머릿속에 떠오른 것은 조각나서 도저히 이어 붙일 수 있는 어떠한 기억이 눈앞에 있는 존재가 나타남으로 인해서 덕지덕지 연결된 탓인지, 아니면 그가 강영현의 머릿속으로 들어와 심어 놓은 생각인지 알 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>드림워커. 강영현은 드림워커를 알고 있다. 아마도 엉망진창인 과거의 기억 대부분이 그와 관련되어 있을 것이라고 강영현은 확신한다. 다만 강영현은 눈앞의 드림워커가 폐쇄지구의 강영현에게 꿈의 형태로 나타났던, 지금 자신의 앞에 빈틈 하나 보이지 않는 정제된 에스퍼의 모습과는 전혀 달랐던, 병색이 짙고 말랐으며 곧이라도 쓰러질 것 같았던 그 약한 모습의 꿈이 동일한 인물인지 아니면 그저 그 꿈은 강영현의 무의식이 만들어낸 어떠한 존재인 것인지에 대해서 강영현은 확신하지 못한다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 그는 정말 꿈이었을까. 그저 꿈이었을까. 왜 꿈의 형태는 지금 자신의 눈앞에 있는 이 사람의 모습이었을까.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 자신을 마주 보는 그의 눈을 가만히 응시했다. 그는 자신의 눈을 피하지 않는다. 오히려 매섭게 강영현의 눈을 마주 바라본다. 순간 핏빛의 형상이 머릿속을 빠르게 스쳐 지나갔다. 강영현의 미간이 설핏 찌푸려졌다. 마주 본 상대방의 표정은 변함이 없다. 오히려 더 뚫어져라 강영현의 눈을 응시하고 있었다. 카메라 플래시가 터지는 것과 같이 핏빛 잔상이 번쩍이며 머릿속에 반짝이고 사라졌다. 그 잔상은 반복될수록 또렷해진다. 그리고 강영현은 그 횟수가 더해질수록 더 자주 떠오르는 잔상이 반복되고 명확해질수록 심장이 박동하고 점차 가빠오는 숨을 참기 힘들어진다. 잊고 있었던 기억이다. 산산조각이 난 신체의 일부가 눈앞을 스쳤다. 산산조각이 났음에도 죽지 않고 꿈틀댔다. 꿈틀대며 강영현을 향해 손을 뻗어온다. 도망가, 아가.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>고통에 찼으나 가까스로 튀어나오는 목소리가 귓가에 스쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>아, 강영현의 두 손이 부들부들 떨려왔다. 강영현은 생각했다. 공포라는 감정을. 잊고 있었던 그 감정을. 아니, 잊지 않고 기억하고 있었을 때는 반복해서 곱씹었으며, 그랬기 때문에 살아남게 했던 그 삶의 처절한 원동력을 모조리 잊었기 때문에 다시 마주했을 때는 그것이 가지고 있는 근원적인 공포에 온몸의 감각들이 그것을 겪었을 당시의 시간으로 돌아갈 수밖에 없다는 것을.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 강영현은 공포로 뒤덮어지는 정신과 신체에도 불구하고 눈앞에 있는 그로부터 시선을 돌리지 않았다. 정확하게는 그의 눈을 바라보았다. 자신을 냉정한 눈으로 응시하는 김원필을.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>눈에는 그 사람의 세계가 담겨 있다. 강영현은 이 거짓이 가득한 세계에서도 사람의 눈빛만은 숨기지 못하는 어떤 것이라는 것을 떠올렸다. 정확히는 그 자신이 했던 말이었다. 우리가 림보에서 한 30년쯤의 시간을 보냈을 때, 서로의 머리가 조금은 희끗해지고 눈가에 주름살이 지기 시작했을 때 김원필은 강영현에게 말했다. 네 눈에는 여전히 내가 있어, 그 많은 시간이 지나도. 사람 눈에는 그 사람의 세계가 있다고 그랬어. 누가? 내 어머니가. 내 눈에도 내가 있을까. 처음 봤던 그날부터. 쭉. 지금까지도? 그래, 지금까지도.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…우리가 림보에서 30년쯤?</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 두려움으로 잠식된 머릿속 한구석을 비집고 드러난 기억을 붙잡았다. 지독한 두통의 한가운데에서 강영현은 흩어지는 기억을 가까스로 붙잡았다. 신물이 날 것 같은 두통에 저절로 어깨가 움츠러들었으나 애써 온몸에 힘을 줘 가며 버텼다. 두려움이 뒤덮은 머리가 무거워 저절로 기울어졌다. 그럴수록 더 간절하게 기억을 붙잡았다. 우리가 그렇게 긴 시간을 함께할 수 있는가. 림보는 어디지? 왜 나의 꿈은 김원필의 형태로 드러났는가. 그는 내게 어떤 존재였을까. 나는, 당신에게 어떤 존재였지.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 흩어지고 부서지고 다시 모여 하나의 조각이 되었다가 다시 흩어지는 기억의 조각들이 두려움을 밀어내고, 또 그의 머릿속을 들쑤시는 두통을 밀어내는 그 순간 다시 고개를 들어 눈앞에서 여전한 눈빛으로 자신을 바라보는 김원필을 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“너,”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>잇새로 잔뜩 힘이 들어가 목소리가 뭉개졌다. 하지만 강영현은 그 고통을 밀어내며 말을 내뱉었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“김원필 아니지.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>모든 것이 기억나는 것은 아니다. 여전히 기억은 조각조각에다 엉망진창이다. 머릿속도 마치 폐허와 같았다. 하지만 강영현은 어떤 것을 드디어 기억해 냈다. 자신을 바라보던 김원필의 얼굴. 그의 눈. 그의 세상의 일부였던 자기 자신을.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>견고한 벽에 금이 가듯 상대방은, 김원필의 얼굴을 뒤집어쓴 자의 눈빛이 흔들리는 순간 강영현은 목에 걸려 있던 목걸이를 낚아채 익숙하게 금판의 현을 튕겼다. 90142218. 그 숫자는 음을 지칭했다. 그의 목걸이에 있는 펜던트는 가는 철을 울리면 그 8개의 음을 정확하게 낼 수 있었다. 그리고 순서대로 그 음을 냈을 때 모든 음이 정상적으로 날 때에 그곳은 현실. 그리고,</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>팅- 마지막 음이 둔탁하게 어긋났다. 동시에 강영현은 책상을 뒤집고 달려들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>현실과 다른 음이 나는 곳은 무의식, 그의 꿈이었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>책상을 뒤집어쓴 채 엎어진 두 사람을 뒤로하고 강영현은 문을 열었다. 갑자기 열어젖힌 문을 지키고 있던 가드를 그대로 발로 걷어찬 후 강영현은 끝이 보이지 않는 것만 같은 은회색의 복도를 달렸다. 위잉- 귓가를 가르는 사이렌 소리가 요란했으나 강영현이 향하는 방향은 정확했다. 강영현은 이제 기억했다. 꿈에서 깨어나기 위해서 어떻게 해야 하는지, 자신이 갇힌 무의식에서 벗어나기 위해서는 무엇을 어떻게 해야 하는지.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 무의식을 아주 잘 이해하고 있었다. 그가 군인으로서 마지막에 수행했던 대부분의 임무는 드림워커와 함께 타인의 무의식을 헤집으며 그 무의식에서 원하는 정보를 빼내고, 필요한 정보를 심어 적을 교란하는 일이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>인간의 무의식은 무한했다. 그리고 무한한 만큼 예측할 수 없는 변수투성이였다. 강영현은 자신이 있는 현재가 무의식이라는 것을 안다. 찢기고 조각나 흩어진 기억들이 덕지덕지 기워지고 연결되며 두서없는 정보가 머릿속으로 고이기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 무의식으로 던져졌다. 기억을 박탈당한 채로. 그래야만 했던 이유가 있었다. 강영현은 미끼였다. 상부의 시선을 분산시킬 강력한 미끼. 그는 모든 정보를 가지고 있는 척 사라져야 했다. 하지만 정작 그에게는 아무런 정보가 없어야 했다. 최대한 시간을 끌어야 했다. 그래야 김원필이 안전할 수 있었다. 김원필을 조여오는 모든 의심을 자신에게로 가져옴으로써 김원필에게 시간을 벌어줄 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필이 안전하게 일을 마무리 지을 수 있을 때까지. 그가 비로소 자유로워질 수 있을 때까지.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 비상계단으로 향하는 문을 발견한다. 단단하게 막혀 있었다. 쾅, 쾅. 발로 아무리 차고 몸으로 부딪쳐도 요지부동이었다. 무의식의 저항이었다. 강영현이 현재를 무의식으로 인식한 순간부터 그의 무의식은 무의식을 인지한 강영현에게 저항하기 시작한다. 강영현이 뜻한 바를 이룰 수 없도록. 그것 또한 무의식의 변화무쌍한 변수 중 하나였다. 강영현은 한 번 더 문을 차다가 자신을 향해 달려드는 복면을 쓴 군인을 그대로 어깨를 통해 업어 매쳤다. 바닥으로 나뒹구는 그의 손에 쥔 총을 쥐어 들고 주저 없이 손잡이를 쏘았다. 탕, 탕, 탕! 총알이 박혀 엉망진창으로 박살이 난 손잡이를 통한 이음매가 박살이 났고 그대로 강영현은 문을 발로 걷어차 열었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>끝도 없이 계단이 이어졌다. 센트럴을 그대로 본뜬 강영현의 무의식. 강영현은 작게 숨을 뱉어낸 후 그대로 바닥을 박차고 뛰어 올라가기 시작했다. 위로, 위로, 높은 곳으로.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>무의식은 방대하나 의식의 의지를 이길 수 없다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 나아가야 했다. 잃어버린 것을 되찾기 위해. 끝도 없이 이어지는 계단을 숨이 벅차도록 뛰어올랐고, 뒤에서 따라오는 군인들을 밀어내고 메치고, 다시 나아갔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 결국 하나의 문이 강영현의 눈앞에 보이기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 생각한다. 무의식으로 내던져진 강영현의 앞에 나타난 김원필. 도망치라고 한 그의 말은 결국 무언가가 잘못되었음을 의미했다. 김원필은 계획대로 강영현이 모든 기억을 잃은 것을 감사했으나, 종국엔 강영현에게 기억을 잃은 채 도망치라고 말했다. 그러기 위해 그는 강영현의 무의식에 나타났다. 그러나 강영현은 이미 잃은 것을 더 이상 잃을 생각도 없으며, 잃어버린 것을 그대로 둔 채 등을 돌려 도망칠 생각은 더더욱 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현이 잃어버린 것, 그것은 강영현을 두려움으로 옭아맬 때 가장 먼저 떠오르게 하는, 처절하고 핍박 된 생활 속에서 죄없이 죽어간 어머니도 아니었고, 그 처절한 죽음으로 인해 무엇보다도 높은 곳으로 가기 위해 독하게 자기 자신을 채근하며 군인으로 성장한 자기 자신도 아니었다. 강영현이 잃어버린 것, 기꺼이 잠시동안 잃기로 작정한 것은, 그의 세계. 그에게 유일하게 명령할 수 있으며, 어떤 명령이든 기꺼이 따를 수 있는 유일한 존재.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그를 생각할수록 올라가려는 강영현의 의지는 더욱 강해졌으며, 이미 끝도 없이 오른 계단 덕에 터질 듯이 강하게 뛰는 심장 또한 그 의지를 가로막을 수는 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>퍽, 강영현은 발로 마지막 자신의 앞을 가로막은 문을 걷어찼다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>벌컥 열린 문으로 차가운 센트럴의 바람이 휘몰아쳤다. 센트럴에서 가장 높은 건물, 그 아래로는 아무 것도 보이지 않는 그곳. 회색의 하늘과 메마르고 차가운 바람이 휘몰아치는 곳.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그는 그곳에 서서 잠시 숨을 골랐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이제는 다시 그의 세계를 되찾으러 갈 때였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 바닥을 박차고 다시 뛰기 시작한다. 그리고 그대로 허공을 향해 몸을 날렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>드림워커</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 생각한다. 자신의 가장 첫 기억을. 예전에는 다른 것이었던 것 같은데, 이제는 아무리 생각해도 한 가지만이 또렷하게 떠오를 뿐이다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>포격이 떨어지고 지축이 흔들리며, 요란한 굉음이 들리는 연병장. 방금까지만 해도 아무런 일이 없었던 그곳으로 떨어진 혼란, 그 혼란의 속에서 가만히 포탄이 날아오는 하늘을 바라보던 자기 자신. 그때 김원필은 생각했다. 오늘일까. 내가 죽는 날은.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>에스퍼들은 죽음과 항상 맞닿아있었다. 최초의 에스퍼들은 단순히 다르다는 이유로 학살과도 같은 죽임을 당했고, 정부가 그들을 이용하기로 마음먹었을 때부터 에스퍼들은 전쟁과 전투에 몰려 죽었고, 가까스로 살아나면 능력의 과부하로 인한 폭주에 시달리며 죽어갔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 기억도 나지 않는 아주 어린 시절부터, 그러니까 에스퍼로 각성한 이후부터 수도 없는 죽음을 봤으며, 자기 자신도 그가 보아왔던 죽음과 다르지 않은 죽음을 머지않은 미래의 언젠가에 마주하게 되리라는 것을 자연스럽게 깨달았다. 그 순간이 올 때는 적어도 기쁘게 죽어야겠다고 마음먹었다. 기쁘게 죽어야겠다는 말은 좀 웃기긴 하지만 김원필은 그랬다. 어느 순간부터 그저 김원필은 언제가 될지 모르는 자신의 죽음을 기다리고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>소모되는 것이 지겨웠고, 저항하지 못하는 것이 괴로웠다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 애초에 센트럴에서 살아가던 부유한 정부군 간부의 아들로 태어나 말을 배우기도 전에 에스퍼로 발현하여 가족들한테서 떨어져 자랐다. 그 귀하다는 드림워커였다. 김원필의 가족들은 기꺼이 김원필을 정부군에게 내놓았고, 김원필은 그렇게 정부군의 에스퍼로 자랐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>말하면서부터는 무의식을 넘나드는 것을 배웠다. 사실 배울 것도 없는 김원필의 고유한 능력이었으나, 김원필은 그 능력을 철저하게 정부군의 필요에 따라 사용하고 확장하도록 교육받고 훈련받았다. 아주 어린 나이부터 능력을 씀으로 인하여 김원필에게는 잦은 폭주를 겪을 수밖에 없었으나 김원필은 그때까지도 제대로 된 가이드를 만난 적이 없었다. 일부러 김원필의 가이드를 찾지 않고 방치한 건 아니었다. 그는 드림워커였기 때문에 그 효용성 때문에라도 정부에서는 김원필의 가이드를 찾는 것에 혈안이 되어 있었다. 하지만 그때까지도 찾지 못했다. 그저 김원필은 자신이 말할 줄도 모르는 이른 나이에 그 세대에서는 대체자가 없는 드림워커로 발현한 것과 같이, 자신의 폭주에 도움이 되는 가이드를 찾지 못하는 것도 자신이 겪는 불운 중 하나일 것으로 생각한다. 김원필이 자신의 죽음에 대하여 기쁘게 생각하기로 한 것도 더 이상 가이드를 찾는 것을 포기하고, 시시때때로 찾아오는 폭주의 괴로움을 약물 가이딩으로 잠재우는 그 지극하고 긴 밤의 어느 순간 마음먹은 것이었다. 언젠가 찾아올 죽음이 김원필에게는 다소 기쁜 것으로 느껴졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>죽으면 모든 게 끝나니 그보다 다행인 것이 어디 있을까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 김원필에게 첫 기억은 불분명한 어떠한 날의, 흔하면 흔하다고도 할 수 있는 고통의 밤이었다. 그날 이전까지는.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 하늘을 뒤덮는 포탄의 흰 꼬리를 쳐다보던 김원필은 순식간에 누군가에 의하여 덮쳐지듯 바닥을 나뒹굴었다. 그리고 방금까지 김원필이 서 있던 자리에 떨어진 포탄은 땅에 박힌 채 불발됐다. 불발일까, 아니면 아직 터지지 않은 것일까. 김원필은 바닥으로 내던져진 충격에 쉽사리 정신을 차리지 못하면서도 그 포탄을 응시하고 있었다. 쾅, 쾅. 여전히 어디선가에서는 무언가가 터지고 무너지는 소리가 들렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“제정신이야? 미쳤어? 죽으려고 작정했어?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>누군가가 자신에게 소리를 쳤다. 그래서 김원필은 멍하니 고개를 돌렸다. 그제야 알았다. 자신을 그의 온몸으로 덮은 채 자신을 보호한 채로 자신을 내려다보며 잔뜩 화가 난 얼굴로 소리를 치고 있는 누군가에 의해서 바닥으로 내던져지듯 쓰러졌고, 그는 어쩌면 그 자리에서 죽을지도 모르는 자신을 살린 것이라는 걸.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>왜 쓸데없는 일을, 이라는 생각을 했다. 김원필은 어쩌면 그날일 수도 있는 자신의 죽음이 방해받은 데에 대하여 일말의 불쾌함을 느꼈으나 그것은 아주 잠깐이었다. 그와 눈을 마주쳤을 때, 늘상 머리를 잠식하던 이제는 너무 익숙한 두통이 바람이 불어 오랫동안 고여 있던 먼지가 날아가듯 사그라져가고 있었다. 두통 때문에 늘 멍하던 머리가 점차 또렷해지고 있었다. 그렇기에 시야 또한 또렷해졌고, 저 멀리서 들리는 자신의 것이 아닌 것과 같은 외부의 소음 또한 한층 또렷해지고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>콰앙, 주변에 있던 어떤 것이 터지며 김원필과 김원필을 온몸으로 덮은 채 가리고 있는 남자의 위로 쏟아졌으나, 그것을 온통 뒤집어쓴 것은 그 남자였다. 그는 자신을 그저 빤히 바라보고 있는 김원필을 쳐다보다가 주변을 살폈다. 어딘가 피할 장소를 찾는 것일 수도, 또 다른 공격이 있는지를 확인하는 것일 수도 있겠지만 곧 그가 사라질 것 같은 느낌이 들었다. 그래서 김원필은 저도 모르게 그의 옷자락을 움켜쥐었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“너, 뭐야?”</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 그의 군복에 있는 이름을 확인했다. 강영현.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필의 첫 기억은 이제, 그의 가이드인 강영현을 처음 만난 그날이었다. 다소 친절하지는 않은 표정이었으며, 오히려 화를 내고 있었지만 온몸으로 그를 보호하듯 감싸안은 그의 몸에서 쏟아져 나오는 태어나서 처음 겪어보는 자연적인 가이딩의 황홀함이었다. 처음으로 김원필은 누군가에게서 보호받는 것이 어떤 것인지를 깨달았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇다고 해서 처음부터, 처음 강영현을 본 순간부터 강영현이 세계가 된 것은 아니었다. 김원필은 부끄럽게도 제대로 된 감정을 배워보지 못했고, 그랬기 때문에 자신이 느끼는 감정이 어떠한 형태와 색깔을 가진 것인지에 대하여 인지하는 것 또한 느렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 첫날, 자신이 구한 자가 그저 평범한 군인이 아닌 에스퍼 김원필이라는 사실을 알게 된 이후부터는 늘 거리를 유지했으며 깍듯했다. 강영현은 폐쇄지구 출신의, 배경이랄 것이 하나도 없는 사병으로 군인 생활을 시작했으며 그의 세상은 그에게 호의적이지 않았고 여기까지 오기까지 강영현은 모든 것들과 하나하나 맨몸으로 맞부딪혀가며 자신을 증명해야 했고, 이겨내야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>어떻게 보면 강영현도 서툴렀다. 살아남는 것에 급급해서, 멈추지 않으면 그대로 파묻혀버릴 수 있기 때문에 어떻게든 발버둥을 치느라 아주 기본적인 것들을 배우지 못했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>처음에는 그저 시키는 대로만 했다. 가이딩이 어떤 것인지도 모르고 그저 온몸에 붙은 기계들이 나타내는 숫자가 떨어지는 것을 위해 손을 붙잡았고, 서로의 몸을 끌어안았다. 숫자가 떨어져 정상이 되면 한 가지 일을 끝냈다는 듯이 뒤도 돌아보지 않고 서로의 거리를 유지했다. 군부 내에서 에스퍼가 가지는 위치를 빠르게 습득한 강영현에게 김원필은 상관이었고, 김원필에게 있어 강영현은 그저 폭주에 의한 고통을 잠재워주는 안정제 그 이상도 이하도 아니었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>언제부터였는지도 모르겠다. 맞잡은 손에 온기가 있다는 것을 깨달은 순간이. 김원필의 신체 수치가 나타나는 모니터가 아닌 김원필의 얼굴을 보며 그 손을 더 꽉 쥐는 순간이 있었다는 것이. 모든 수치가 정상으로 돌아가고 나서도 강영현의 손을 잡은 자기 손에서 힘이 빠져나가지 않는다는 순간이.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 모든 것들은 알지도 못하는 순간에 생겨났고, 깨닫지도 못할 만큼 느렸지만, 김원필은 점점 강영현이 궁금해졌다. 그가 어떤 시간을 보내왔고, 어떻게 지금 이순간에 자신의 앞에 나타나게 되었으며 어떤 생각을 하고 있는지.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>늘 비슷한, 항상 다르지 않은 어느 날 밤, 김원필은 그저 물끄러미 천장을 바라보며 영원히 오지 않을 것만 같았던 아침을 기다리다가 눈을 감았다. 오랫동안 감았다가 떴을 때, 김원필은 처음 보는 장소에 서 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>천장의 반쯤이 허물어진, 반쯤 부서지고 엉망진창인 긴 의자들이 열을 맞춰 늘어선, 누런 햇빛이 깨진 스테인드글라스를 통해 녹색, 붉은색, 노란색, 파란색으로 부서지는, 김원필로서는 처음 보는 장소. 그리고 김원필은 그곳의 한쪽 구석에 웅크리고 잠이 든 강영현을 발견했다. 그제야 깨달았다. 자신의 능력을, 한때는 저주라고 생각했던, 하지만 어쩔 수 없이 받아들일 수밖에 없었던 그 능력을 처음으로 나 자신을 위해 써본 것이라는 것을.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>타인의 무의식에 어떠한 이유도 없이 자신이 의도하지도 않게 걸어들어온 적은 처음이라 김원필로서도 어떻게 해야 하는지, 또 어떻게 나가야 하는 것인지도 쉽게 방법이 떠오르지 않았다. 숨 쉬듯 들어갔던 누군가의 무의식에서 어찌할 줄을 모르고 당황을 한 것도 그때가 처음이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>인간의 무의식은 광활하고 알 수 없는 것이었다. 수많은 사람의 무의식을 드나들던 김원필 또한 무의식을 아직도 정확하게 이해하지는 못했다. 그러나 김원필은 인간이 잠이 들었을 때, 기억을 하든 기억을 하지 못하든 꿈을 꾸고 있다는 것은 알고 있었다. 그 꿈은, 대개 그 사람의 가장 원초적이고 강렬한 기억의 장소에 머문다. 이곳은 강영현에게 있어 그런 곳일 것이다. 김원필은 아주 조용하고 어떠한 기척도 없이 그 잔해 같은 장소를 관찰했다. 여긴 어떤 곳일까. 어떤 곳이기에 강영현의 꿈이 머무는 것일까. 스테인드글라스에 굴절되어 부서지는 색색의 햇빛을 멍하니 바라보았다. 그러다가 그 밑에 있는 십자가와 십자가에 매달린 예수상을 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>한참을 바라보았다. 한참을 바라보고 또 바라보다가 김원필은 그것이 인간들이 파멸을 선택하기 이전의 세상에서 사람들이 믿었다던 신이라는 것을 깨달았다. 신이 있었다고 했다. 김원필의 세상에는 이제 없는 것이었지만 종교는 인간의 광활한 역사에 없었던 적이 없었다고 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>신은 세상을 만들었고, 인간을 사랑한다고 믿었다고 했다. 김원필은 문득 궁금했다. 그가 세상을 만들었다면, 이 세상 또한 그가 계획한 것일까. 우리가 모두 파멸을 향해 다다르고 있는 이 무너져 가는 세상 또한 그가 의도한 것일까. 나 또한 계획된 것일까. 인간이 가질 수 없는 능력을 지니고 태어나 어떤 것을 위해 쓰이는지도 모르는 채 끊임없이 소모되고 닳아가는 나도 그의 계획 속에 있는 것일까. 아니면 나는 역시 저주를 받은 걸까. 그가 버린 세상에서 그저 계획도 하지 않은 돌연변이인 것일까. 그럼에도 그는 여전히 우리를 사랑하는가.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>사랑이라는 것은 대체 무엇일까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 후로도 꿈속의 산책은 계속 이어졌다. 김원필로서도 어찌할 수 없는 것이었다. 끝도 없이 이어지던 불면의 밤의 어느 순간 스르르 눈을 감으면 어느새 강영현의 무의식 속이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이제는 그 안에 있는 모든 것들을 눈에 담고도 모자라, 눈을 감아도 떠올릴 만큼 익숙해진 그 어느 날부터 김원필은 그 장소를 눈에 담는 것 대신 잠이 든 강영현을 관찰했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현의 무의식, 그 안에서 잠이 든 강영현의 또 다른 꿈속으로 들어가는 것은 김원필에게 어렵지 않은 일이었지만 그러고 싶지는 않았다. 누군가의 무의식에 들어가 그의 생각을 훔치고, 그의 생각을 조작하는 일은 이제 김원필에게 숨 쉬는 것만큼 자연스러운 일이었으나 강영현에게만은 그러고 싶지 않았다. 그의 생각과 그의 시간과 그의 세계가 궁금했으나, 강영현이 알려주지 않는다면 알고 싶지 않았다는 것이 더 정확할지도 모르겠다. 그에게 알려줄 생각이 있는지 없는지조차 김원필은 알지 못했지만.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>현실에서 강영현과 함께하는 시간은 점점 더 많아졌다. 강영현은 이제 충분한 훈련을 거치고 김원필과 함께 임무에 투입되었다. 임무를 마치고 돌아온 김원필을 가이딩하는 것으로는 충분하지 않았던 모양인지, 이제야 되찾은 가이드를 김원필을 그렇게 소모했던 것처럼 아낌없이 소모하고 싶은 모양인지 상부에서는 강영현에게 드림머신을 이용한 무의식 침투법을 훈련했고, 강영현은 이제 누군가의 무의식 속에서도 김원필의 곁에서 김원필의 불안정해질지도 모르는 능력을 안정시켰다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>여전히 그들 사이에는 적당한 거리가 있었다. 여전히 그들이 손을 잡을 때는 서로의 손에 있는 온기를 느끼며, 강영현은 더 이상 김원필의 수치를 확인하지 않고 그의 눈을 바라보았으며, 가이딩이 끝나도 그들은 맞닿은 몸을 놓지 않았으나 그들 사이에는 여전한 벽이 있는 것만 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 김원필은 제가 의도하지 않게 들어간 강영현의 무의식 속에서도 잠이 든 강영현을 바라보기만 할 뿐, 그 이상의 어떤 것을 하지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 모든 것은 정지된 듯, 고인 듯, 그렇게 나아가지 않을 줄 알았지만.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“언제까지 올 겁니까.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그날도 그저 잠이 든 줄만 알았던 강영현으로부터 기대도 하지 않았던 목소리를 들었을 때, 김원필은 너무 놀라서 그대로 굳었다. 강영현은 늘 그랬던 것처럼 웅크린 채로 누워 있어서 어쩌면 김원필은 제가 환청을 들었을지도 모른다고 생각했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“언제까지 아무것도 안 할 겁니까.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 강영현의 다음 목소리가 들렸을 때,</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그냥 저는 계속 자는 척만 하는 게 낫겠습니까.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 어쩌면 강영현 또한 자신과 같은 마음이었다는 걸, 그 또한 항상 자신과 같은 생각을 하고 있었다는 걸 깨달았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아니, 그만해. 자는 척.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현의 감겨 있던 눈이 부스스 뜨여 자신을 바라보던 그 순간을 김원필은 영원히 기억할 것이다. 여전히 허공에 부유하는 먼지와 스테인드글라스를 통하여 굴절되는 색색의 빛, 그리고 그 밑에 있는 신의 흔적을 김원필은 결국 받아들이기로 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>사랑이라는 거창한 것이 무엇인지는 모르겠지만, 사랑이라는 것이 존재한다면 신이 나를 사랑하는 것이 맞다면, 정해져 있는 끝을 무한히 기다리는 이 영원히 끝나지 않을 것만 같은 시한부와 같은 인생에 강영현을 보내 준 것만으로 그것이 증명되는 것만 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필이 신의 존재를 믿기 시작한 때였다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현의 꿈에서 강영현과 눈을 마주쳤을 때, 그의 눈에 있는 자기 자신을 마주했을 때. 숨기지 않는 자기 자신에 대한 감정을 말하지 않고도 알 수 있었던 그때.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 후로 김원필은 강영현과 많은 이야기를 나누었다. 강영현의 무의식으로 걸어 들어가는 밤이 기다려져서 더 이상 불면의 밤이 두렵지도 지겹지도 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>꿈의 시간은 현실의 시간과 달리 더디게 흐른다. 그래서 그들은 아주 많은 이야기를 할 수 있었으며 서로의 이야기를, 생각을 이해하는데 시간을 쓰는 것을 아끼지 않을 수 있었다. 김원필은 처음으로 무의식의 세계가 어쩌면 나쁘지 않은 것일지도 모른다고 생각하게 되었다. 자신의 저주받은 줄만 알았던 능력이, 하필이면 그 능력이었다는 불운이 어쩌면 다행이라는 생각도 하게 되었다. 모든 것은 처음이었다. 강영현을 만나고 나서부터 김원필이 하게 된 생각들은, 모두.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 폐쇄지구 출신이었다. 센트럴과 센트럴을 요새처럼 둘러싼 8개의 안전구역도 아닌 그 너머에 있는, 김원필은 말로만 들어봤던 폐쇄지구. 쫓겨나고, 갈 곳이 없는 자들이 숨어 들어가는 거대한 죽은 도시. 강영현은 폐쇄지구에서 태어났다고 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그는 그가 어떻게 살아왔는지 직접 말을 해 주기보다는 그저 김원필의 손을 붙잡고 자신의 이마를 덮는 것으로 대신했다. 김원필은 그것이 강영현의 허락이라는 것을 알았다. 강영현의 무의식으로 걸어 들어가 그가 보았던, 겪었던, 그리고 여전히 진행되고 있는 과거의 고통을 직접 보았으며, 김원필은 강영현의 과거로부터 빠져나와서는 어쩌면 처음으로, 누군가를 위해 울었다. 울지 않고서는 견딜 수가 없을 만큼 실질적으로 닿는 그의 처절한 과거가 가여웠다기보다는 그것이 어떤 것인지 너무 잘 알기 때문이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>전혀 다른 시간을 살아온 두 사람이었고, 그들이 겪은 고통과 과거는 분명 달랐지만 김원필은 강영현을 이해할 수 있었다. 그의 고독과 외로움과 상실, 그 무게를 짊어진 채로 끝없이 이어지는 것만 같은 현실의 아득함에 대한 괴로움. 그렇게 김원필은 강영현을 향해 울다가, 자기 자신을 위해 울었다. 그것조차도 처음이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그저 눈물만 뚝뚝 떨어지는 김원필의 눈을 바라보던 강영현은 그 눈가를 조심스럽게 문지르다가 결국 참지 못하고 그를 가득 끌어안았다. 이마와 이마를 맞대고, 코와 코가 맞닿고, 서로를 빈틈없이 끌어안으며 하나처럼 엉켰을 때 강영현은 김원필에게 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“가이딩을 받는 것 같습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 에스퍼이며, 가이드는 강영현이었지만 김원필은 그게 맞을지도 모른다고 대답했다. 나는 어떻게든 당신의 상처를 어루만지고 이해하고 싶었으니까. 그리고 여기는 현실에서는 불가능한 것이 가능한 무의식의 세계니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>무의식에서의 시간은 점차 쌓여갔다. 현실에서의 시간이 쌓여감과 동시에 그보다 수없이 더 많은 시간이. 그들은 1단계의 무의식에서 쌓여가는 현실과는 다른 느린 시간에 만족할 수가 없었다. 2단계의 무의식에서는 현실보다 더 느리게 시간이 흘러갔으며, 3단계, 그 너머 림보에서는 어쩌면 영원한 시간이 그들에게 주어질 수도 있었다. 단 하룻밤의 시간만으로도 말이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>시간뿐만이 아니었다. 무의식에서는 어떠한 제약도 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필과 강영현은 모든 것을 새로 접하고 배우는 어린아이처럼 자신들의 시간을 마주했다. 서로에 대해서 더 이상 숨길 것이 없었기 때문에 솔직할 수 있었고, 그래서 자신의 마음속에 어떤 생각들이 머무르고 있는지, 얼마나 오랫동안 그 생각들을 참고 있었는지, 그저 참는 것이 능사였는지, 아니면 다른 무언가가 있는지에 대해서까지 아주 오랜 시간 동안 들여다볼 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이를테면 그런 것이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 어떻게든 살아남아야 한다는 생각밖에 없었다. 지붕도 온전하지 않은 폐쇄지구의 예배당이 그의 꿈의 배경이었던 이유는 그가 처음으로 안전함을 느꼈던 장소였기 때문이었다. 폐쇄지구의 예배당은 어떤 이유에서인지 불길한 곳으로 대부분의 사람이 인식하고 있었으며 강영현은 공유된 불길함을 이용할 수 있을 만큼 똑똑했다. 비록 천장의 절반은 날아갔으나 그곳은 늘 고요했다. 사람들의 발길이 닿지 않는 그곳은 강영현에게 처음으로 안전하다는 것이 어떤 것인지에 대한 감정을 알려주었다. 유일한 가족이었던 어머니를 잃고, 예배당을 안전지대 삼아 강영현은 오로지 한 가지 생각만을 하게 되었다고 했다. 살아남아야 한다. 어떻게든 살아남아야 한다. 그러기 위해서 강영현이 가장 먼저 해야 할 일은 폐쇄지구를 벗어나는 것이었다. 폐쇄지구에서 벗어나 군인들에게 붙잡혔고, 부모를 잃은 아이들이 함께 더불어 자라는 보육원에서 자랐고, 보육원에서 어느 정도 자라고 난 후에는 살아남기 위해 군인이 됐다. 그뿐이었다. 강영현은 이미 어느 정도 나이가 있어서 보육원에서 지내는 시간은 몇 년 되지 않았으며, 그 몇 년 또한 쉽지만은 않았다. 강영현은 세상에 어떠한 호의도 있지 않다고 믿는 편이었다. 타인은 그저 내가 이겨내야만 하는, 무너뜨리고 지나가야 하는 어떤 것이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 끝에 어떤 것이 있는지는 알지 못한다. 여전히 알 수 없다. 하지만 강영현은 김원필을 만났고 어쩌면 김원필이 그의 종착점일지도 모른다고 생각하게 됐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 군인이 된 이후로 어떤 임무도 마다하지 않았다. 위험한 적진에 혈혈단신으로 침투하는 임무도, 누군가를 죽여야 하는 일도, 백업 없이 반군의 지역에 정찰을 나가는 것. 강영현이 해내면 해낼수록 상부에서는 어렵고 위험한 임무를 맡겼으며, 강영현은 그 임무들을 어떠한 불만도 없이 모두 해냈다. 군인으로서 직위는 높아졌지만 강영현은 높은 곳으로 가고 싶어 그들의 수단이 되는 것을 자처한 것은 아니었다. 썩어 가는 권력 한 줌을 쥐기 위해 초개와도 같이 달려든 것도 아니었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그저 살기 위함이었다. 그가 폐쇄지구를 빠져나온 이유와 지금껏 그가 버텨온 이유는 동일했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 김원필을 만난 이후로 비로소 산다는 것이 어떤 것인지에 대해서 생각하게 됐다. 김원필을 만나고 그와는 다르지만 어떻게 보면 끝없이 소모 당하는 인생을 살아왔던 김원필과 함께 진짜 살아간다는 것이 어떤 것인지에 대해서 고민하게 됐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그들은 다른 사람들이 잠든 깊은 밤, 강영현의 무의식 속에서 다른 사람들의 시간보다도 훨씬 오랜 시간을 서로 함께 보냈다. 서로에 대해서 속속들이 알 수 있을 정도로 시간이 지나고, 이제는 눈만 보아도 서로가 어떤 생각을 하게 되었는지에 대해서 알 수 있을 만큼의 시간이 지나고 나서부터는 림보로 내려갔다. 림보라는 그 무한한 백지 위에 그들은 감히 서로를 만나기 이전에는 상상조차 할 수 없었던, 진짜 삶을 그리기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원하는 모든 것을 만들어낼 수 있는 림보, 무의식의 가장 깊고 낮은 밑바닥에서 그들은, 강영현이 어렸을 적 보육원에서 일 년에 한두 번 보여주었던 전쟁 이전의 시기에 만들었다던 오래된 고전 영화 속의 배경과 같은 끝없이 이어지는 누런 사막 위에 오롯이 서 있는 이름 없는 펍을 만들었고, 손님 하나 오지 않는 그곳에서 30년도 넘는 시간을, 그들로서는 상상할 수도 없었던 오랜 시간을 보내며 까만 머리 사이로 하얀 흰머리가 자라날 정도로 나이 든 서로의 모습을 확인하기도 했으며, 말로만 들었던 안전구역의 밖, 폐쇄지구보다도 더 멀리 있는 사람이 더 이상 살아갈 수 없다는 황폐해진 지구의 어딘가를 상상하며 보지도 못한 그곳을 만들어냈다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>언젠가는 그곳에 갈 수 있을까. 김원필은 강영현에게 물었다.</p>
+<p class="empty">&nbsp;</p>
+<p>네가 가고 싶다면, 언제든. 우린 갈 수 있어. 강영현은 김원필에게 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 수십 년, 어쩌면 백 년도 넘는 시간이 아무도 모르는 사이에 강영현과 김원필 사이에 쌓였다. 김원필은 이제 강영현에 대한 마음이 어떤 것인지에 대해서 정확하게 알게 되었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>처음에는 그가 궁금했고, 그를 알게 된 후에는 그가 불쌍했으며, 그와 함께 보낸 시간이 쌓이면 쌓일수록 우습게도 살고 싶어졌다. 오늘일지, 내일일지 폭주가 와서 미쳐 죽을지, 누군가에 의해서 죽임을 당할지, 아니면 무차별 공격에 죽게 될지 모르지만 어쨌든 그 순간만을 기다리던 김원필은 비로소 살고 싶었다. 살아가고 싶었다. 삶이라는 것을.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현이 아니었다면 몰랐을 것들, 강영현을 만나지 않았다면 변하지 않았을 것들. 강영현이 자신의 앞에 나타나지 않았다면 어쩌면 머지 않았을 자신의 마지막을 기다리고 싶지 않아졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러기 위해선 무언가를 해야 했다. 살던 대로 살아선 안 됐다. 아무것도 하지 않으면 아무것도 바뀌지 않았으니까.</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 그때 그런 선택을 한 것에 대해서 김원필은 결론적으로 말하면 후회하지 않는다.</p>
+<p class="empty">&nbsp;</p>
+<p>똑, 똑.</p>
+<p class="empty">&nbsp;</p>
+<p>뭔가가 발등 위로 떨어진다. 시야가 희미했다. 머리가 깨질 듯이 아팠다. 너무 아팠다. 살면서 처음 겪어보는 고통이라서 김원필은 앓는 소리조차 내지 못했다. 우욱, 결국 일렁이는 속을 참지 못하고 치밀어 올라오는 것을 내뱉었다. 뭔가가 똑똑 떨어지던 발등 위로 붉은 피가 쏟아졌다. 바닥이 온통 피였다. 놀라운 일도 아니었다. 능력을 쓸 때마다 코피가 났고 능력을 쓸 때마다 폭주 수치는 치솟았다. 폭주 수치가 치솟아 오를수록 내부의 장기가 저들끼리 꼬이고 꼬여 무슨 일이 일어나고 있는지 알 수 없지만, 피가 울컥울컥 쏟아졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>피를 토해낼 때마다 천장에 매달려 늘어진 팔과 몸이 출렁였다.</p>
+<p class="empty">&nbsp;</p>
+<p>피를 한 번 토해내고 나면 그래도 아주 잠깐은 조금은 나아졌다. 그 시간의 텀조차 점차 짧아지고 있었지만 말이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 신체가 그렇게 고통으로 잠식되고 있는 중에도 정신만은 또렷했다. 참 이상한 일이었다. 그렇게 고통스러운 와중에도 생각이라는 걸 할 수 있으니까 말이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>며칠간 자신에게 일어났던 모든 일들을 돌이켜보고, 어떤 것이 잘못됐는지에 대해서 생각도 해봤으며, 틈틈이 강영현의 무의식으로 들어가 그가 괜찮은지에 대해서도 확인했다. 그리고 김원필은 이제 인정하기로 했다. 자신이 실패했음을.</p>
+<p class="empty">&nbsp;</p>
+<p>섣부른 선택이라고 하기에 김원필은 지금이 아니더라도 언젠간 그와 비슷한 선택을 했을 것이다. 충분히 준비되지 않았기 때문에 실패했다고 하기에, 김원필은 나름 모든 것을 계산했고 준비했다.</p>
+<p class="empty">&nbsp;</p>
+<p>정부군 에스퍼 중에서도 최상위 등급에 속하는 김원필은 그 특유의 정신계 능력의 희귀성 때문에 상부에서도 각별히 보안에 신경을 썼다. 에스퍼는 비슷한 능력을 가지거나 동일한 능력을 가진 경우가 드물지 않아 대체가 가능한가를 기준으로 그 등급을 선정하였고, 드림워커가 에스퍼들 중에서도 최상위 등급에 책정될 수밖에 없었던 이유는 한 세대에 단 한 명만이 그 능력을 타고 태어나기 때문이었다. 한 명의 드림워커가 살아있는 동안 다른 드림워커는 나타나지 않는다. 그가 죽게 되거나, 아니면 곧 죽게 되는 경우에 새로운 드림워커는 나타났다.</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 김원필은 각별하게 감시를 받았다. 김원필은 타인의 무의식 속에서는 항상 자기 모습이 아닌 타인의 모습으로 위장하고 임무를 수행했으며, 반군은 아직도 그가 어떻게 생겼고 몇 살이나 되고 어느 부대에 속해 있는지 알지 못했다. 날고기는 정신계 에스퍼 또한 그의 존재를 쉽게 가늠하지 못했다. 따라서 그를 잃는 것은 너무 큰 전력 손실이었다. 그래서 초반에 반군은 김원필의 존재를 인식하고 나서 어떻게든 그를 죽이려 했으나 그것이 불가하다는 것을 인정하고 난 후부터는 끊임없이 그를 회유하려 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>반군의 에스퍼 중에는 김원필처럼 타인의 무의식을 자유자재로 넘나들 수 있는 능력을 가진 에스퍼는 없었으나 어떻게든 상부에서 알 수 없게 김원필에게 간접적으로나마 김원필에게 정부군을 배반하고 반군으로 합류할 것을 설득하는 시도를 할 수 있는 능력을 가진 에스퍼들은 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그들에게 김원필이 왜 그렇게 필요한 것인지, 또 정부군에게는 김원필이 왜 그렇게까지 중요한 것인지 김원필은 알 수 없었다. 자신의 능력은 강영현을 만나기 이전에는 늘 저주라고 생각했으며 그 능력의 효율성 또한 이해하지 못했다. 이해하고 싶지도 않았고, 그것에 자부심을 느끼고 싶지도 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 많은 것들이 강영현을 만나게 된 이후로 달라졌다. 반군은 여전히 김원필을 필요로 했다. 다양한 간접적인 경로를 통해 반군에서는 끊임없이 김원필에게 그들에게 합류해 정부군을 무너뜨리고 새로운 세상을 만들 것을 제안했다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 그리고, 처음으로 물었다. 새로운 세상이 어떤 것인지에 대해서.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필에게 돌아온 답은 짧았다. 자유가 있는 세상.</p>
+<p class="empty">&nbsp;</p>
+<p>자유, 대략 그것이 어떤 의미인지는 알고 있지만 그것을 겪어보지 못해 직접적으로 닿는 느낌은 없었다. 하지만 그 단어가 지닌 의미가 이전과는 달리 느껴졌다. 자유. 살아갈 자유, 내가 원하는 사람과 함께 살아갈 수 있는 자유. 그런 것이라면 어쩌면 무모할지라도 무언가 시도를 해 볼 수 있지 않을까.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 정부군으로 살아오면서 수도 없는 다양한 이유로 센트럴로부터 도망친 사람들을 보았고, 알고 있었지만 그들의 대부분은 붙잡혔고 붙잡힌 사람들은 다시는 돌아오지 못했다. 그들도 그렇게 될 가능성이 높았다. 아무 대책 없이 도망을 친다면 말이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 김원필은 계획이 필요했다. 혼자였다면 그러지 않았을 것이다. 혼자였다면 죽어도 상관이 없었을 테니 그렇게까지 고민도 하지 않았을 것이다. 아니, 혼자였다면 차마 도망칠 생각조차 하지 못했을 것이다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 강영현과 함께여야 그 모든 것을 시작할 결심을 할 수 있을 것이라 생각했고, 제 생각을 강영현에게 털어놓았다. 그가 동의하면 김원필은 어떻게든 떠날 생각이었으며, 그가 동의하지 않으면 김원필은 기꺼이 포기할 생각이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필의 마음을 들은 강영현은 물었다. 나가면 뭘 하고 싶은데?</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 주저하지도 않고 정확하게 자신이 원하는 바를 이제 말할 수 있었다. 살고 싶어. 너랑 같이.</p>
+<p class="empty">&nbsp;</p>
+<p>나는 너랑 같이 살아가고 싶어. 센트럴이고 안전구역이고 다 벗어나서 아무도 없는 곳에서 너랑 같이 살고 싶어. 이제는, 죽고 싶지 않아. 너를 두고 죽고 싶지 않아.</p>
+<p class="empty">&nbsp;</p>
+<p>그 다음의 말들은 하지 못했다. 그저 그의 등에 이마를 대고 내가 당신의 모든 것을 읽을 수 있는 것처럼, 당신도 내가 차마 하지 못하는 이 모든 말들을 알았으면 좋겠다고 생각했다. 그때, 강영현은 제 허리를 두른 김원필의 손등을 제 손으로 덮으며 꽉 붙잡았다. 안다는 듯이. 말하지 않아도 알고 있다는 듯이.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 말했다. 나는 어디를 가든 네가 가는 곳이면 가. 어디를 가더라도 내가 같이 갈 거야. 그 말을 들었을 때 김원필은, 행여 이 계획의 끝이 실패라 하더라도 더 이상 상관이 없어졌다. 우리는 살기 위해 떠날 것이고, 결국 죽는다 해도 기쁘게 죽을 거라고.</p>
+<p class="empty">&nbsp;</p>
+<p>그들은 차곡차곡 계획을 쌓아가기 시작했다. 충분한 고민과 여러 가지 선택의 가능성 중에 그들은 반군에 합류하는 선택지는 처음부터 버렸다. 그들이 주장하는 자유는 달콤하게 들리는 것이었으나, 오랫동안 정부군에서 안전을 이유로 모든 것을 박탈당했던 자신들의 인생을 돌아보건대 반군에게 간다고 한들 그들이 주장하는 자유를 매개로 그들이 김원필과 강영현에게 어떤 것을 포기하게 만들지 알 수 없었기 때문이다.</p>
+<p class="empty">&nbsp;</p>
+<p>그저 그들은 어딘가로 향하고 싶었다. 정부군도, 반군도 없는 그 어딘가로. 지구는 두 발로는 걸을 수 없을 만큼 광활한 대륙과 그보다도 더 드넓은 바다가 뒤덮여있다고 했지만 그들은 현재의 인류에게 허용된 좁은 구역 외에 다른 것들은 본 적이 없었다. 모래가 뒤덮여있는 사막, 푸른 초목으로 가득한 숲, 하늘과 닿을 듯이 높은 산, 그리고 끝이 보이지 않을 정도로 넓은 바다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 모든 것들은 구인류였던 기존의 인간들과 신인류였던 에스퍼들의 대대적인 전쟁으로 인해서 더 이상 사람이 살 수 없을 정도로 망가지고 황폐해졌으며, 인간들이 들어가서도 안 되는 위험구역이 되었기 때문에 갈 수 없다고 알고 있지만 그들은 그것이 정말인지에 대해서 생각했다. 그것이 정말인지 아닌지를 알기 위해서는 직접 가는 수밖에 없다. 직접 가서 확인한다면 정말 그 모든 것들은 이제 죽어 이 세상에 더 이상 존재하지 않는지, 그게 아니라면 우리는 눈과 귀가 막힌 채 그저 상부가 말하는 것만 믿고 살았던 건지 알 수 있을 것이다.</p>
+<p class="empty">&nbsp;</p>
+<p>문제는 김원필이 어떻게 어디까지 도망을 칠 수 있느냐 하는 것이었다. 김원필은 귀중한 만큼 그 일거수일투족이 철저히 감시당했다. 위장을 제안한 건 강영현이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>정확히는 위장의 위장의 위장. 반군 측에 김원필이 합류하고자 하는 의사를 전한다. 그렇게 하면 반군에서는 어떻게든 김원필이 그들에게로 올 수 있도록 방법을 만들 것이다. 하지만 그것조차 쉽지는 않을 것이다. 김원필이 탈출하기 위해서는 상부의 시선 분산이 필요했다. 김원필만큼 중요한 누군가가 상부의 시선을 그대로 이끌고 가야만 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 생각했다. 김원필만큼 중요한 사람. 그 자체로는 별것도 아닌 군인이겠지만 김원필의 폭주 위험을 낮추기 위해서는 그 누구보다 필요한 사람. 그건 자기 자신이라고. 강영현은 김원필이 상부의 시선이 분산된 틈을 타, 반군이 마련한 방법을 통하여 센트럴과 안전구역을 빠져나갈 때까지 버티기로 했다. 물론 김원필은 처음부터 반대했다. 우리 둘이 같이 가야 해. 강영현은 우리 둘은 함께 갈 수 있다고 말했다. 다만 시간 차가 조금 있을 뿐이라고.</p>
+<p class="empty">&nbsp;</p>
+<p>다행인 것은 김원필에게는 무의식에 침투해 사람의 의식을 조종할 수 있는 능력이 있다는 것이었으므로, 반군에 합류하지 않고도 강영현과 약속한 합류 지점에는 센트럴만 안전하게 빠져나간다면 도달할 수 있을 것이었다. 강영현은 그간 수없는 임무를 통해 확인했던 김원필의 능력을 믿고 있었다. 자신이 센트럴을 빠져나가는 것은 그다음의 문제다. 강영현은 생각했다. 폐쇄지구를 빠져나와 센트럴로도 왔는데, 센트럴을 다시 빠져나가는 것을 하지 못하겠냐고. 게다가 강영현은 그래야 할 이유가 분명했다. 김원필과 함께 살아가기 위해.</p>
+<p class="empty">&nbsp;</p>
+<p>“무의식이 어떤지는 네가 가장 잘 알잖아. 내 기억에 네가 없어도 내 눈에는 네가 있을 거고, 내 심장에도 네가 있을 거야. 그러면 나는 길을 찾을 수 있어.”</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 오랫동안 고민했다. 그리고 결국 결정했다.</p>
+<p class="empty">&nbsp;</p>
+<p>둘만의 디데이를 앞두고 김원필은 강영현의 무의식에 걸어들어와 이제는 익숙한 부서진 예배당의 부서진 의자 위에 강영현과 나란히 앉아 한참 동안 아무 말 없이 눈을 감고 있었다. 두 손을 꼭 모은 채로. 마치 기도를 하듯이. 강영현은 그런 김원필을 바라보고 있었다. 하아, 작게 한숨을 내쉰 김원필은 여전히 눈을 감은 채로 중얼거렸다. 난 네가 정말 이러는 게 싫어. 아주 조금의 물기도 섞여 있었다. 그러니까 살아. 꼭 살아야 해. 강영현은 고개를 끄덕였다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현에게 있어 김원필은 강영현이 결국 닿아야 했던 어떤 끝이었으며, 어느 순간부터는 제 목숨을 버린다 해도 지키고 싶은 유일한 사람이었고, 또한 그가 말하는 모든 것은 강영현에게 있어 법이 되었다. 강영현은 살아남을 것이다. 어렸을 때 폐쇄지구를 탈출할 때처럼. 어떻게든 살아남을 것이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 그제야 눈을 떴다. 그리고 손을 뻗어 강영현의 손을 잡았다. 강영현은 맞닿은 김원필의 손바닥과 자신의 손바닥 사이에 뭔가 뾰족한 것이 눌리는 것을 느꼈다. 김원필의 손이 빠져나갔을 때, 손에 있는 것은 자그마한 펜던트였다. 투박한 철판 위에 세 개의 얇은 쇠막대가 달린.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 그것을 가만히 바라보았다. 김원필의 설명을 기다렸다. 김원필은 막대기를 튕겨보라고 했다. 서로 다른 음이 튀어나왔다. 김원필은 강영현의 손목을 붙잡아 손목 위에 언젠가 입대 시에 강제로 새긴 강영현의 군번을 엄지로 쓸었다. 각 음이 의미하는 숫자를 설명해 주었다. 그 펜던트는 튕기면 강영현의 군번 숫자에 맞는 음을 들려주는 작은 칼림바였다. 투박했지만 그랬다. 그리고 강영현은 그것이 김원필이 강영현에게 주는 토템이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>토템은 무의식의 세계에서 그곳이 무의식인지 아니면 현실인지를 알려주는 물건이었다. 각자 의미가 있는 것으로 정하기도 하지만 정부군의 경우 드림머신을 통하여 강영현과 같이 타인의 무의식에 침투할 때는 일괄적으로 군번줄을 토템으로 정한다. 토템은 무의식과 현실을 구분하는 물건이기에 타인이 알면 안 되는 것이었으나, 상부에서는 그러한 임무에 투입되는 군인들이 그렇게 중요하지 않았다. 그들이 무의식의 단계에서 죽임을 당해 림보에 빠져 들어가 영원히 깨지 않는 잠에 들어 코마 상태에 이른다고 하더라도 그들이 아쉽지 않았다. 그래서 정부에서 정해주는 토템은 의미가 없었다. 그런 걸 알기 때문에 각자가 개인적인 토템을 별도로 마련하는 경우도 있었지만 강영현은 토템이 없었다. 따지자면 강영현의 토템은 김원필이었으니 필요가 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 김원필이 강영현의 손에 토템을 쥐여준 이유를 강영현은 알았다. 길을 잃지 말라고. 길을 잃지 말고 잘 돌아오라고. 강영현은 손에 쥔 펜던트를 꽉 쥐었다가 폈다. 그리고 목에 걸었다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 그것이 강영현과 자신의 마지막이 아닐 것이라 믿었다. 그러지 않기 위해 그들은 수없이 많이 계획을 복기했고 철저하게 탈출 루트를 짰으며 무의식 속에서 수도 없이 반복해 보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>물론 실패할 가능성을 아예 염두에 두지 않은 것은 아니었다. 하지만 이렇게 보기 좋게 실패할 줄은 몰랐다.</p>
+<p class="empty">&nbsp;</p>
+<p>모든 실패에는 원인이 있다지만 그 실패의 원인을 김원필도 강영현도 감히 예상조차 하지 못했다. 강영현은 김원필에 의해 기억이 지워진 채 자신의 무의식 속으로 깊이 가라앉았으며, 김원필은 강영현과 사전에 약속된 대로 반군이 고안해 낸 방법으로 탈출하려고 했다. 하지만 센트럴을, 부대조차도 빠져나가지 못했다.</p>
+<p class="empty">&nbsp;</p>
+<p>눈앞에 나타난 또 다른 드림워커 때문에.</p>
+<p class="empty">&nbsp;</p>
+<p>인간이 만들어낸 드림머신은 에스퍼와 일반인의 무의식에 침투할 수는 있으나 드림워커인 김원필의 무의식에는 들어올 수 없었다. 김원필의 무의식은 견고한 방벽과도 같았다. 어렸을 적부터 아마 그 이전 드림워커들도 동일하게 실험을 빙자한 여러 가지 방법으로 괴롭힘을 당했지만 어떤 방법으로도 그의 무의식은 침투되지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 김원필은 눈앞에 나타난 드림워커를 보자마자 알았다. 저 사람은 실제가 아니구나. 내가 타인의 무의식에 침투하듯, 내 무의식으로 침투해 들어온 거구나.</p>
+<p class="empty">&nbsp;</p>
+<p>동시대에 드림워커는 단 한 명뿐이라고 했다. 아직도 그 이유는 아무도 알지 못했다. 아마도 최초의 에스퍼가 드림워커이기 때문일 것이라고 주장하는 이론이 주된 합의점이지만 그것조차도 확실하지 않았다. 드림워커가 최초의 에스퍼이긴 했다. 최초로 각성했고, 각성을 한 이후로 그는 사람들의 무의식을 걸어 다니며 에스퍼의 능력이 잠재된 신인류를 각성시켰으니까. 그가 정부에 의하여 학살을 당하고 난 후 몇 년이 지나 숨어 있던 다음 세대의 드림워커가 발각됐다. 그 후로 정부는 드림워커를 더 이상 죽이지 않기로 했다. 대신 철저하게 이용하기로. 그들은 그 세대에 단 한 명뿐이고 에스퍼를 만들어낸 능력이니 최대한 이용하자고. 김원필은 자기가 몇 번째 드림워커인지에 대해서도 딱히 관심은 없었다. 그저 드림워커로 각성했으며, 이 세대의 드림워커로 살아가고 있지만 그저 그 이전의 드림워커들과 그 이후에 나타날 새로운 드림워커에 대한 일말의 동정이 있을 뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 김원필은 또 다른 드림워커를 마주하자마자 그를 알아볼 수밖에 없었다. 나는 죽지 않았는데, 죽기 직전도 아닌데. 너는,</p>
+<p class="empty">&nbsp;</p>
+<p>‘곧 무너질 거야.’</p>
+<p class="empty">&nbsp;</p>
+<p>그가 말했다. 아, 김원필은 등골을 타고 도는 한기를 느꼈다. 그 말이 의미하는 것이 무엇인지 정확히 알았기 때문이었다. 그때, 머릿속에 오랫동안 견고하게 쌓여 있던 어떤 것이 터지는 듯한 느낌이 들었다. 온몸으로 자기 자신조차도 주체할 수 없는 이능력이 터져나갔다. 귓가로 김원필이 지르지 않는 비명이 찢어질 것처럼 들렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>정신계 에스퍼의 최종 폭주는 그저 자신의 머릿속에서 벌어지는 것이기 때문에 물리계 에스퍼의 폭주보다는 위험하지 않다고들 한다. 하지만 김원필의 폭주는 달랐다. 김원필은 눈과 코와 입에서 피를 흘리며 그대로 그 자리에 풀썩 쓰러졌고 그가 쓰러진 후 허공으로 찢어질 듯한 폭발음과 모든 것이 무너져 내리는 소리 미처 도망가지 못한 사람들의 비명이 뒤덮였다.</p>
+<p class="empty">&nbsp;</p>
+<p><strong>We’re all gonna die</strong></p>
+<p class="empty">&nbsp;</p>
+<p>헉, 단말마와 같은 깊은숨을 내뱉으며 강영현은 거칠게 상체를 일으켰다. 철컹, 거친 몸놀림으로 인해 누워 있는 침대가 움직일 정도였다. 하지만 강영현은 완전히 침대를 벗어나진 못했다. 침대 옆 철제 난간과 강영현의 손목을 단단하게 결박하고 있는 구속구 때문이었다. 강영현은 여전히 거친 숨을 내쉬며 주변을 둘러보았다. 강영현의 혈관에 연결된 드림머신의 라인들이 보였고, 그 옆에는 여전히 잠이 들어 있는 대원들이 보였다. 시간이 별로 없었다. 강영현은 거친 숨을 몰아쉬며 자유롭지 않은 손으로 몸을 반쯤 기울여 팔에 연결된 진정제 라인을 강제로 뽑아냈다. 팔에서는 피가 배어 나오기 시작했으나 지금은 그런 것을 신경 쓸 때가 아니었다.</p>
+<p class="empty">&nbsp;</p>
+<p>무의식에서 막 빠져나왔을 때는 부작용이 발생한다. 게다가 강영현은 기억을 잃은 채 무의식으로 던져졌다가 가까스로 빠져나왔기 때문에 머릿속이 뒤죽박죽이었다. 강영현은 피가 뚝뚝 떨어지고 있는 팔을 들어 그대로 손으로 자신의 볼을 내리쳤다. 짝, 짝, 한 번이 아닌 여러 번을. 정신을 차리기 위함이었다. 두서없는 머릿속으로 기억들이 물밀듯이 쏟아졌고, 모든 것들이 이제는 기억난다.</p>
+<p class="empty">&nbsp;</p>
+<p>자기가 무엇을 위해 무의식으로 떨어졌으며, 무엇을 지키기 위해서 그런 짓까지 벌였는지. 그리고 이제 강영현은 자신이 무엇을 해야 하는지 정확하게 알고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 우선 구속구부터 풀기로 했다. 침대 난간과 연결된 그것의 쇠줄을 돌려 잡고 쾅, 쾅 난간을 내리쳤다. 몇 번을 시도해도 요지부동인 것이 결국엔 양발로 퍽퍽 내려치자 굉음을 내며 부서졌다. 부서진 틈 사이로 난간에 연결된 구속구를 빼어 쇠줄로 둘둘 감아 손에 쥐었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러고 나서 강영현은 바닥을 딛고 일어섰다. 일어서려고 했다. 하지만 그대로 주저앉았다. 다리에 좀처럼 힘이 들어가질 않았다. 씨발, 얼마나 누워 있었던 거야. 강영현은 잇새를 악물며 벽을 붙잡고 몸을 일으켰다. 좀처럼 힘이 들어가지 않는 다리를 퍽퍽 내리쳤다. 제발 좀. 바닥을 차내듯 몇 번을 구르고 나서야 조금씩 힘이 돌아오는 것을 느끼며 강영현은 고개를 돌려 여전히 드림머신에 연결된 대원들을 확인했다. 그리고 기다시피 다리를 질질 끌고 이동해 한쪽 구석에 있는 트레이를 뒤졌다. 다행히 진정제 몇 병이 남아 있었다. 강영현은 그 진정제를 모두 드림머신에 털어 넣었다. 진정제를 아무리 쏟아붓는다고 한들 그들이 무의식에서 탈출하는 속도가 더 느려지진 않겠지만 그래도 시간을 벌어야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>조금씩 사지가 말을 듣기 시작하는 것 같았다. 강영현은 가까스로 일어나 그들의 몸을 뒤적여 무기가 될 만한 것들은 모두 찾아냈다. 종이 쪼가리나 다름없어 보이는 환자복을 벗어 던지고 그들의 몸에서 억지로 벗겨낸 군복으로 갈아입는 것까지만 해도 더디게 시간이 걸렸다. 마음은 급했고 그의 몸 상태는 평소와 같지 않았으며 머릿속은 하나의 생각밖에 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필을 찾아야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 옷을 다 입은 이후 총 하나를 손에 쥔 채 문으로 다가가 거친 숨을 가라앉히기 위해 조금 더 천천히 숨을 몰아쉬며 집중했다. 현재 상황에.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현이 눈을 뜬 곳은 아마도 부대 내 지하에 있는 특수임무센터일 것이다. 드림머신을 사용하는 무의식 침투 임무는 외부의 영향을 받기 쉬우므로 임무가 이루어지는 장소를 폐쇄적으로 운영했다. 이곳조차도 실시간으로 감시되고 있을 테지만, 잠깐. 왜 이렇게 조용하지. 강영현은 미간을 설핏 찡그렸다. 외부의 소리를 관찰하고 싶었으나, 폐쇄된 임무센터에서는 외부의 상황을 쉽게 가늠하기가 어려웠다. 여러 가지 상황을 고려해야 했다. 문을 열자마자 공격이 들어올 가능성이 가장 컸다. 운이 좋다면 문을 열고 나가는 중에 공격자를 마주할 수도 있을 것이다. 하지만 어떤 경우이든 강영현은 뚫고 나가야 한다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 마지막으로 숨을 내쉬며 습관적으로 손을 뻗어 목에 걸려 있던 펜던트를 어루만졌다. 둔탁한 표면이 손끝에 느껴지자 침착함이 불안한 마음을 잠재웠다. 손끝으로 펜던트에 달린 세 개의 막대를 순서대로 튕겼다. 여덟 개의 음이 마지막 음까지 정확하게 허공으로 흩어졌다. 이곳은 현실이다. 이 문밖에 김원필이 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 정공법을 선택했다. 두꺼운 문고리를 순식간에 밀어내며 총을 겨눴다. 하지만 문을 열자마자 보인 광경은 강영현이 생각하고 각오한 것과는 전혀 다른 것이었다. 지독한 화약 냄새가 코끝을 찔렀다. 총을 받쳐 든 강영현의 손이 힘없이 툭 떨어졌다. 눈앞에 펼쳐진 광경이 단지 참혹해서가 아니었다. 여기저기 널브러진 시체들, 파괴되고 반쯤은 불타 허물어지는 모든 것.</p>
+<p class="empty">&nbsp;</p>
+<p>매캐한 연기 때문에 숨쉬기가 쉽지 않았다. 손등으로 코와 입가를 막은 채 널브러진 시체들의 상태를 살피며 앞으로 나아갔다. 대부분 폭사인 게 분명해 보였다.</p>
+<p class="empty">&nbsp;</p>
+<p>도대체 무슨 일이 있었는지 정도는 어느 정도 예상이 갔다. 강영현이 이 부대에 처음 온 날도 반군으로부터 폭격을 당했으니까. 김원필이 있는 부대는 특히 반군의 공격이 심했다. 김원필이 어떤 의미에서 그들에게는 아군으로 삼지 못할 바에야 차라리 죽여버리는 게 나은 전력이라고 판단했던 모양이었다. 하지만 그만큼 정부군의 대비도 철저했기 때문에 이렇게까지 초토화가 된 적은 단 한 번도 없었다. 김원필이 있는 곳을, 이렇게까지.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 알 수 없는 불안감에 다급하게 지상으로 올라왔다. 지상으로 올라오는 내내, 그리고 지상으로 올라와서도 광경은 여전했다. 지상의 모든 것들도 반쯤은 무너져 내렸고 반쯤은 불타 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>흡사 일부러 그렇게 방치를 한 것처럼.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 주위를 둘러보았다. 김원필이 여기 있을까. 아니면, 어딘가로 피해 있을까. 아니, 반군에게 억류된 것인가. 그것도 아니라면. 하지만 강영현의 모든 본능적인 감각이 외치고 있었다. 김원필은 이곳에 있다고.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 이곳에 있지 않아야 했지만 이곳에 있다고.</p>
+<p class="empty">&nbsp;</p>
+<p>한참을 뒤지다가 가까스로 숨이 붙어 있는 사람을 찾아냈다. 강영현은 허리를 숙여 그의 상태를 확인했다. 소생의 가능성은 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“어떻게 된 겁니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>“폭주가….”</p>
+<p class="empty">&nbsp;</p>
+<p>“김원필 에스퍼는 어디 있습니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>그의 바들바들 떨리는 손끝이 본관을 가리켰다. 이 난리가 났는데 김원필이 저기 있다는 말이 쉽게 와닿지 않았다. 하지만 강영현은 무의식에서 김원필이 간절하게 외치던 그 말을 떠올린다. 도망쳐, 영현아. 뭔가가 잘못됐구나. 제대로, 잘못됐구나.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 그때부터 바닥을 박차고 뛰기 시작했다. 폐허를 건너뛰어 그나마 멀쩡한 본관으로 들어갔으나 본관은 모든 것들이 비어 있는 상태였다. 강영현은 그 알 수 없는 공허함에 기분이 급속도로 나빠졌다. 중요한 모든 것들은 이미 빠져나갔다. 남은 건 필요 없는 것, 그리고 지키지 않아도 되는 것들뿐. 하지만 여전히 김원필이 여기에 있다면.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현의 턱이 잔뜩 긴장한 채 맞물리고 강영현은 총을 치켜든 채로 사방을 주시하며 본관 내에 있는 위치들을 떠올렸다. 사무동과 연구동, 그리고… 강영현은 지하를 힐끗 내려보았고 거침없이 계단을 따라 뛰어 내려갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>지하에는 임시 수용시설과 심문실이 있었다. 부대 내에서 발생하는 범죄나, 외부에서 데려오는 반군 인질을 수용하는 시설이었다. 그곳으로 가야 한다는 본능과 여전히 왜 그곳으로 가야 하는지 쉽사리 이해가 가지 않는 강영현의 이성이 지속적으로 충돌한다. 결론이 하나밖에 없는데, 그 결론조차도 강영현은 납득할 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필을 알게 된 이후부터 김원필의 인생을 엿보고 난 다음부터 그 지긋지긋하도록 상부는 김원필을 아낌없이 소모했고 동시에 보호했다. 꼭 황금알을 낳는 거위를 지키기 위해 배를 가르지 않고 누구도 다가오지 못하게 하는 것처럼. 그 시대 유일한 드림워커를 대하는 그들의 방식은 지독하고 또 지독했다. 그런 그들이 이렇게 쉽게 김원필을,</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 텅 빈 수용시설의 철창을 지나 뛰면서 그 끝에 있는 심문실을 노려보았다. 전기 공급시설마저 공격을 당했는지 천장에 달린 조명들마저 간헐적으로 깜빡였다. 단단하게 닫혀 있는 심문실의 앞에 선 강영현은 잠금장치에 자신의 홍채를 인식시켰다. 하지만 정보가 없다는 메시지가 이내 떠올랐다. 강영현은 고민 없이 들고 있던 총으로 잠금장치를 쏘아 부쉈다. 잠금장치가 강제로 해제되자 문이 끼익, 열렸고 그 너머에는,</p>
+<p class="empty">&nbsp;</p>
+<p>지독한 피 냄새와, 여기에 있지 말아야 할 김원필이 있었다. 김원필은 문을 열고 나타난 강영현을 보며 피가 묻어 엉망이 된 얼굴로도 울 것 같은 얼굴이 되었다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현의 두 손이 격앙된 감정과 놀란 감정으로 정신없이 떨리기 시작했지만 그것도 잠시였다. 강영현은 그렇게 천장에 결박돼 억지로 매달려 있는 김원필에게 달려가 그의 힘없이 늘어진 그의 양팔 사이에 자신의 머리를 끼워 넣어 어깨로 김원필의 팔을 떠받치고, 김원필의 허벅지를 끌어올려 자신의 몸에 기대게 했다. 김원필의 몸이 너무 차가웠다.</p>
+<p class="empty">&nbsp;</p>
+<p>“무슨, 이게. 도대체, 어떻게.”</p>
+<p class="empty">&nbsp;</p>
+<p>강영현의 입에서는 완성되지 못한 말들이 두서없이 튀어나왔다. 김원필을 최대한 품 안에 끌어안은 채, 가이딩을 시작했지만 김원필은 얕은 기침을 뱉어내며 희미한 목소리로 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“왜 왔어. 도망가라고 했잖아.”</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 김원필을 조금 더 추켜 안으며 김원필의 팔이 묶인 천장의 끈을 바라보았다. 김원필의 상태는 최악이었다. 강영현은 수치를 확인하지 않아도 알 수 있었다. 힘이라곤 없는 마른 몸을 끌어안고 신체에 다른 상처들이 없는지 조심스럽게 어루만지는 동안에도 강영현은 최대한의 가이딩 에너지를 김원필에게 쏟아냈다. 상처는 없었다. 다행히도. 고문을 당하진 않은 모양이었다. 그런데 이 피는 대체 뭐란 말인가.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필을 흥건히 적시고 있는 피들은 김원필의 것이었다. 강영현은 여전히 차가운 김원필의 몸을 꽉 끌어안은 채, 한 손으로는 뒷주머니에 있던 나이프를 꺼내 김원필의 손목을 옥죄던 줄을 끊어냈다. 툭, 김원필의 팔이 힘없이 강영현의 어깨 위로 떨어졌다. 강영현은 고개를 돌려 김원필의 얼굴을 확인했다. 창백한 얼굴과 입가에 고인 피, 코피가 말라붙은 코. 강영현은 손을 들어 김원필의 입가를 조심스럽게 닦아내며 얼굴을 확인했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“왜,”</p>
+<p class="empty">&nbsp;</p>
+<p>평소에는 그저 손을 잡는 것만으로도, 그것이 모자라면 안고 있는 것으로도 충분한 가이딩이었다. 강영현은 이렇게까지 많은 가이딩 에너지를 김원필에게 쏟아냈던 적이 없었다. 그만큼 그들의 상성은 맞았다. 하지만 강영현이 더 많은 가이딩 에너지를 쏟아내어도 김원필은 울컥, 피를 토해냈다.</p>
+<p class="empty">&nbsp;</p>
+<p>“왜, 안 돼. 왜, 왜 안 되는 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p>강영현의 목소리가 떨리며 김원필의 목덜미에 얼굴을 묻은 채, 다시 한번 가이딩 에너지를 방사했다. 김원필의 머리가 힘없이 강영현의 어깨로 기대어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>“영현아, …나는 실패했어.”</p>
+<p class="empty">&nbsp;</p>
+<p>운이 나빴다고 해야 할까. 아니면 언제든 일어날 수 있었던 일이었음에도 강영현을 만난 김원필에게 있어서 그 수많은 당연한 일들을 미뤄내고 가장 하고 싶은 일이 생겼기 때문에 시야가 흐려지고 아주 잠깐 잊은 것뿐이라고 해야 할까. 뭐가 됐든 상관없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필의 폭주는 말 그대로 에스퍼 역사상 최악의 폭주였다. 에스퍼 단 한 명의 폭주로 부대 하나가 통째로 날아갔다는 건 상부로서도 처음 겪는 일이었다. 상부는 빠르게 결론을 내렸다. 이 정도의 폭주를 겪고 있는 김원필은 소생 불가 상태다. 그렇다면 어딘가에 새로운 드림워커가 있을 것이다. 그때 반군 측에서는 드림워커가 그들에게 있다는 새로운 선전을 펼쳤다. 그들은 김원필의 합류를 이용하여 그런 선전을 펼쳤던 것이고, 김원필이 이용하기로 했던 그 수가 예상하지 못한 순간에 예상하지 못한 방법으로 활용됐다. 상부는 새로운 드림워커를 반군에서 먼저 찾아냈으리라 판단했으며, 새로운 드림워커를 어떻게든 정부군으로 편입시키기 위해 반군과 대대적인 전쟁을 벌이기로 마음먹었다. 간헐적 전투만 이루어졌던 지난 수십 년 간의 지리한 공방전이 다시 세상을 무너뜨리려는 최악의 전쟁으로 치달을 수 있는 상황이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>고작 드림워커 하나 때문에. 드림워커가 뭐라고. 김원필은 자조했다.</p>
+<p class="empty">&nbsp;</p>
+<p>드림워커는 한 세대에 단 한 명만 존재할 수 있다는 경험을 통한, 하지만 증명되지 않은 사실 하나에 모두는 매몰되었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그 와중에도 김원필의 가이드였던 강영현 또한 소모할 수 있을 때까지 써먹을 작정이었다. 가이드를 찾기 힘든 드림워커에게 적합성이 상당히 높은 가이드가 정부군의 손에 있다는 것은 새로운 드림워커를 그들의 편으로 끌어들이기에 적당한 수였다. 그래서 임무 후 혼수상태가 된 강영현의 무의식에 침투하여 브레인워싱을 시도해 그들의 손쉬운 수단이 되도록 만들고자 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>폭주로 망가진 부대는 그렇게 버려졌다. 폭주에 시달리는 김원필을 그 부대의 지하에 가둔 채, 두뇌를 초기화한 강영현만 데려오면 모든 것을 파괴하기로 결정 내렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 생각했다. 왜 하필, 그 시점에 이전에는 겪어보지도 못했던 폭주가 터져 나왔던 것일까.</p>
+<p class="empty">&nbsp;</p>
+<p>폭주에 시달리며 피를 토해내고 괴로워하던 김원필의 앞에 폭주 직전에 마주했던 드림워커가 다시 나타난 게 정확히 어느 시점이었는지 김원필은 기억하지 못한다. 그는 김원필을 안타깝게 바라보았다. 김원필에게 다가와 김원필을 안쓰럽다는 듯이 쓰다듬었다. 처음 봤을 때는 알지 못했으나 그는 지금의 김원필보다 훨씬 나이가 많아 보였다. 흐릿한 시야로 김원필이 그를 쳐다보자, 그가 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“드림워커는 타인의 무의식을 넘나들 수도, 그들의 머릿속에 생각을 지울 수도, 심을 수도 있지만, 너 자신과 연결된 기억을 건드리게 되면 모든 게 무너진단다.”</p>
+<p class="empty">&nbsp;</p>
+<p>아, 김원필은 그제야 깨달았다. 강영현의 기억을 지운 일, 그것은 그저 강영현의 기억을 지운 단순한 것이 아니었다. 자기 자신의 머릿속에 있던 어떤 것 또한 지운 것이나 마찬가지였다. 김원필을 버티게 했던 것을 없앰으로써 오히려 건드리면 안 될 뇌관을 건드렸다. 드림워커에서 드림워커로 이어지던 오래된 본능, 견고한 무의식의 벽. 그 벽이 무너져 내렸을 때, 드림워커는 돌이킬 수 없는 길로 이르게 되었다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 애초에 알지도 못했고, 알 수도 없었던 것. 알았다면 달랐을까. 아니, 그렇지 않았을 것이다. 어차피 이 모든 일은 성공하지 않으면 실패하는 것뿐이었다. 성공보다는 실패의 가능성이 더 높은 일이었고, 결국은 실패를 했을 뿐이다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그래도, 너무 슬퍼하지 마. 더 이상의 드림워커는 없단다. 네가 마지막이었어.”</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 고통이 지배하는 뇌가 그 말을 제대로 받아들이지 못하고 있음에도 그저 그 말을 하는 그를 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“우리는 모두 죽을 거니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>그가 어떻게 지금 시점에 김원필의 눈앞에 나타났는지 김원필은 알 수 없다. 그저 고통이 만들어낸 환영일 수도 있었다. 그는 다시 사라졌고 그 후로 김원필은 다시 폭주에 의한 고통으로 신음했다. 하지만 김원필은 단 하나만은 확신할 수 있었다. 모든 것이 끝나리라는 것. 드디어 기쁘게 죽을 수 있는 것일까.</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 이렇게 강영현이 눈앞에 나타났을 때, 김원필은 자신의 마지막 시도마저 실패했음에 대하여 화가 나야 함에도 불구하고, 자신을 끌어안은 강영현에게서 일말의 안도를 느끼는 자기 자신에 대해서 조금의 슬픔을 느꼈다.</p>
+<p class="empty">&nbsp;</p>
+<p>마지막임을 알게 된 이후로, 폭주의 상태에서 능력을 쓰면 더욱 폭주를 가속화시키는 것을 알면서도 강영현의 무의식에 침투했다. 모든 것을 잊은 상태에서도 잃어버린 것을 찾기 위해 애를 쓰는 강영현을 보며 울컥, 울컥 감정이 치밀어올라 몇 번을 미뤘다. 무의식에서 다치는 것 또한 현실에서 다치는 것과도 동일한 고통이었기 때문에 피를 흘리며 쓰러져 있는 강영현을 지나치지 못하고 치료한 것 또한 김원필의 신체에는 어마어마한 무리를 가져오는 행위였으나, 김원필은 멈추지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>자신의 실패는 확정되었으나, 강영현은 모든 것을 잊었으니 실패하지 않을 수 있었다. 차라리 다행이었다. 모든 걸 잊었으니, 그는 살아갈 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>도망치라는 생각을 심었다. 미루고 미루다가 결국 더는 미룰 수 없는 시점에. 어디로든 도망갔으면 좋겠다. 모든 것이 끝나더라도 어딘가는, 이 세상 어딘가에는 도망칠 수 있는 어떤 곳이 있을지도 모르니까.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 자기가 할 수 있는 일을 다 했다고 생각했다. 마음이 편해졌다. 여전히 고통은 온몸을 괴롭게 만들었지만 괜찮았다. 이제는 기쁘게 죽을 수 있을 것 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“왜 왔어, 영현아.”</p>
+<p class="empty">&nbsp;</p>
+<p>그런데 강영현이 이렇게 나타난다는 것에 대해서는 고려하지 않은 변수라 김원필은 힘이 점점 떨어지는 와중에도 그를 타박하듯 중얼거렸다. 하지만 그와는 달리 그의 몸에 기대어져 있는 몸은 점점 더 그의 품속으로 파고들었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“가자.”</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 그를 단단히 끌어안은 채 속삭였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“실패했다니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>“아직, 안 끝났어.”</p>
+<p class="empty">&nbsp;</p>
+<p>그의 목소리에는 단호한 의지가 있었다. 그래서 김원필은 그에게 말하지 못했다. 최초의 드림워커를, 그가 말한 그 말을. 우리는 모두 죽을 것이라는 그 말을.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 김원필을 끌어안은 채로 심문실을 벗어났다. 그는 여전히 김원필에게 닿지만 않는 것 같은 가이딩 에너지를 김원필에게 지속적으로 불어넣어 주었다. 김원필은 조금 숨이 쉬기 편하다고 느껴지면서도 다시 한번 피를 울컥 뱉어낼 때는 그저 어쩔 수 없다는 듯이 희미하게 웃으며 조금 더 힘을 주어 강영현의 목을 끌어안을 뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>지상으로 올라온 강영현은 처참한 연병장을 가로질러 뛰었다. 무너져 내리고 여전히 무언가는 불에 타고 있었다. 하지만 그래도 뭐라도 하나가 있을 것이다. 우리를 이곳에서 벗어나게 해 줄 무언가가.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 반동강이 난 헬리포트의 헬기와, 창고의 군용 트럭들을 하나하나 확인하다가 문득 떠올렸다. 수리 중인 트럭은 이곳이 아닌 내부에 보관한다는 것을. 강영현의 발은 다급하게 움직인다. 그 와중에도 김원필에게는 여전히 강영현의 차고 넘치는 가이딩 에너지가 쏟아졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현의 턱으로 땀이 뚝뚝 떨어져 김원필의 얼굴에 닿았다. 강영현은 수리를 위해 내부에 있는 트럭 몇 대를 발견하고 주변을 둘러보다가 때가 묻고 넝마가 다 된 오래된 담요를 하나 가져와 바닥에 깔고 그 위에 김원필을 앉혔다. 김원필의 앞에 쭈그려 앉아 여전히 피가 묻은 얼굴을 마주하던 강영현은 다시 여러 가지를 뒤져 물병 몇 통과 그나마 깨끗한 천을 찾아냈다. 천에 잔뜩 물을 묻힌 채로 김원필의 얼굴에 묻은 굳은 피를 닦아내면서도 강영현은 다른 한 손으로 김원필의 손을 잡은 채 가이딩 에너지를 쏟아내고 있었다. 김원필의 얼굴을 봐도 알 수 있었다. 지금 이 에너지가 김원필에게 한 톨도 도움이 되지 않고 있다는 것을. 하지만 강영현은 멈출 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“잠깐만 기다려. 움직이는 게 있는지 봐야 하니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 희미하게 고개를 끄덕였다. 강영현은 김원필의 손을 꽉 잡으며 에너지를 방사하다가 결국 고개를 숙여 김원필의 입에 자신의 입을 맞췄다. 더 깊고 원초적인 에너지가 김원필의 몸으로 아주 조금 스며들었다. 여전히 온몸의 고통이 가득하다. 지글지글 끓는 에너지가 곧 터질 것만 같았다. 김원필은 자신에게서 떨어져 뛰어가는 강영현의 뒷모습을 바라보았다. 기쁘게 죽을 수 있을 것 같았는데, 자신을 살리겠다고 저렇게 뛰어다니는 강영현을 보니 마음속에서는 또 불쑥 살고 싶다는 의지가 튀어나온다.</p>
+<p class="empty">&nbsp;</p>
+<p>우리는 모두 죽을 거야.</p>
+<p class="empty">&nbsp;</p>
+<p>그 말을 떠올려도 여전히 살고 싶어졌다. 인간이란 그런 건가. 죽기 직전까지, 정말 죽음을 맞이하는 그 순간까지 살기 위해서 발버둥 치는 그런 존재인 건가.</p>
+<p class="empty">&nbsp;</p>
+<p>가장 구석에 있던 트럭 하나에 시동이 걸렸다. 강영현은 연료를 확인했다. 다른 차에 있는 기름을 모두 끌어내 움직일 수 있는 트럭으로 몰아넣었다. 그래도 중간 정도밖에 차지 않았다. 이걸로는 어디까지 갈 수 있을지 가늠이 되지 않았다. 하지만 더 이상 지체할 시간이 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 김원필에게로 뛰어왔다. 김원필은 그동안 다시 한번 피를 뱉어냈는지 얼굴이 엉망이었다. 강영현은 곧이라도 무너질 것 같은 마음을 다잡으며 대충 던져 놓았던 젖은 수건으로 김원필의 얼굴을 정성스레 닦았다. 그리고 김원필을 다시 온몸에 밀착해 끌어안고 들어 올렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>트럭에 올라탄 강영현은 여전히 김원필을 안은 채였다. 트럭은 내부가 다행히 넓었고, 김원필을 옆자리에 태운 상태보다는 밀착하고 있는 것이 그에게 가이딩 에너지를 조금이라도 더 받아들일 수 있을 것 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필도 강영현도 이제 그만하겠다는, 그만하라는 말을 하지 않는다. 꼭 어딘가에 큰 구멍이 나서 강영현의 에너지가 줄줄 새어나가는 것을 알면서도 그들은 그만두지 않는다. 한 톨이라도 김원필에게 스미는 가이딩 에너지가 있다면 그것이 김원필을 조금 더 나아지게 할 수 있다면 강영현은 그만두지 않을 것이다.</p>
+<p class="empty">&nbsp;</p>
+<p>이미 시동이 걸려 있는 트럭의 핸들을 잡기 전 강영현은 김원필이 조금 더 편하게 앉을 수 있고 자기 몸에 밀착될 수 있도록 자세를 조정했다. 김원필은 힘없이 강영현에게 반쯤 기대앉은 채로 강영현의 가슴께에 머리를 기대고 있었다. 쿵쿵쿵쿵, 빠른 심장 소리가 귓가에 퍼졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현이 액셀을 밟았고 트럭은 거친 굉음을 내며 움직이기 시작했지만, 그 굉음조차도 강영현의 심장 소리를 김원필에게서 멀어지게 만들지 않았다. 차가 거친 땅 위를 달릴 때마다 불규칙적으로 차체가 크게 움직였고 몸이 흔들릴 때마다 김원필은 고통이 밀려오는 것을 참아냈다.</p>
+<p class="empty">&nbsp;</p>
+<p>부대는 센트럴의 외곽에 있었고, 강영현은 외곽에서 멀지 않은 외부의 안전구역으로 빠져나가기로 마음먹었다. 하지만 부대를 벗어난 후로 강영현은 점점 드러나기 시작하는 예상하지 못한 광경에 저도 모르게 품에 안은 김원필을 더 끌어안았다.</p>
+<p class="empty">&nbsp;</p>
+<p>사방은 부대와 같은 폐허였다. 저 멀리 센트럴의 한가운데 보이는 센트럴의 상징, 스카이하이스가 검은 연기를 뿜어내며 불타고 있었다. 이게 도대체 어떻게 된 건지에 대한 생각은 아주 잠깐 들었으나 그것에 대해 고민하는 것 또한 사치였다. 강영현은 센트럴로부터 반대 방향으로 차를 몰았다. 가는 길에 보이는 모든 것들이 말해 주고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>센트럴의 몰락을. 무슨 일이 벌어졌는지 알고 싶지도 않았다. 그저 강영현은 단 하나만 생각했다. 이곳을 벗어나고, 안전구역도 벗어나서 어딘가로. 우리가 향하기로 한 그곳으로. 김원필을 안전하게 데리고 가야 한다는 그 하나의 생각.</p>
+<p class="empty">&nbsp;</p>
+<p>“영현아.”</p>
+<p class="empty">&nbsp;</p>
+<p>희미한 목소리가 강영현을 찾았다. 강영현은 발끝에 힘을 잔뜩 주고 액셀러레이터를 밟으면서도 대답했다. 응. 김원필이 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“우린 모두 죽을 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 아주 잠시 말이 없었다. 전방을 주시하던 강영현은 시선을 내려 자신을 보고 있던 김원필과 눈을 맞췄다.</p>
+<p class="empty">&nbsp;</p>
+<p>“우린 모두 죽을 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p>“.......”</p>
+<p class="empty">&nbsp;</p>
+<p>“하지만 죽기 전까진 살아있어.”</p>
+<p class="empty">&nbsp;</p>
+<p>아, 김원필은 눈을 감았다. 기쁘게 죽겠다고 마음먹었던 순간부터, 강영현을 만나 다시 살고 싶어진 지금까지 그 모든 시간이 눈앞을 스치듯 지나갔다. 현실의 시간과는 달랐던 그들의 시간. 수많은 생각과 감정과 마음을 나누고, 서로가 유일했던 그 시간. 진짜가 아니기 때문에 살고자 했었던 건데. 어쩌면 나는 그 시간의 일 분, 일 초 모든 순간을 살아있었던 것일지도 모르겠다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 어느 순간부터 조금씩 느려져 다시 평상시의 리듬을 찾은 강영현의 심장 소리에 귀를 기울이며 한참을 일렁이는 마음을 가라앉혔다.</p>
+<p class="empty">&nbsp;</p>
+<p>“영현아.”</p>
+<p class="empty">&nbsp;</p>
+<p>응. 강영현이 대답했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“가장 가고 싶은 곳으로 가. 그리고 거기서, 살아. 죽지 말고. 꼭 살아.”</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 아무 말이 없었다. 그의 턱이 굳어졌고, 그의 목울대가 크게 움직였으나 강영현은 한참 동안 아무 말도 하지 않았다. 가까스로 대답했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“우리 같이. 죽지 말고. 같이 사는 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p>희미하게 웃는 김원필의 코에서 코피가 흘렀다. 김원필은 고개를 끄덕였다. 저 멀리서 무언가가 터지고 무너져 내리는 소리가 들리는 것도 같았다. 하지만 아무래도 상관이 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p><strong>Epilogue, and Prologue </strong></p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 폐쇄지구에 돌아온 게 얼마나 됐는지 가늠해 보았다. 13살 생일을 맞기 전 도망쳤으니, 20년이 가까운 시간이었다. 폐쇄지구는 여전히 폐허가 된 버려진 도시다. 하지만 강영현이 기억하는 것과는 많이 달라졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>폐쇄지구를 채웠던 수많은 사람들은 모두가 어디로 갔는지 대부분 사라진 상태였다. 이제 폐쇄지구에 남은 사람들의 수는 현저히 적었다. 그들은 공격적이지 않았으며, 폐쇄지구를 그들의 집으로 삼고 살아가고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>폐허였던 돌무더기 사이에서 나무가 자랐고, 군데군데 파란 풀들이 돋아났다. 회색의 도시는 생명을 품고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 처음에는 적응이 되지 않았다. 폐쇄지구에 들어왔을 때, 본능적으로 폐쇄지구에서 살아가던 그 순간들을 떠올리고 온몸은 긴장 상태였으나 그러지 않아도 된다는 것을 깨달은 건 폐쇄지구에서 일주일 정도의 시간을 보낸 후였다.</p>
+<p class="empty">&nbsp;</p>
+<p>식물들이 돋아나기 시작한 것도 모자라 폐쇄지구에는 작은 소동물들이 뛰어다니는 모습을 심심찮게 볼 수 있었다. 버려진 도시, 폐허가 된 도시, 더 이상 갈 곳이 없는 사람들이 마지막으로 도망치는 곳. 폐쇄지구는 더 이상 그런 곳이 아닌 것만 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 폐쇄지구에 아직도 살고 있는 사람에게 물은 적이 있다. 이전에 여기에 있던 사람들은 다 어디로 갔냐고. 그들은 잘 모르겠다고 했다. 어느 날 폐쇄지구를 사방으로 막고 있던 장벽의 절반이 와르르 무너져 내렸고, 사람들은 그 너머에 있는, 무엇이 있는지도 모르지만 적어도 안전구역과 센트럴보다는 더 나은 것을 기대하며 나아갔다고 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>센트럴은 무너졌다. 센트럴이 무너지자 안전구역에는 더 이상 그곳을 살아가던 사람들을 억압하던 것들이 사라졌다. 하지만 안전구역에 살아가던 사람들은 여전히 그곳에 살고 있다고 들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>무너진 센트럴에는 승리한 반군들이 들어찼다고 했다. 그들은 자유를 부르짖으며 더 이상 우리는 과거와같이 살지 않아도 된다고 선전했다. 하지만 그건 알 수 없는 일이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>폐쇄지구에 오기까지 강영현은 수없이 죽을 뻔했고, 이동 수단이 없어 때로는 걸어서, 그리고 때로는 남의 것을 훔치기도 했다. 그래도 어떻게든 폐쇄지구로 돌아왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>장벽이 무너졌다는 곳에도 가보았다. 정말 무너졌다. 폐허더미 너머로부터 깨끗한 공기를 품은 바람이 불어오고 있다는 것만 확인하고 강영현은 예배당으로 돌아왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>예배당만이 여전한 것 같았다. 더 이상 오염되고 누런 햇빛이 아닌, 어떤 날은 맑았고, 어떤 날은 조금 흐리고, 또 어떤 날에는 뜨겁기까지 한 햇볕을 투과하는 스테인드글라스의 색색의 빛도, 부서진 의자들도. 강영현은 폐쇄지구에 들어온 후 이주가 지날 즈음부터 예배당을 고치기로 마음먹었다.</p>
+<p class="empty">&nbsp;</p>
+<p>아침이 되어 눈을 뜨면 강영현은 눈을 뜨고 몸을 일으켜 조금은 묵직한 몸에 고여 있는 잠을 털어냈고, 자신의 옆자리, 예배당의 단상 위, 스테인드글라스의 햇빛이 가장 잘 드는 곳, 폐쇄지구 구석구석을 돌아 사람들이 버리고 간 이불과 각종 천을 가져다 깨끗하게 빨아 말려 깔아 두고 그 위에 얌전히 누워 잠이 들어 있는 김원필을 확인한다.</p>
+<p class="empty">&nbsp;</p>
+<p>평온했다. 천천히 오르락내리락하는 가슴의 움직임을 확인하고서도 강영현은 검지를 뻗어 그의 코끝에 손을 대어본다. 희미하지만 작은 숨이 퍼지는 것이 느껴졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필은 이곳으로 오는 어느 순간 잠이 들었다. 아무리 깨워보려고 노력해도 일어나지 않았다. 하지만 숨을 쉬고 있었기 때문에 언젠가는 깨어날 것이라고 생각했다. 폐쇄지구로 오기까지 그 멀고 험한 길을 강영현은 김원필의 머리부터 발끝까지 한 톨도 다치거나 상하지 않게 그를 보호하며 오느라 정작 자기 몸에는 크고 작은 생채기들을 수도 없이 만들어냈지만, 강영현은 결국 성공했다.</p>
+<p class="empty">&nbsp;</p>
+<p>하루의 가장 많은 시간은 잠이 든 그의 손을 잡고 가이딩 에너지를 보내고, 가끔은 그를 꽉 끌어안은 채 제가 내뿜을 수 있는 모든 가이딩 에너지를 쏟아내고, 그 후로는 예배당을 고쳐나가기 시작했다. 무너진 벽들을 치우고, 장벽의 잔해 중 쓸 만한 것들을 가져와 그 위에 쌓았다. 천장은 어떻게 해야 할지 아직은 고민 중이지만 어떻게든 고칠 수 있을 것이다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“어제는 석궁을 얻었어. 광장에 있는 할아버지 말한 적 있었지? 그 할아버지가 알고 보니 장인이었나 봐. 아직은 서투른데 조금 연습하면 사냥도 할 수 있을 것 같아.”</p>
+<p class="empty">&nbsp;</p>
+<p>폐쇄지구는 이제 남은 사람들끼리 새로운 규칙을 정하여 서로 도와가며 살아가고 있었다. 더 이상 원초적인 폭력만이 지배하는 공간이 아니었다. 그들은 어느 날 갑자기 나타난 강영현을 경계하지도, 밀어내지도 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>해가 졌고, 강영현은 임시로 만들어놓은 예배당 한쪽 구석의 욕실에서 물통에 채워놓은 물로 간단하게 샤워를 한 후 여전히 젖은 머리를 대충 털어 말린 후 이제는 하얀 달빛을 받고 그 자리에 누워 잠이 든 김원필의 옆에 앉아 그날 하루 있었던 일들을 속삭이듯 늘어놓았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>더 이상 할 말이 없어지면 강영현은 김원필의 옆에 길게 누워 잠이 든 김원필을 한참 동안 바라보기만 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“원필아.”</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 매일 밤 김원필을 불렀다. 이제 여기, 자신이 있는 곳으로 오라고. 끝없는 무의식을 헤매고 있을 김원필을 불렀다. 언젠가는 눈을 뜰 것이라고 믿으며.</p>
+<p class="empty">&nbsp;</p>
+<p>하얀 달빛이 스테인드글라스를 통해 예배당의 허공에 색색으로 부서졌고, 강영현은 김원필의 가슴 위로 손을 올렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>그때 조금은 다른 움직임이 느껴졌다. 조금 크게 숨을 들이마시고, 다시 내뱉고. 강영현의 손은 자신도 모르게 가이딩 에너지를 조금 더 쏟아부었다. 숨을 들이마시고 내뱉는 과정이 조금 더 커지고 김원필의 입에서 한숨 같은 숨소리가 흩어져나온 것은 스테인드글라스의 빛이 십자가의 예수상 위로 옮겨져 예수상을 따라 다시 김원필의 위로 흩어져 흡사 과거의 신이 김원필을 바라보는 것 같이 빛이 쏟아지는 늦은 밤이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>김원필의 눈꺼풀이 파르르 떨리다가 천천히 무거운 것을 들어 올리듯 위로 뜨였다. 여전히 무겁다는 듯이 다시 감겼다가 다시 천천히 뜨고, 감기를 반복한다. 강영현은 반쯤 일어나 김원필을 바라보았다. 이제 눈을 뜨는 것에 익숙해진 김원필이 주변을 둘러보다가 강영현에게로 시선을 둔다.</p>
+<p class="empty">&nbsp;</p>
+<p>두 사람의 눈이 오랫동안 마주쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p>아, 강영현은 그런 김원필을 끌어 제 품에 가득 안았다. 쿵, 쿵 맞닿은 가슴의 심장이 뛰고 있었다. 살아있구나, 우리는. 김원필이 속삭였다. 강영현은 대답했다. 응, 살아있어.</p>
+<p class="empty">&nbsp;</p>
+<p>그때, 강영현의 목에 아무렇게나 걸려 있던 목걸이가 툭 끊겼다. 목에서 흘러내려 바닥으로 떨어지며 작은 충격이 나직한 음을 내는 펜던트는 조용하고 고요한 허공에 음을 내뱉었다. 하지만 반쯤 꺾인 음.</p>
+<p class="empty">&nbsp;</p>
+<p>강영현은 품에 있는 김원필을 더욱 꽉 옥죄며 김원필의 얼굴에 입을 맞추며 속삭였다. 잘 왔어, 나는 이제 어떤 것도 상관없어. 강영현의 단단한 등을 더듬으며 그를 끌어안았다.</p>
+<p class="empty">&nbsp;</p>
+<p>흰 달빛이 여전히 스테인드글라스를 통해 색색이 부서졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>비현실적인 아름다움이었다.</p>
+
+</div>
+<!-- 본문 끝 -->
+
+<!-- 하단 버튼 -->
+<div class="btn-wrap">
+  <a class="btn" href="/fic/">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
+    목록으로
+  </a>
+  <a class="btn" href="https://forms.gle/eaJu5Zz7BGjGH1bR9" target="_blank">
+    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    후기쓰기
+  </a>
+</div>
+
+<div class="footer">© 2026 @worldbyyp. All Rights Reserved.</div>
+
+<!-- 설정 패널 -->
+<div id="settings-wrap">
+  <div id="settings-panel">
+    <div class="panel-row">
+      <span class="panel-label">글씨</span>
+      <button class="ctrl-btn font-sm" onclick="changeFontSize(-1)">가</button>
+      <button class="ctrl-btn font-md" onclick="changeFontSize(0)">가</button>
+      <button class="ctrl-btn font-lg" onclick="changeFontSize(1)">가</button>
+    </div>
+    <div class="panel-row">
+      <button class="ctrl-btn mode-btn" id="modeBtn" onclick="toggleMode()">🌙 다크모드</button>
+    </div>
+  </div>
+  <button id="gear-btn" onclick="toggleSettings()">⚙</button>
+</div>
+
+<!-- TOP 버튼 -->
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
+
+<script>
+  // 우클릭/드래그 방지
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, true);
+  document.addEventListener('selectstart', function(e){ e.preventDefault(); return false; }, true);
+  document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; }, true);
+
+  // 진행바 + TOP 버튼
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (scrollTop / docHeight * 100) + '%';
+    var btn = document.getElementById('top-btn');
+    if (scrollTop > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // 설정 패널 토글
+  function toggleSettings() {
+    document.getElementById('settings-panel').classList.toggle('open');
+  }
+  // 패널 외부 클릭시 닫기
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('settings-wrap');
+    if (!wrap.contains(e.target)) {
+      document.getElementById('settings-panel').classList.remove('open');
+    }
+  });
+
+  // 폰트 크기 (본문만, 제목 제외)
+  var fontSizes = [14, 16, 18];
+  var fontIdx = 1;
+  function changeFontSize(dir) {
+    if (dir === 0) { fontIdx = 1; }
+    else { fontIdx = Math.max(0, Math.min(2, fontIdx + dir)); }
+    document.querySelector('.content').style.fontSize = fontSizes[fontIdx] + 'px';
+  }
+
+  // 다크/라이트 모드
+  function toggleMode() {
+    document.body.classList.toggle('dark-mode');
+    document.getElementById('modeBtn').textContent =
+      document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
+  }
+
+  // BGM — BGM 없는 작품은 아래 두 함수 삭제
+  var player;
+  var isPlaying = false;
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('ytplayer', { events: { 'onReady': function(e) {} } });
+  }
+  function toggleBGM() {
+    var btn = document.getElementById('bgmBtn');
+    if (!isPlaying) {
+      if (player && player.playVideo) player.playVideo();
+      btn.textContent = '■';
+      isPlaying = true;
+    } else {
+      if (player && player.stopVideo) player.stopVideo();
+      btn.textContent = '▶';
+      isPlaying = false;
+    }
+  }
+</script>
+</body>
+</html>
