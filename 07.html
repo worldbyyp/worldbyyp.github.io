@@ -5,111 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-  }
-  html, body {
-    background: #ffffff;
-    font-family: 'Nanum Gothic', sans-serif;
-    font-size: 16px;
-    line-height: 2;
-    color: #222222;
-    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default;
-  }
-  .header, .btn-wrap, .footer {
-    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
-  }
+  * { margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-user-select: none !important; -moz-user-select: none !important;
+    -ms-user-select: none !important; user-select: none !important; }
+  html, body { background: #ffffff; font-family: 'Nanum Gothic', sans-serif;
+    font-size: 16px; line-height: 2; color: #222222; cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default; }
+  .header, .btn-wrap, .footer { cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important; }
   .content { cursor: default !important; }
   a, button { cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important; }
-  .header {
-    background: #0b0b14;
-    color: #ffffff;
-    text-align: center;
-    padding: 60px 20px 50px;
-  }
+  .header { background: #0b0b14; color: #ffffff; text-align: center; padding: 60px 20px 50px; }
   .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
   .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
   .header .trigger { font-size: 13px; color: #0b0b14; }
-  .bgm-wrap {
-    background: #ffffff;
-    display: flex;
-    justify-content: center;
-    padding: 30px 20px;
-  }
-  .bgm-btn {
-    width: 48px;
-    height: 32px;
-    border: 1px solid #cccccc;
-    background: transparent;
-    color: #888888;
-    font-size: 14px;
-    font-family: 'Nanum Gothic', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.2s, color 0.2s;
-    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
-  }
+  .bgm-wrap { background: #ffffff; display: flex; justify-content: center; padding: 30px 20px; }
+  .bgm-btn { width: 48px; height: 32px; border: 1px solid #cccccc; background: transparent;
+    color: #888888; font-size: 14px; font-family: 'Nanum Gothic', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, color 0.2s; cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important; }
   .bgm-btn:hover { border-color: #888888; color: #555555; }
-  .content {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 40px 24px 60px;
-    background: #ffffff;
-    color: #222222;
-  }
+  .content { max-width: 680px; margin: 0 auto; padding: 40px 24px 60px; background: #ffffff; color: #222222; }
   .content p { margin-bottom: 0; min-height: 1.4em; }
   .content p.empty { height: 1.4em; }
-  em { font-style: italic; }
-  strong { font-weight: 700; }
-  .btn-wrap {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    padding: 120px 0 90px;
-    background: #0b0b14;
-  }
-  .btn {
-    display: flex; align-items: center; gap: 8px;
-    padding: 10px 28px;
-    border: 1px solid #555555;
-    background: transparent;
-    color: #cccccc;
-    font-size: 14px;
-    letter-spacing: 1px;
-    text-decoration: none;
-    font-family: 'Nanum Gothic', sans-serif;
-    transition: border-color 0.2s, color 0.2s;
-    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
-  }
+  em { font-style: italic; } strong { font-weight: 700; }
+  .btn-wrap { display: flex; gap: 16px; justify-content: center; padding: 120px 0 90px; background: #0b0b14; }
+  .btn { display: flex; align-items: center; gap: 8px; padding: 10px 28px;
+    border: 1px solid #555555; background: transparent; color: #cccccc;
+    font-size: 14px; letter-spacing: 1px; text-decoration: none;
+    font-family: 'Nanum Gothic', sans-serif; transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important; }
   .btn:hover { border-color: #ffffff; color: #ffffff; }
   .btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
-  .footer {
-    background: #0b0b14;
-    text-align: center;
-    padding: 20px;
-    font-size: 12px;
-    color: #ffffff;
-    font-family: 'Nanum Gothic', sans-serif;
-  }
-  @media (max-width: 600px) {
-    .header h1 { font-size: 22px; }
-    .content { padding: 30px 18px 50px; }
-  }
+  .footer { background: #0b0b14; text-align: center; padding: 20px;
+    font-size: 12px; color: #ffffff; font-family: 'Nanum Gothic', sans-serif; }
+  @media (max-width: 600px) { .header h1 { font-size: 22px; } .content { padding: 30px 18px 50px; } }
 </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
-
 <div class="header">
   <h1>파흔(破痕)</h1>
   <div class="author">달링</div>
   <div class="trigger">*No Trigger warning</div>
 </div>
-
 <div class="content">
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -117,14 +53,14 @@
 <p> 원필은 제 곁에 곤히 잠든 남자를 물끄러미 내려다보았다. 소년에서 완연한 남자가 된 뚜렷한 옆선이 눈에 들어왔다. 보름밤, 붉은 사막에서 처음 만났을 때보다 단단해진 턱선과 쭉 뻗은 콧대, 그리고 희미한 미소를 띤 입술까지. 애달픈 시선이 천천히 내려간다. 그는 저도 모르게 허공에 손을 뻗어 잠든 이의 뺨에 대려 하다가 이내 거두었다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>지금, 두 갈래의 길에 서 있다.</p>
-<p>복수는 쉽고 구원은 어렵다.</p>
+<p style="text-align:center;"><em><strong>지금, 두 갈래의 길에 서 있다.</strong></em></p>
+<p style="text-align:center;"><em><strong>복수는 쉽고 구원은 어렵다.</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>공교롭게도 오늘은 붉은 달빛이 사막을 가장 밝게 비추는 보름밤이었다. 물기 어린 시선이 탁자 위 플라스크 안, 만개한 하얀 튤립으로 향했다. </p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>어떤 길을 택할 것인가…</p>
+<p style="text-align:center;"><em><strong>어떤 길을 택할 것인가</strong></em><em><strong>…</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>아니, 원필은 이미 제 선택을 알고 있었다. 찰나의 순간 붉게 짓무른 눈가에 투명한 눈물이 그렁하게 맺히는 듯했다. 그는 아랫입술을 짓이기며 울음기를 목구멍 깊숙이 삼켜냈다. 허공에 머물던 손끝이, 가죽 주머니에서 꺼낸 유리병의 코르크 마개를 비틀어 열었다. 병 안에 든 푸른 액체가 넘칠 듯 찰랑거렸다.</p>
@@ -145,10 +81,10 @@
 <div class="content">
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>파흔(破痕)</p>
+<p style="text-align:center;"><strong>파흔(</strong><strong>破痕)</strong></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>-달링</p>
+<p><em>-달링</em></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -164,7 +100,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -203,7 +139,7 @@
 <p class="empty">&nbsp;</p>
 <p>밤새워 번민하던 이네는, 도서관을 찾아 명흔과 관련된 서적을 꼼꼼히 살폈다. 아들의 몸에 적힌 이름을 어떻게든 지워야 한다는 생각만이 머릿속을 지배했다.</p>
 <p class="empty">&nbsp;</p>
-<p>「명흔이 사라지는 유일한 길은 새겨진 이름의 주인이 사망했을 때뿐이다. 항간에는 명흔을 인위적으로 파괴하는 비술이 존재한다는 소문이 있었으나, 이는 허무맹랑한 낭설에 불과하다.」</p>
+<p><em><strong>「명흔이</strong></em><em><strong> 사라지는 유일한 길은 새겨진 이름의 주인이 사망했을 때뿐이다. 항간에는 명흔을 인위적으로 파괴하는 비술이 존재한다는 소문이 있었으나, 이는 허무맹랑한 낭설에 불과하다.</strong></em><em><strong>」</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p>서적이 알려준 정보는 하툰을 더 깊은 슬픔에 빠뜨릴 뿐이었다. 그녀는 다음 날 제 아버지의 집에서 일하는 늙은 정보원을 은밀히 불러 당부했다.</p>
 <p class="empty">&nbsp;</p>
@@ -237,7 +173,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -270,7 +206,7 @@
 <p class="empty">&nbsp;</p>
 <p>독은 빠르게 작은 혈관을 타고 퍼져나갔다. 살갗이 검푸르게 죽어가고 극심한 고열이 끓어올랐다. 하르호트의 의사들이 달라붙었지만, 열은 사흘 밤낮 동안 떨어지지 않았다. 생사의 경계 속에서 영현의 머릿속을 스쳐 지나간 것은, 전날 도서관 금서 구역에서 읽었던 아르칸의 잔혹한 핏빛 역사였다. </p>
 <p class="empty">&nbsp;</p>
-<p>옥좌에 오르기 위해 2대 카안은 이복 형제 셋, 3대 카안은 동복 형제를 포함해 여섯 명을 도륙했다. 4대 카안은, 형제들뿐 아니라 선대의 하툰들까지 모조리 암살했다. </p>
+<p><em><strong>옥좌에 오르기 위해 2대 카안은 이복 형제 셋, 3대 카안은 동복 형제를 포함해 여섯 명을 도륙했다. 4대 카안은, 형제들뿐 아니라 선대의 하툰들까지 모조리 암살했다. </strong></em></p>
 <p class="empty">&nbsp;</p>
 <p>아르칸 제국의 절대 군주, 카안의 옥좌는 반드시 타이지에게만 승계된다. 하지만 카안의 자격은 태어난 순서나 적장자의 명분 따위와는 무관했다. 오직 가장 뛰어난 타이지만이 그 자리를 쟁취할 수 있다는 것이 아르칸의 절대 법칙이었다.</p>
 <p class="empty">&nbsp;</p>
@@ -311,7 +247,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;"><strong>***</strong></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -385,7 +321,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -777,7 +713,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;"><strong>***</strong></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -970,17 +906,17 @@
 <p>구시대의 동화책에서 보았던 마법 양탄자가 이러했을까. 사막 위를 매끄럽게 가르는 소리 없는 비행이 시작됐다. </p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>하르호트의 태양은 눈을 멀게 하고</p>
-<p>사막의 바람은 귀를 열게 한다네.</p>
+<p><em><strong>하르호트의 태양은 눈을 멀게 하고</strong></em></p>
+<p><em><strong>사막의 바람은 귀를 열게 한다네.</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>바람 사이로, 원필이 혼잣말처럼 흥얼거리는 노랫소리가 퍼졌다. 영현이 원필을 처음 보았던 날, 달맞이꽃을 캐면서 읊조렸던 바로 그 음이었다. </p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>기억의 모래는 발자국을 지우고</p>
-<p>엇갈린 약속은 별이 되어 박히네.</p>
-<p>바람아, 내 목소리가 닿지 않는 곳까지</p>
-<p>이 노래를 실어보내주오…</p>
+<p><em><strong>기억의 모래는 발자국을 지우고</strong></em></p>
+<p><em><strong>엇갈린 약속은 별이 되어 박히네.</strong></em></p>
+<p><em><strong>바람아, 내 목소리가 닿지 않는 곳까지</strong></em></p>
+<p><em><strong>이 노래를 실어보내주오</strong></em><em><strong>…</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>이 노래는 아르칸에서 금지된 해온족의 전통가요였다. 원필은 아주 어릴 적 누군가가 불러주었던 희미한 기억을 더듬어, 속삭이듯 노래를 이어갔다. 영현은 원필의 어깨에 제 턱을 올린 채 지그시 눈을 감았다. 여린 듯 단단한 미성이 밤이슬처럼 귓가를 적셨다.</p>
@@ -1278,9 +1214,9 @@
 <p class="empty">&nbsp;</p>
 <p>그럴 리가 없는데. 말도 안 되는 일인데. 원필의 해맑은 대답과 동시에, 귓속에서 날카로운 이명이 울려 퍼졌다. 순간 영현의 머릿속으로 몇십 번을 곱씹어 읽어 글자 하나하나까지 외워버렸던 낡은 명흔서의 한 페이지가 스쳐 지나갔다.</p>
 <p class="empty">&nbsp;</p>
-<p>「무릇 명흔(命痕)이란 두 사람에게 쌍방으로 발현되는 것이 이치이나, 모든 섭리에는 예외가 존재하는 법. 그 흉터를 홀로 짊어지는 ‘일방(一方) 명흔’의 병증이 기록된 사례가 몇 차례 있었다.</p>
+<p><em><strong>「무릇</strong></em><em><strong> 명흔(</strong></em><em><strong>命痕)</strong></em><em><strong>이란 두 사람에게 쌍방으로 발현되는 것이 이치이나, 모든 섭리에는 예외가 존재하는 법. 그 흉터를 홀로 짊어지는 ‘일방(</strong></em><em><strong>一方) </strong></em><em><strong>명흔’의 병증이 기록된 사례가 몇 차례 있었다.</strong></em></p>
 <p class="empty">&nbsp;</p>
-<p>각인을 품은 자는 지독한 명흔통(命痕痛)을 앓으며 주기적으로 상대와 교합(交合)해야만 연명할 수 있으나, 명흔이 없는 상대방은 그 어떠한 통증이나 운명의 징후로부터 자유롭다.」</p>
+<p><em><strong>각인을 품은 자는 지독한 명흔통(</strong></em><em><strong>命痕痛)</strong></em><em><strong>을 앓으며 주기적으로 상대와 교합(</strong></em><em><strong>交合)</strong></em><em><strong>해야만 연명할 수 있으나, 명흔이 없는 상대방은 그 어떠한 통증이나 운명의 징후로부터 자유롭다.</strong></em><em><strong>」</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p>쌍방의 굴레인 줄 알았던 각인이, 일방의 상흔이 되어 그의 목을 죄어왔다. 영현의 세계가 발밑부터 서서히 붕괴하기 시작했다.</p>
 <p class="empty">&nbsp;</p>
@@ -1342,7 +1278,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>그러나 운명의 톱니바퀴는 영현의 믿음을 철저히 배신했다. 새벽녘 하르호트에 전례 없는 지각변동이 일어난 참이었다. 영현이 성내에 당도했을 때, 곳곳에서 대낮처럼 환하게 횃불이 타오르고 있었다. 왕의 친위대인 케식들이 요리사 바우르치들을 포박하여 끌고 가는 중이었다.</p>
@@ -1546,19 +1482,19 @@
 <p>밀봉해 넘긴 짧은 서신 안에는, 피비린내 나는 현실을 애써 숨긴 마음이 꾹꾹 눌러 담겨 있었다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>「원필아 나야, 영현이.</p>
+<p><strong>「원필아</strong><strong> 나야, 영현이.</strong></p>
 <p class="empty">&nbsp;</p>
-<p>집안에 급한 변고가 생겨서 당분간 출발할 수 없을 것 같아. </p>
+<p><strong>집안에 급한 변고가 생겨서 당분간 출발할 수 없을 것 같아. </strong></p>
 <p class="empty">&nbsp;</p>
-<p>이 편지를 가져간 자는 내 수족과 같은 자니 겁먹지 않아도 돼.</p>
+<p><strong>이 편지를 가져간 자는 내 수족과 같은 자니 겁먹지 않아도 돼.</strong></p>
 <p class="empty">&nbsp;</p>
-<p>딱 한 달. 그 안에 모든 걸 마무리 짓고 널 만나러 갈게. </p>
+<p><strong>딱 한 달. 그 안에 모든 걸 마무리 짓고 널 만나러 갈게. </strong></p>
 <p class="empty">&nbsp;</p>
-<p>허나 만약, 한 달이 지나도 내가 가지 못한다면 혼자 떠나도록 해. </p>
+<p><strong>허나 만약, 한 달이 지나도 내가 가지 못한다면 혼자 떠나도록 해. </strong></p>
 <p class="empty">&nbsp;</p>
-<p>네가 녹색지대로 돌아올 때, 다시 찾아갈게.</p>
+<p><strong>네가 녹색지대로 돌아올 때, 다시 찾아갈게.</strong></p>
 <p class="empty">&nbsp;</p>
-<p>영현.」</p>
+<p><strong>영현.</strong><strong>」</strong></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>영현은 휘에게 원필이 머무는 은신처의 좌표의 좌표와 함께 흙먼지를 가리고 쳐둔 위장막을 걷어내는 방법도 세세하게 일러주었다.</p>
@@ -1675,7 +1611,7 @@
 <p class="empty">&nbsp;</p>
 <p>뭐지? 너무 뜨거워. 원필의 시선이 제 다리에 닿은 영현의 탄탄한 허벅지에 닿았다.</p>
 <p class="empty">&nbsp;</p>
-<p>「金元弼」</p>
+<p><strong>「金元弼」</strong></p>
 <p class="empty">&nbsp;</p>
 <p>탄탄한 넓적다리 위에, 익숙한 이름 석 자가 마치 끓어오르는 마그마처럼 검붉은 빛을 뿜어내고 있었다.</p>
 <p class="empty">&nbsp;</p>
@@ -1722,7 +1658,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -2020,7 +1956,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -2109,14 +2045,14 @@
 <p>이윽고 원필의 입술 사이로 해온족의 옛 자장가가 나직하게 흘러나왔다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>눈을 감으면 바람이 잠들고</p>
-<p>붉은 사막엔 달빛만 남지</p>
-<p>착한 아이야 양들을 세렴</p>
-<p>꿈속에 들면 아프지 않단다</p>
-<p>달콤한 물과 푸른 언덕이</p>
-<p>너를 찾아와 안아줄 거야</p>
-<p>노래가 끝나면 다 나을 테니</p>
-<p>셋을 세고서 잠에 들자꾸나</p>
+<p><em><strong>눈을 감으면 바람이 잠들고</strong></em></p>
+<p><em><strong>붉은 사막엔 달빛만 남지</strong></em></p>
+<p><em><strong>착한 아이야 양들을 세렴</strong></em></p>
+<p><em><strong>꿈속에 들면 아프지 않단다</strong></em></p>
+<p><em><strong>달콤한 물과 푸른 언덕이</strong></em></p>
+<p><em><strong>너를 찾아와 안아줄 거야</strong></em></p>
+<p><em><strong>노래가 끝나면 다 나을 테니</strong></em></p>
+<p><em><strong>셋을 세고서 잠에 들자꾸나</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“하나, 둘… 셋.”</p>
@@ -2134,7 +2070,7 @@
 <p>제 안에서 범람하는 감정이 갈래를 잃고 말았다. 흔들리는 시선이 탁자 위 플라스크 안의 하얀 튤립에 머물렀다. 밤사이 누가 물을 주었는지, 시들어가던 꽃잎은 어느새 생기를 머금고 겹겹의 꽃망울을 밀어 올리고 있었다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -2314,7 +2250,7 @@
 <p class="empty">&nbsp;</p>
 <p>영현의 하의가 길게 찢겨 나가며 허벅지의 맨살이 드러났다. 순간, 가까이서 검을 들이밀고 있던 태륜의 눈이 크게 뜨였다. 찢어진 옷자락 사이로 피보다 더 붉은 기괴한 글자가 선명한 빛을 뿜어내고 있었다.</p>
 <p class="empty">&nbsp;</p>
-<p>「弼」</p>
+<p><strong>「弼」</strong></p>
 <p class="empty">&nbsp;</p>
 <p>이건 뭐지. 몸에 왜 글씨가? 태륜의 두 눈이 경악으로 물든 찰나였다. 시야를 잃었음에도 살기의 방향을 본능적으로 읽어낸 영현의 재빠른 반격이 이어졌다. 쐐액-! 섬뜩한 파공음과 함께 영현의 검이 은빛 호를 그렸다.</p>
 <p class="empty">&nbsp;</p>
@@ -2331,7 +2267,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“그 녀석을 가만히 두지 않겠다.”</p>
@@ -2574,18 +2510,18 @@
 <p>눈물범벅이 된 원필이 흠칫 놀라 부서진 목걸이를 내려다보았다. 반으로 갈라진 투박한 펜던트 안에는 바싹 마른 정체불명의 붉은 약초 가루와 오래된 양피지 조각이 돌돌 말려 숨겨져 있었다. 떨리는 손으로 펼쳐낸 낡은 종이 위에는, 이한의 필체로 된 주술이 적혀 있었다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>「명흔을 지우고자 한다면,</p>
-<p>망연초 가루를 맑은 정수에 녹여내라.</p>
+<p style="text-align:center;"><strong>「명흔을</strong><strong> 지우고자 한다면,</strong></p>
+<p style="text-align:center;"><strong>망연초 가루를 맑은 정수에 녹여내라.</strong></p>
 <p class="empty">&nbsp;</p>
-<p>그 절반은 명흔을 짊어진 자에게 먹이고,</p>
-<p>남은 반절은 주술을 거행하는 자가 삼켜야 할지니.</p>
+<p style="text-align:center;"><strong>그 절반은 명흔을 짊어진 자에게 먹이고,</strong></p>
+<p style="text-align:center;"><strong>남은 반절은 주술을 거행하는 자가 삼켜야 할지니.</strong></p>
 <p class="empty">&nbsp;</p>
-<p>그리하면 흔적을 품은 자는 </p>
-<p>파흔(破痕)하여</p>
-<p>낙인처럼 박힌 이름이 </p>
-<p>영원히 소멸할 것이나</p>
-<p>그 대가로 천기를 거스른 자는 </p>
-<p>평생의 목소리를 잃을 것이다.」</p>
+<p style="text-align:center;"><strong>그리하면 흔적을 품은 자는 </strong></p>
+<p style="text-align:center;"><strong>파흔(</strong><strong>破痕)</strong><strong>하여</strong></p>
+<p style="text-align:center;"><strong>낙인처럼 박힌 이름이 </strong></p>
+<p style="text-align:center;"><strong>영원히 소멸할 것이나</strong></p>
+<p style="text-align:center;"><strong>그 대가로 천기를 거스른 자는 </strong></p>
+<p style="text-align:center;"><strong>평생의 목소리를 잃을 것이다.</strong><strong>」</strong></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“아….”</p>
@@ -2606,14 +2542,14 @@
 <p class="empty">&nbsp;</p>
 <p>이한은 그렇게 말하고, 졸음에 눈을 비비는 아이를 토닥이며 나직한 목소리로 자장가를 읊조렸다.</p>
 <p class="empty">&nbsp;</p>
-<p>눈을 감으면 바람이 잠들고</p>
-<p>붉은 사막엔 달빛만 남지</p>
-<p>착한 아이야 양들을 세렴</p>
-<p>꿈속에 들면 아프지 않단다</p>
-<p>달콤한 물과 푸른 언덕이</p>
-<p>너를 찾아와 안아줄 거야</p>
-<p>노래가 끝나면 다 나을 테니</p>
-<p>셋을 세고서 잠에 들자꾸나...</p>
+<p><em><strong>눈을 감으면 바람이 잠들고</strong></em></p>
+<p><em><strong>붉은 사막엔 달빛만 남지</strong></em></p>
+<p><em><strong>착한 아이야 양들을 세렴</strong></em></p>
+<p><em><strong>꿈속에 들면 아프지 않단다</strong></em></p>
+<p><em><strong>달콤한 물과 푸른 언덕이</strong></em></p>
+<p><em><strong>너를 찾아와 안아줄 거야</strong></em></p>
+<p><em><strong>노래가 끝나면 다 나을 테니</strong></em></p>
+<p><em><strong>셋을 세고서 잠에 들자꾸나...</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p>하나, 둘, 셋. 그 한없이 다정했던 음성을 끝으로 큰 눈이 스르르 감겼다. 그리고 다음 날 아침, 원필이 깨어났을 때 몸에 새겨져 있던 붉은 글자는 잔흔 하나 남기지 않고 완벽하게 사라져 있었다.</p>
 <p class="empty">&nbsp;</p>
@@ -2745,16 +2681,16 @@
 <p class="empty">&nbsp;</p>
 <p>그는 대리석 바닥에 널브러진 겉옷을 주워 입고, 침상 아래 숨겨두었던 낡은 가죽 주머니에서 작은 유리병 두 개를 꺼내 들었다. </p>
 <p class="empty">&nbsp;</p>
-<p>푸른색 병은 뼈와 살을 녹이는 맹독이오, </p>
-<p>붉은색 병은 망연초의 비약이다. </p>
+<p><em><strong>푸른색 병은 뼈와 살을 녹이는 맹독이오, </strong></em></p>
+<p><em><strong>붉은색 병은 망연초의 비약이다. </strong></em></p>
 <p class="empty">&nbsp;</p>
 <p>원필은 제 곁에 곤히 잠든 남자를 물끄러미 내려다보았다. 소년에서 완연한 남자가 된 뚜렷한 옆선이 눈에 들어왔다. 보름밤, 붉은 사막에서 처음 만났을 때보다 단단해진 턱선과 쭉 뻗은 콧대, 그리고 희미한 미소를 띤 입술까지. 애달픈 시선이 천천히 내려간다. 그는 저도 모르게 허공에 손을 뻗어 잠든 이의 뺨에 대려 하다가 이내 거두었다.</p>
 <p class="empty">&nbsp;</p>
-<p>그는 지금 두 갈래의 길에 서 있다. 복수는 쉽고 구원은 어렵다.</p>
+<p><em><strong>그는 지금 두 갈래의 길에 서 있다. 복수는 쉽고 구원은 어렵다.</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p>공교롭게도 오늘은 붉은 달빛이 사막을 가장 밝게 비추는 보름밤이었다. 물기 어린 시선이 탁자 위 플라스크 안, 만개한 하얀 튤립으로 향했다. </p>
 <p class="empty">&nbsp;</p>
-<p>어떤 길을 택할 것인가…</p>
+<p><em><strong>어떤 길을 택할 것인가</strong></em><em><strong>…</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p>아니, 원필은 이미 제 선택을 알고 있었다. 찰나의 순간 붉게 짓무른 눈가에 투명한 눈물이 한 방울 그렁하게 맺히는 듯했다. 그는 아랫입술을 짓이기며 울음기를 목구멍 깊숙이 삼켜냈다. 이내 허공에 머물던 손끝이, 가죽 주머니에서 꺼낸 유리병의 코르크 마개를 비틀어 열었다. 병 안에 든 푸른 액체가 넘칠 듯 찰랑거렸다.</p>
 <p class="empty">&nbsp;</p>
@@ -2764,7 +2700,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -2804,11 +2740,11 @@
 <p class="empty">&nbsp;</p>
 <p>그 순간, 언젠가 붉은 사막의 바람을 맞으며 원필이 뱉어냈던 말이 환청처럼 귓가를 스쳤다.</p>
 <p class="empty">&nbsp;</p>
-<p>하르호트의 그 숨 막히는 성벽 안에서 갇혀 사느니, 차라리 난 죽을 거야.</p>
+<p><em><strong>하르호트의 그 숨 막히는 성벽 안에서 갇혀 사느니, 차라리 난 죽을 거야.</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p>허억. 영현의 입술 사이로 비명이 샜다. 다리에서 힘이 풀리며 그의 몸이 차가운 돌바닥 위로 무너져 내렸다. 원필이 영현을 버리고 떠나 풍화했다. 끔찍한 명흔에게서, 영현에게서, 그리고 이 하르호트에서 영원히 벗어나기 위해. 어젯밤 자신에게 먼저 안겨 오며 내어주었던 다정한 허락과 달콤한 입맞춤은 그가 건네는 잔인한 작별 인사에 불과했던 것이었다.</p>
 <p class="empty">&nbsp;</p>
-<p>아무도 모르는 척박한 사막 깊은 곳으로 홀로 걸어 들어가서, 제 육신이 거친 모래바람에 온전히 깎이고 바스러져 모래가 될 때까지 묵묵히 기다리는 거야…</p>
+<p><em><strong>아무도 모르는 척박한 사막 깊은 곳으로 홀로 걸어 들어가서, 제 육신이 거친 모래바람에 온전히 깎이고 바스러져 모래가 될 때까지 묵묵히 기다리는 거야</strong></em><em><strong>…</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p>“안 돼, 원필아…! 원필아!”</p>
 <p class="empty">&nbsp;</p>
@@ -2844,7 +2780,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -2861,7 +2797,7 @@
 <p class="empty">&nbsp;</p>
 <p>하지만 지금 당장은 죽을 수 없었다. 아니, 결단코 죽어서는 안 되었다. 열광하는 군중 너머, 아득하게 일렁이는 붉은 사막의 지평선을 응시하던 영현의 귓가로 고운 원필의 목소리가 환청처럼 흩어졌다.</p>
 <p class="empty">&nbsp;</p>
-<p>—맹세해줘. 좋은 카안이 되겠다고.</p>
+<p><em><strong>—맹세해줘</strong></em><em><strong>. 좋은 카안이 되겠다고.</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p>그래, 너와 한 맹세를 반드시 지킬게, 원필아. 네가 꿈꾸던 세상. 성벽 안팎의 차별이 무너지고, 척박한 사막의 억압받는 자들도 맑은 물을 마시는 세상. 피비린내 대신 꽃이 피어나는 평온한 제국을 만들어 볼게.</p>
 <p class="empty">&nbsp;</p>
@@ -2890,7 +2826,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>-FIN.</p>
+<p><em>-FIN.</em></p>
 <p class="empty">&nbsp;</p>
 <p>-에필로그</p>
 <p class="empty">&nbsp;</p>
@@ -2982,12 +2918,12 @@
 <p>그리고 부디, 제발, 더는 아프지 않기를. </p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>하르호트의 태양은 눈을 멀게 하고</p>
-<p>사막의 바람은 귀를 열게 한다네.</p>
-<p>기억의 모래는 발자국을 지우고</p>
-<p>엇갈린 약속은 별이 되어 박히네.</p>
-<p>바람아, 내 목소리가 닿지 않는 곳까지</p>
-<p>이 노래를 실어보내주오…</p>
+<p><em><strong>하르호트의 태양은 눈을 멀게 하고</strong></em></p>
+<p><em><strong>사막의 바람은 귀를 열게 한다네.</strong></em></p>
+<p><em><strong>기억의 모래는 발자국을 지우고</strong></em></p>
+<p><em><strong>엇갈린 약속은 별이 되어 박히네.</strong></em></p>
+<p><em><strong>바람아, 내 목소리가 닿지 않는 곳까지</strong></em></p>
+<p><em><strong>이 노래를 실어보내주오</strong></em><em><strong>…</strong></em></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>입술로 새어 나오지 못한 침묵의 노래가 마음속에서 흩어졌다. 원필은 손에 쥐어진 따뜻한 빵 한 덩이를 소중히 품에 안은 채, 다시금 녹색지대를 향해 느린 발걸음을 옮겼다. 뒤에서 불어온 모래바람이 길을 잃지 말라는 듯 마른 등을 부드럽게 밀어주었다.</p>
@@ -2995,7 +2931,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>FIN.</p>
+<p><em>FIN.</em></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -3015,7 +2951,6 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 </div>
-
 <div class="btn-wrap">
   <a class="btn" href="https://sites.google.com/view/theworldbyyp/fic" target="_parent">
     <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
@@ -3026,37 +2961,31 @@
     후기쓰기
   </a>
 </div>
-
 <div class="footer">© 2026 @worldbyyp. All Rights Reserved.</div>
-
 <script>
   document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, true);
   document.addEventListener('selectstart', function(e){ e.preventDefault(); return false; }, true);
   document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; }, true);
-
+  
   var players = {};
   var isPlaying = {};
-
   var tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(tag);
-
   function onYouTubeIframeAPIReady() {
-    [1,2,3].forEach(function(idx) {
+    [1,2,3].slice(0,3).forEach(function(idx) {
       var el = document.getElementById('ytplayer' + idx);
       if (el) {
-        players[idx] = new YT.Player('ytplayer' + idx, {
-          events: { 'onReady': function(e) {} }
-        });
+        players[idx] = new YT.Player('ytplayer' + idx, { events: { 'onReady': function(e) {} } });
         isPlaying[idx] = false;
       }
     });
   }
-
   function toggleBGM(idx) {
     var btn = document.getElementById('bgmBtn' + idx);
     if (!isPlaying[idx]) {
-      [1,2,3].forEach(function(i) {
+      Object.keys(isPlaying).forEach(function(i) {
+        i = parseInt(i);
         if (i !== idx && isPlaying[i]) {
           if (players[i] && players[i].stopVideo) players[i].stopVideo();
           document.getElementById('bgmBtn' + i).textContent = '▶';
