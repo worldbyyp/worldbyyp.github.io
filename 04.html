@@ -23,15 +23,9 @@
   .header, .btn-wrap, .footer {
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
   }
-  .content {
-    cursor: default !important;
-  }
-  a, .btn {
-    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
-  }
-  a:hover, .btn:hover {
-    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
-  }
+  .content { cursor: default !important; }
+  a, button { cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important; }
+
   .header {
     background: #0b0b14;
     color: #ffffff;
@@ -42,17 +36,6 @@
   .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
   .header .trigger { font-size: 13px; color: #888888; }
 
-  /* 숨겨진 유튜브 iframe */
-  .youtube-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  /* BGM 버튼 */
   .bgm-wrap {
     background: #ffffff;
     display: flex;
@@ -60,14 +43,16 @@
     padding: 30px 20px;
   }
   .bgm-btn {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 32px;
+    width: 48px;
+    height: 32px;
     border: 1px solid #cccccc;
     background: transparent;
     color: #888888;
-    font-size: 13px;
-    letter-spacing: 1px;
+    font-size: 14px;
     font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: border-color 0.2s, color 0.2s;
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
   }
@@ -84,6 +69,7 @@
   .content p.empty { height: 1.4em; }
   em { font-style: italic; }
   strong { font-weight: 700; }
+
   .btn-wrap {
     display: flex;
     gap: 16px;
@@ -106,6 +92,7 @@
   }
   .btn:hover { border-color: #ffffff; color: #ffffff; }
   .btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
   .footer {
     background: #0b0b14;
     text-align: center;
@@ -122,12 +109,10 @@
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
-<!-- 숨겨진 유튜브 iframe -->
-<div class="youtube-hidden">
+<div class="youtube-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
   <iframe id="ytplayer"
     src="https://www.youtube.com/embed/E244Db-Cd5I?enablejsapi=1&autoplay=0"
-    allow="autoplay"
-    allowfullscreen>
+    allow="autoplay" allowfullscreen>
   </iframe>
 </div>
 
@@ -2258,31 +2243,24 @@
   var player;
   var isPlaying = false;
 
-  // YouTube IFrame API 로드
   var tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(tag);
 
   function onYouTubeIframeAPIReady() {
     player = new YT.Player('ytplayer', {
-      events: {
-        'onReady': function(e) {}
-      }
+      events: { 'onReady': function(e) {} }
     });
   }
 
   function toggleBGM() {
     var btn = document.getElementById('bgmBtn');
     if (!isPlaying) {
-      if (player && player.playVideo) {
-        player.playVideo();
-      }
+      if (player && player.playVideo) player.playVideo();
       btn.textContent = '■';
       isPlaying = true;
     } else {
-      if (player && player.stopVideo) {
-        player.stopVideo();
-      }
+      if (player && player.stopVideo) player.stopVideo();
       btn.textContent = '▶';
       isPlaying = false;
     }
