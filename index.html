@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+</style>
+</head>
+<body>
+<script>
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+  }, true);
+  document.addEventListener('selectstart', function(e) {
+    e.preventDefault();
+    return false;
+  }, true);
+  document.addEventListener('dragstart', function(e) {
+    e.preventDefault();
+    return false;
+  }, true);
+  try {
+    window.parent.document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    }, true);
+    window.parent.document.addEventListener('selectstart', function(e) {
+      e.preventDefault();
+    }, true);
+  } catch(e) {}
+</script>
+</body>
+</html>
