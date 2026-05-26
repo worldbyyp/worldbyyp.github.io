@@ -132,10 +132,8 @@
     pointer-events: auto;
     transform: translateX(0);
   }
-  .panel-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .panel-row:last-child {
+    justify-content: center;
   }
   .panel-label {
     font-size: 10px;
@@ -160,7 +158,7 @@
   .ctrl-btn.font-sm { font-size: 13px; }
   .ctrl-btn.font-md { font-size: 13px; }
   .ctrl-btn.font-lg { font-size: 13px; }
-  .ctrl-btn.mode-btn { font-size: 13px; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; gap: 4px; }
+  .ctrl-btn.mode-btn { font-size: 13px; width: 120px; display: flex; align-items: center; justify-content: center; text-align: center; gap: 4px; }
   .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); color: #ffffff; }
   #gear-btn {
     width: 36px;
