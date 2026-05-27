@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ART — YOUNGPIL Webzine : 世界2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default; }
+    body { background: #0b0b14; font-family: 'Nanum Gothic', sans-serif; }
+
+    /* 네비 */
+    .nav-outer { padding: 60px 0; }
+    .nav-wrap {
+      position: relative;
+      width: 100%; max-width: 672px;
+      margin: 0 auto; line-height: 0;
+    }
+    .nav-wrap img { display: block; width: 100%; height: auto; pointer-events: none; }
+    .nav-wrap img.hover-img { position: absolute; top:0; left:0; opacity:0; transition: opacity 0.1s; }
+    .zone {
+      position: absolute; z-index: 10; text-decoration: none;
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
+    }
+    .zone-home   { left:0%;  top:0%; width:13%; height:100%; }
+    .zone-fic    { left:76%; top:0%; width:6%;  height:100%; }
+    .zone-art    { left:82%; top:0%; width:18%; height:70%; }
+    .zone-behind { left:82%; top:50%; width:18%; height:50%; }
+
+    /* 카드 목록 */
+    .page-wrap { max-width: 672px; margin: 0 auto; padding: 0 20px; }
+    .list { display: flex; flex-direction: column; gap: 12px; }
+
+    .card, .card * { cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important; }
+    .card {
+      position: relative; display: block;
+      text-decoration: none; overflow: hidden; border-radius: 6px;
+    }
+    .card img.bg {
+      display: block; width: 100%; height: auto;
+    }
+    /* art는 실제 이미지 위에 텍스트 오버레이 */
+    .overlay {
+      position: absolute; top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0);
+      transition: background 0.35s;
+    }
+    .card:hover .overlay {
+      background: rgba(0,0,0,0.45);
+    }
+    .inner {
+      position: absolute; top:0; left:0; right:0; bottom:0;
+      padding: 0 20% 0 22%;
+      display: flex; flex-direction: column; justify-content: center;
+      gap: 3px;
+      opacity: 0; transition: opacity 0.35s;
+    }
+    .card:hover .inner { opacity: 1; }
+    .title {
+      font-size: clamp(10px, 3.6vw, 24px);
+      font-weight: 700; color: #fff;
+      letter-spacing: 2px; line-height: 1;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+      position: relative; top: -1px;
+    }
+    .author {
+      font-size: clamp(7px, 1.8vw, 14px);
+      color: #cccccc; letter-spacing: 0.5px; line-height: 1;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+      position: relative; top: 3px;
+    }
+    .tags {
+      position: absolute;
+      bottom: 22%; right: 7%;
+      display: flex; gap: 4px; align-items: center;
+      opacity: 0; transition: opacity 0.35s;
+    }
+    .card:hover .tags { opacity: 1; }
+    .tag {
+      font-size: clamp(6px, 1.2vw, 11px); color: #fff;
+      border: 1px solid rgba(255,255,255,0.7); border-radius: 4px;
+      padding: 2px 6px; background: rgba(0,0,0,0.35);
+      white-space: nowrap; line-height: 1.4; text-align: center;
+      font-family: 'Nanum Gothic', sans-serif;
+    }
+
+    /* 하단 */
+    .footer-area {
+      height: 300px; display: flex;
+      align-items: flex-end; justify-content: center;
+      padding-bottom: 40px;
+    }
+    .copyright { font-size: 12px; color: #ffffff; font-family: 'Nanum Gothic', sans-serif; text-align: center; }
+
+    #top-btn {
+      position: fixed; bottom: 36px; right: 28px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #888; font-size: 11px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer; text-decoration: none;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    #top-btn.visible { opacity: 1; }
+    #top-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="nav-outer">
+    <div class="nav-wrap">
+      <img class="base" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-basic_vnsvwz.png" alt="">
+      <img class="hover-img" id="imgHome"   src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-home_lm2jsl.png"   alt="">
+      <img class="hover-img" id="imgFic"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-fic_nwj22t.png"    alt="">
+      <img class="hover-img" id="imgArt"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-art_zvol24.png"    alt="">
+      <img class="hover-img" id="imgBehind" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-behind_toqrv9.png" alt="">
+      <a class="zone zone-home"   href="/home"   onmouseenter="showHover('imgHome')"   onmouseleave="hideAll()"></a>
+      <a class="zone zone-fic"    href="/fic"    onmouseenter="showHover('imgFic')"    onmouseleave="hideAll()"></a>
+      <a class="zone zone-art"    href="/art"    onmouseenter="showHover('imgArt')"    onmouseleave="hideAll()"></a>
+      <a class="zone zone-behind" href="/behind" onmouseenter="showHover('imgBehind')" onmouseleave="hideAll()"></a>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="list">
+    <a class="card" href="/art/28">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art28_lijlxd.png" alt="여름 키우기">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">여름 키우기</div>
+        <div class="author">김끼잉</div>
+      </div>
+      <div class="tags"><span class="tag">SF</span><span class="tag">인외물</span></div>
+    </a>
+    <a class="card" href="/art/29">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art29_dcspk2.png" alt="천계의 사랑!">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">천계의 사랑!</div>
+        <div class="author">나흘</div>
+      </div>
+      <div class="tags"><span class="tag">현대판타지</span></div>
+    </a>
+    <a class="card" href="/art/30">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art30_cmzzph.png" alt="소원이 머물다 간 자리">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">소원이 머물다 간 자리</div>
+        <div class="author">덕수</div>
+      </div>
+      <div class="tags"><span class="tag">인외물</span><span class="tag">현대판타지</span></div>
+    </a>
+    <a class="card" href="/art/31">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art31_e7ro84.png" alt="형은 가끔">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">형은 가끔</div>
+        <div class="author">두덩</div>
+      </div>
+      <div class="tags"><span class="tag">수인물</span><span class="tag">환생물</span></div>
+    </a>
+    <a class="card" href="/art/32">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art32_toola1.png" alt="페어">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">페어</div>
+        <div class="author">두부</div>
+      </div>
+      <div class="tags"><span class="tag">센티넬버스</span></div>
+    </a>
+    <a class="card" href="/art/33">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art33_tq4kyy.png" alt="적당한 상실">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">적당한 상실</div>
+        <div class="author">따불</div>
+      </div>
+      <div class="tags"><span class="tag">센티넬버스</span></div>
+    </a>
+    <a class="card" href="/art/34">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art34_elwxjg.png" alt="나에게서 당신에게">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">나에게서 당신에게</div>
+        <div class="author">마카</div>
+      </div>
+      <div class="tags"><span class="tag">SF</span></div>
+    </a>
+    <a class="card" href="/art/35">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art35_zt3opq.png" alt="59.5AU">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">59.5AU</div>
+        <div class="author">빠삐</div>
+      </div>
+      <div class="tags"><span class="tag">SF</span></div>
+    </a>
+    <a class="card" href="/art/36">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art36_u4gqja.png" alt="만개의 조건">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">만개의 조건</div>
+        <div class="author">뽀동</div>
+      </div>
+      <div class="tags"><span class="tag">인외물</span></div>
+    </a>
+    <a class="card" href="/art/37">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art37_auevf2.png" alt="龍虎相搏">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">龍虎相搏</div>
+        <div class="author">음이</div>
+      </div>
+      <div class="tags"><span class="tag">동양판타지</span></div>
+    </a>
+    <a class="card" href="/art/38">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art38_dhzcye.png" alt="천사는 오늘도 일합니다">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">천사는 오늘도 일합니다</div>
+        <div class="author">청바</div>
+      </div>
+      <div class="tags"><span class="tag">천사물</span><span class="tag">판타지</span></div>
+    </a>
+    <a class="card" href="/art/39">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880984/art39_lsa2j5.png" alt="그 여름을 기억해">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">그 여름을 기억해</div>
+        <div class="author">필폭스</div>
+      </div>
+      <div class="tags"><span class="tag">인외물</span><span class="tag">현대물</span></div>
+    </a>
+    <a class="card" href="/art/40">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art40_hxvh5k.png" alt="At the sight of thee">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">At the sight of thee</div>
+        <div class="author">loveubettter</div>
+      </div>
+      <div class="tags"><span class="tag">고전물</span></div>
+    </a>
+    <a class="card" href="/art/41">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880984/art41_qe2izq.png" alt="up all (k)night">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">up all (k)night</div>
+        <div class="author">mai</div>
+      </div>
+      <div class="tags"><span class="tag">시대물 왕정물</span></div>
+    </a>
+    <a class="card" href="/art/42">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880984/art42_cz63u5.png" alt="Server Maintenance">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">Server Maintenance</div>
+        <div class="author">ravie</div>
+      </div>
+      <div class="tags"><span class="tag">게임물</span><span class="tag">NPC물</span></div>
+    </a>
+    <a class="card" href="/art/43">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880984/art43_nronul.png" alt="우리 집, 어느 날 (Our Home, One Day)">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">우리 집, 어느 날 (Our Home, One Day)</div>
+        <div class="author">Shark</div>
+      </div>
+      <div class="tags"><span class="tag">수인물</span></div>
+    </a>
+    <a class="card" href="/art/44">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880984/art44_snjjc9.png" alt="From that rainy night">
+      <div class="overlay"></div>
+      <div class="inner">
+        <div class="title">From that rainy night</div>
+        <div class="author">uyoonim</div>
+      </div>
+      <div class="tags"><span class="tag">현대물</span><span class="tag">힐링물</span></div>
+    </a>
+    </div>
+    <div class="footer-area">
+      <p class="copyright">© 2026 @worldbyyp. All Rights Reserved.</p>
+    </div>
+  </div>
+
+  <a id="top-btn" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">TOP</a>
+
+  <script>
+    var cur = null;
+    function showHover(id) {
+      if (cur === id) return;
+      cur = id;
+      document.querySelectorAll('.hover-img').forEach(function(el){ el.style.opacity='0'; });
+      document.getElementById(id).style.opacity = '1';
+    }
+    function hideAll() {
+      cur = null;
+      document.querySelectorAll('.hover-img').forEach(function(el){ el.style.opacity='0'; });
+    }
+    window.addEventListener('scroll', function() {
+      document.getElementById('top-btn').classList.toggle('visible', window.scrollY > 200);
+    });
+  </script>
+</body>
+</html>
