@@ -63,13 +63,37 @@
     transition: background 0.3s;
   }
   .header-img-wrap {
-    margin-bottom: 24px;
+    margin-top: 0;
+    margin-bottom: 60px;
     display: flex;
     justify-content: center;
   }
   .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
   .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
-  .header .tags { font-size: 13px; color: #888888; }
+  .header .trigger { font-size: 13px; }
+
+  .bgm-wrap {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 0;
+    transition: background 0.3s;
+  }
+  .bgm-btn {
+    width: 48px;
+    height: 32px;
+    border: 1px solid var(--text);
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
 
   #settings-wrap {
     position: fixed;
@@ -107,13 +131,6 @@
   }
   .panel-row:last-child {
     justify-content: center;
-  }
-  .panel-label {
-    font-size: 10px;
-    color: #888888;
-    font-family: 'Nanum Gothic', sans-serif;
-    width: 28px;
-    user-select: none !important;
   }
   .ctrl-btn {
     border: 1px solid rgba(255,255,255,0.2);
@@ -229,6 +246,8 @@
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
 
+
+
 <div id="progress-bar"></div>
 
 <div class="header">
@@ -237,8 +256,10 @@
   </div>
   <h1>여름 키우기</h1>
   <div class="author">김끼잉</div>
-  <div class="tags">SF, 인외물</div>
+  <div class="trigger" style="font-size: 13px; color: #0b0b14;">*No Trigger Warning</div>
 </div>
+
+
 
 <div class="content">
     <img src="https://art.theworldbyyp.kr/28/28(1).png" alt="" style="width:100%; height:auto; display:block; margin-bottom:8px;">
@@ -253,6 +274,8 @@
     <img src="https://art.theworldbyyp.kr/28/28(10).png" alt="" style="width:100%; height:auto; display:block; margin-bottom:8px;">
     <img src="https://art.theworldbyyp.kr/28/28(11).png" alt="" style="width:100%; height:auto; display:block; margin-bottom:8px;">
 </div>
+
+
 
 <div class="btn-wrap">
   <a class="btn" href="/art/">
@@ -307,6 +330,8 @@
     document.getElementById('modeBtn').textContent =
       document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
   }
+
+
 </script>
 </body>
 </html>
