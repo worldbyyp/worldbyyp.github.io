@@ -3,8 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>배덕(背徳)</title>
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg: #ffffff;
+    --text: #222222;
+    --header-bg: #0b0b14;
+    --btn-wrap-bg: #0b0b14;
+    --footer-bg: #0b0b14;
+  }
+  .dark-mode {
+    --bg: #111111;
+    --text: #ffffff;
+    --header-bg: #111120;
+    --btn-wrap-bg: #111120;
+    --footer-bg: #111120;
+  }
+
   * {
     margin: 0; padding: 0; box-sizing: border-box;
     -webkit-user-select: none !important;
@@ -13,44 +29,186 @@
     user-select: none !important;
   }
   html, body {
-    background: #ffffff;
+    background: var(--bg);
     font-family: 'Nanum Gothic', sans-serif;
     font-size: 16px;
     line-height: 2;
-    color: #222222;
-    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default;
+    color: var(--text);
+    cursor: default;
+    transition: background 0.3s, color 0.3s;
   }
-  .header, .btn-wrap, .footer {
+  .header, .btn-wrap, .footer, #settings-wrap, #top-btn {
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
   }
   .content { cursor: default !important; }
-  a, button { cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important; }
+  a, button {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+
+  /* 진행바 */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: #888888;
+    z-index: 9999;
+    transition: width 0.1s;
+  }
+
+  /* 헤더 */
   .header {
-    background: #0b0b14;
+    background: var(--header-bg);
     color: #ffffff;
     text-align: center;
     padding: 60px 20px 50px;
+    transition: background 0.3s;
+  }
+  .header-img-wrap {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .header-img-placeholder {
+    font-size: 28px;
+    color: #555555;
+    /* 이미지 생기면 아래로 교체:
+    <img src="★이미지주소★" alt="" style="width:80px; height:auto;"> */
   }
   .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
   .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
   .header .trigger { font-size: 13px; color: #888888; }
+
+  /* BGM — BGM 없는 작품은 .bgm-wrap 째로 삭제 */
+  .bgm-wrap {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 0;
+    transition: background 0.3s;
+  }
+  .bgm-btn {
+    width: 48px;
+    height: 32px;
+    border: 1px solid var(--text);
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
+
+  /* 톱니바퀴 + 패널 */
+  #settings-wrap {
+    position: fixed;
+    bottom: 36px;
+    left: 28px;
+    z-index: 999;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  #settings-panel {
+    background: rgba(30, 30, 40, 0.82);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-10px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  #settings-panel.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+  .panel-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+  }
+  .panel-row:last-child {
+    justify-content: center;
+  }
+  .panel-label {
+    font-size: 10px;
+    color: #888888;
+    font-family: 'Nanum Gothic', sans-serif;
+    width: 28px;
+    user-select: none !important;
+  }
+  .ctrl-btn {
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: #cccccc;
+    font-family: 'Nanum Gothic', sans-serif;
+    padding: 3px 10px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .ctrl-btn.font-sm { font-size: 13px; }
+  .ctrl-btn.font-md { font-size: 13px; }
+  .ctrl-btn.font-lg { font-size: 13px; }
+  .ctrl-btn.mode-btn { font-size: 13px; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; gap: 4px; }
+  .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); color: #ffffff; }
+  #gear-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  #gear-btn:hover {
+    background: rgba(40, 40, 55, 0.8);
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* 본문 */
   .content {
     max-width: 680px;
     margin: 0 auto;
     padding: 40px 24px 60px;
-    background: #ffffff;
-    color: #222222;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s, font-size 0.2s;
   }
-  .content p { margin-bottom: 0; min-height: 1.4em; }
-  .content p.empty { height: 1.4em; }
+  .content p { margin-bottom: 1em; min-height: 1.4em; }
+  .content p.empty { height: 1.4em; margin-bottom: 0; }
   em { font-style: italic; }
   strong { font-weight: 700; }
+
+  /* 하단 버튼 */
   .btn-wrap {
     display: flex;
     gap: 16px;
     justify-content: center;
-    padding: 120px 0 90px;
-    background: #0b0b14;
+    padding: 60px 0 60px;
+    background: var(--btn-wrap-bg);
+    transition: background 0.3s;
   }
   .btn {
     display: flex; align-items: center; gap: 8px;
@@ -67,14 +225,47 @@
   }
   .btn:hover { border-color: #ffffff; color: #ffffff; }
   .btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+  /* 푸터 */
   .footer {
-    background: #0b0b14;
+    background: var(--footer-bg);
     text-align: center;
     padding: 20px;
     font-size: 12px;
     color: #ffffff;
     font-family: 'Nanum Gothic', sans-serif;
+    transition: background 0.3s;
   }
+
+  /* TOP 버튼 */
+  #top-btn {
+    position: fixed;
+    bottom: 36px;
+    right: 28px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 11px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 1; pointer-events: auto; }
+  #top-btn:hover {
+    background: rgba(40, 40, 55, 0.8);
+    color: rgba(255,255,255,0.9);
+  }
+
   @media (max-width: 600px) {
     .header h1 { font-size: 22px; }
     .content { padding: 30px 18px 50px; }
@@ -83,13 +274,31 @@
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
+<!-- 진행바 -->
+<div id="progress-bar"></div>
+
+
+
+<!-- 헤더 -->
 <div class="header">
-  <h1>배덕(背德)</h1>
+  <div class="header-img-wrap">
+    <div class="header-img-placeholder">★</div>
+    <!-- 이미지 생기면 위 div 지우고 아래 주석 해제:
+    <img src="★이미지주소★" alt="" style="width:80px; height:auto;">
+    -->
+  </div>
+  <h1>배덕(背徳)</h1>
   <div class="author">나선</div>
-  <div class="trigger">*Trigger warning</div>
+  <div class="trigger">*Trigger Warning</div>
 </div>
 
+
+
+
+
+<!-- 본문 시작 -->
 <div class="content">
+
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>금혼령이 내려졌다. 도성 곳곳에 붙은 방에 사람들이 몰려들었다. 글을 읽지 못하는 자들 앞에 글을 붙여놓으면 뭐 하랴. 누군가 읽어주기만을 기다리고 있던 사람들 사이에서 순돌이가 재빠르게 책방으로 달려갔다. 다들 비키시오, 비키시오! 우렁찬 고함에 사람들이 갈라진다. 따사로운 햇살에 졸고 있던 책방 영감을 어깨에 짊어지고 순돌이 그 사이를 걸어갔다. 안경을 올려 쓰고 방을 찬찬히 읽은 책방 영감이 땅이 꺼져라 한숨을 쉬었다.</p>
@@ -118,7 +327,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>배덕(背德)</strong></p>
+<p><strong>배덕</strong><strong>(</strong><strong>背德</strong><strong>)</strong></p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -168,7 +377,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“세자,”</p>
-<p>“​이만 물러가겠습니다. 중전마마.”</p>
+<p>“이만 물러가겠습니다. 중전마마.”</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>한참을 마주한 눈은 영현이 먼저 피했다. 멈춘 숨을 터뜨리며 영현을 불렀으나 영현은 물러가겠다며 일어섰다. 이 넓은 궁 안에 향을 잠그는 방법을 아는 이는 왕과 세자뿐이니 꼭 물어보고 싶었는데. 가겠다고 예를 갖춘 인사를 하는 영현을 붙잡을 재량이 없었다. 영현이 나가고 긴장이 풀림과 동시에 향이 퐁퐁 솟아올랐다. 그렇게 한 소리를 들었는데도 터지는 향에 억울해져 입술을 비죽였다. 나가버린 세자는 제게 단 한 번도 향을 내어준 적이 없는데. 꼭 이렇게 참아야 한다고 질책하는 것 같아 제 향으로만 꽉 채운 이곳에서 침울해졌다.</p>
@@ -196,7 +405,7 @@
 <p>“전하께서?”</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>별로 달갑지 않은 이의 부름에 가고 싶지 않다는 의미로 박상궁을 바라보지만, 방법은 없었다. 가셔야 합니다. 마마. 단호한 목소리에 원필이 느릿하게 일어나 입을 삐죽이며 희정당으로 향했다. 안으로 들어서기도 전에 밖에 서 있는 궁인들이 익숙했다. 왕이 가장 아끼는 숙의의 사람들. 왕을 보필하는 내관이 문을 열어주면 목도할 광경이 이미 눈에 선하다. </p>
+<p>별로 달갑지 않은 이의 부름에 가고 싶지 않다는 의미로 박상궁을 바라보지만, 방법은 없었다. 가셔야 합니다. 마마. 단호한 목소리에 원필이 느릿하게 일어나 입을 삐죽이며 희정당으로 향했다. 안으로 들어서기도 전에 밖에 서 있는 궁인들이 익숙했다. 왕이 가장 아끼는 숙의의 사람들. 왕을 보필하는 내관이 문을 열어주면 목도할 광경이 이미 눈에 선하다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“소인은 나가면 되겠사옵니까?”</p>
@@ -223,7 +432,7 @@
 <p>“아니오. 중전. 세자가 왔는데 같이 담소라도 나누어야지요.”</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>세자가 왔다는 내관의 말에 숙의가 일어서자 원필도 따라 일어섰다. 경고는 잘 알아들었으니 물러가겠다는 말이었으나 그것조차 못하게 왕이 막아선다. 가족의 마음이 먼지만큼도 없는 이들이 모여 무슨 담소를 나눈다는 건지. 숙의가 나가고, 들어오는 영현과 눈이 마주쳤다. 정확히는 들어오며 마주친 숙의에게 웃으며 인사하는 영현을 물끄러미 바라보다가 시선을 마주했다. 영현의 얼굴에서 웃음기가 지워진다. </p>
+<p>세자가 왔다는 내관의 말에 숙의가 일어서자 원필도 따라 일어섰다. 경고는 잘 알아들었으니 물러가겠다는 말이었으나 그것조차 못하게 왕이 막아선다. 가족의 마음이 먼지만큼도 없는 이들이 모여 무슨 담소를 나눈다는 건지. 숙의가 나가고, 들어오는 영현과 눈이 마주쳤다. 정확히는 들어오며 마주친 숙의에게 웃으며 인사하는 영현을 물끄러미 바라보다가 시선을 마주했다. 영현의 얼굴에서 웃음기가 지워진다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“소자, 중전마마께서도 계신 줄 몰랐습니다.”</p>
@@ -311,7 +520,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“그래서 어찌 잠그는 것입니까?”</p>
-<p>“단전에 힘을 주시면 됩니다. 처음 조절은 어려우나 곧 익숙해지실 겁니다.”​</p>
+<p>“단전에 힘을 주시면 됩니다. 처음 조절은 어려우나 곧 익숙해지실 겁니다.”</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>이리 쉬운 것인데 원필에게 알려주지 않은 연유는 무엇일까. 제 아비의 고약한 성질과 고집에 혀를 내두른 영현이 원필에게 향을 잠그는 법을 쉽게 내놓았다. 원필에게 매번 향을 잠그라고 눈치를 주었으나 영현이 좋아하는 향이었다. 한량처럼 전국 방방곡곡을 돌아다니는 동생이 선물했던 금목서라는 꽃과 같은 향. 방법을 알려주었으니 이제 원필에게 나는 이 꽃향기도 다시 맡기는 힘들겠지. 곧 갈무리가 될 원필의 향을 마지막으로 크게 들이켰다. 이미 이 좁은 공간에서 다양한 감정을 표출한 만큼 많이 흘러나온 원필의 향에 뒤덮인 영현이 한계인 줄도 모르고.</p>
@@ -337,7 +546,7 @@
 <p>“하아, 하아…….”</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p> 흥분된 숨을 내뱉으며 뒤를 돌아봤을 땐 영현이 없었다. 이곳은 대조전이 아닌 동궁전인데도 저만 남아 있었다. 급하게 영현을 부르려 했으나 문밖의 큰 그림자가 보여 입을 다물었다. 그제야 작금의 사태를 깨닫고 제 두 손에 얼굴을 묻었다. 창피하고 부끄러웠지만 싫지 않았다. 제 치마를 찔러오던 영현의 아래가 나만 흥분한 것이 아니라는 방증이었기에. </p>
+<p>흥분된 숨을 내뱉으며 뒤를 돌아봤을 땐 영현이 없었다. 이곳은 대조전이 아닌 동궁전인데도 저만 남아 있었다. 급하게 영현을 부르려 했으나 문밖의 큰 그림자가 보여 입을 다물었다. 그제야 작금의 사태를 깨닫고 제 두 손에 얼굴을 묻었다. 창피하고 부끄러웠지만 싫지 않았다. 제 치마를 찔러오던 영현의 아래가 나만 흥분한 것이 아니라는 방증이었기에.</p>
 <p class="empty">&nbsp;</p>
 <p>원필의 향만 가득했던 궁 안에 다른 향이 섞여 들었다. 제게는 보여주지 않은 영현의 다정한 미소 같은 포근한 향. 원필이 처음 맡아보는 영현의 향이다.</p>
 <p class="empty">&nbsp;</p>
@@ -455,7 +664,7 @@
 <p>“그럼, 이제 제 차례, 아니 내 차례입니다.”</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>장에 가보신 적이 있습니까? 장이 열리면 제일 끝 쪽에 요깃거리를 만드는 집이 있습니다. 거기 조청에 버무린 것이 궁에서 주는 약과보다……. 원필의 이야기가 훗날 제가 왕이 되었을 때 도움이 되는 이야기인지는 전혀 모르겠지만, 재잘대는 원필의 광대가 볼록 솟아있었다. 가장 아름답다고 생각한 눈이 웃느라 휘어지고, 목소리가 그 어느 때보다 맑고 밝다.</p>
+<p>장에 가보신 적이 있습니까? 장이 열리면 제일 끝 쪽에 요깃거리를 만드는 집이 있습니다. 거기 조청에 버무린 것이 궁에서 주는 약과보다……. 원필의 이야기가 훗날 제가 왕이 되었을 때 도움이 되는 이야기인지는 전혀 모르겠지만, 재잘대는 원필의 광대가 볼록 솟아있었다. 가장 아름답다고 생각한 눈이 웃느라 휘어지고, 목소리가 그 어느 때보다 맑고 밝다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“어, 웃는다!”</p>
@@ -547,8 +756,8 @@
 <p>“…가야 합니다.”</p>
 <p>“민내관은 어의를 부르거라.”</p>
 <p>“예? 예. 저하.”</p>
-<p>“​이시간부로 중전의 처소에 어의를 제외한 다른 이들의 출입을 금한다.”</p>
-<p>“​세자!”</p>
+<p>“이시간부로 중전의 처소에 어의를 제외한 다른 이들의 출입을 금한다.”</p>
+<p>“세자!”</p>
 <p>“박상궁은 민내관을 따라가서 어의에게 탕약도 같이 들이라 전하거라.”</p>
 <p>“세자, 이게 뭐하는,”</p>
 <p>“향 조절을 못 하고 계시지 않습니까.”</p>
@@ -623,7 +832,7 @@
 <p class="empty">&nbsp;</p>
 <p>물기 가득한 목소리가 울려 펴졌다. 목소리 끝에 아양이 묻어나온다. 양인에게 안기려는 본능이다. 동시에 제 향을 풀어 영현을 유혹했다. 마주친 두 눈이 반쯤 풀려있는데도 빛을 내며 저를 담는다. 향을 풀어주시면 안 됩니까? 애처로운 목소리에 영현은 또 넘어갈 수밖에 없었다. 원필의 가까이에서 작게 향을 풀어내자 허겁지겁 영현의 향을 들이마셨다. 그 순한 얼굴이 순식간에 야해 빠진다.</p>
 <p class="empty">&nbsp;</p>
-<p>이 야살스러운 얼굴을 계속 보았다간 정신력으로 붙잡고 있는 제 이성을 그대로 놓아버릴지도 몰랐다. 영현은 급하게 등잔 위의 불을 남김없이 꺼버렸다. 그게 더 자극시킬 줄은 꿈에도 모르고. 불이 꺼지고 달빛에 의지하게 되자 원필의 손이 더 대담해졌다. 영현의 손을 붙잡고 끌어 제 당의 안으로 집어넣었다. 원필에게 무례하게 굴며 배를 쓸어댔던 그날처럼 만져달라는 의미다. </p>
+<p>이 야살스러운 얼굴을 계속 보았다간 정신력으로 붙잡고 있는 제 이성을 그대로 놓아버릴지도 몰랐다. 영현은 급하게 등잔 위의 불을 남김없이 꺼버렸다. 그게 더 자극시킬 줄은 꿈에도 모르고. 불이 꺼지고 달빛에 의지하게 되자 원필의 손이 더 대담해졌다. 영현의 손을 붙잡고 끌어 제 당의 안으로 집어넣었다. 원필에게 무례하게 굴며 배를 쓸어댔던 그날처럼 만져달라는 의미다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“흣, 흐읍…….”</p>
@@ -635,7 +844,7 @@
 <p>“참으셔야지요. 마마. 밖의 궁인들이 다 듣게 생겼습니다.”</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>영현의 손에 느끼느라 정신없는 와중에 착실히 고개를 끄덕였다. 이미 제 궁으로 들어온 이상 밖에 서 있는 궁인들은 보고도 못 본 척, 들어도 듣지 못한 척하는 것이 당연한 일이거늘. 원필만 그걸 모르고 두 손으로 제 입을 틀어막는다. 순진한 김원필. 이런 원필을 제 아비에게 보낸다는 건 상상할 수도 없는 일이다. </p>
+<p>영현의 손에 느끼느라 정신없는 와중에 착실히 고개를 끄덕였다. 이미 제 궁으로 들어온 이상 밖에 서 있는 궁인들은 보고도 못 본 척, 들어도 듣지 못한 척하는 것이 당연한 일이거늘. 원필만 그걸 모르고 두 손으로 제 입을 틀어막는다. 순진한 김원필. 이런 원필을 제 아비에게 보낸다는 건 상상할 수도 없는 일이다.</p>
 <p class="empty">&nbsp;</p>
 <p>이미 풀어헤쳐진 당의와 치마까지 모두 벗겨내자 원필의 몸이 그대로 그러난다. 풍성한 치마 아래에 숨겨져 있던 마른 몸을 잘근잘근 씹고 싶어 애꿎은 제 송곳니만 질리도록 훑어댔다. 앞과 뒤가 모두 푹 젖어버린 속곳 위로 손을 대어 움직이면 제 입을 막았어도 흘러나오는 야릇한 신음과 움찔대는 허리가 절경이었다.</p>
 <p class="empty">&nbsp;</p>
@@ -643,11 +852,11 @@
 <p>“세자, 흑, 그만, 흣, 그마안…….”</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>별로 만져주지도 않았는데 절정이 오는 듯 원필이 입을 막지도 못하고 영현의 손을 밀어내며 몸부림쳤다. 영현의 손이 속곳 위로 튀어나온 선단을 세게 문지르자 결국 반질반질한 액체를 뿜어낸다. 하루 종일 이 액체를 내뱉었으니 색도 점성도 진하지 않았다. 힘이 빠져있는 원필의 척척한 속곳까지 다 벗기고 나면 이미 많이 문질러 발갛게 부어오른 성기가 드러났다. </p>
+<p>별로 만져주지도 않았는데 절정이 오는 듯 원필이 입을 막지도 못하고 영현의 손을 밀어내며 몸부림쳤다. 영현의 손이 속곳 위로 튀어나온 선단을 세게 문지르자 결국 반질반질한 액체를 뿜어낸다. 하루 종일 이 액체를 내뱉었으니 색도 점성도 진하지 않았다. 힘이 빠져있는 원필의 척척한 속곳까지 다 벗기고 나면 이미 많이 문질러 발갛게 부어오른 성기가 드러났다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“참으로 빨기 좋게 생겼습니다.”</p>
-<p>“그건 안, 흐읏!”​</p>
+<p>“그건 안, 흐읏!”</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>그렇게 분출해 냈어도 꺼덕거리며 서 있는 원필의 것을 영현이 입에 물었다. 따뜻한 입안이 제 것을 감싸고 움직이자 큰 자극에 허리가 휘어졌다. 츕, 츕- 물기 가득한 소리가 외설적으로 원필의 귓가에 때려 박힌다. 영현이 혀로 선단을 감싸고 비비는 것에 또 사정감이 든 원필이 손을 뻗어 영현의 머리를 밀어냈다. 영현이 제 다리를 꽉 붙잡고 있어 다리를 오므리지도, 영현에게 벗어나지도 못하고 쭉쭉 제 액을 빨려댔다.</p>
@@ -670,7 +879,7 @@
 <p>“어찌 감당하려고 이러십니까.”</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>이미 영현과의 행위에 이성이 잠식당한 원필에게 감당은 들리지 않는 말이었다. 본능만 살아남아 자꾸만 뒤가 젖어 영현의 것을 원했다. </p>
+<p>이미 영현과의 행위에 이성이 잠식당한 원필에게 감당은 들리지 않는 말이었다. 본능만 살아남아 자꾸만 뒤가 젖어 영현의 것을 원했다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“안 해주시면 전하께 갈 것입니다.”</p>
@@ -717,11 +926,11 @@
 <p>영현의 눈이 형형하게 빛났다. 아버지에 대한 죄책감은 없었다. 세자와 중전이라는 신분은 그저 배덕감이라는 쾌락의 도구였다.</p>
 <p class="empty">&nbsp;</p>
 <p>잃었으나 되찾았고, 뺏어가기 전에 가져 품에 안았다. 그러니…원필은 내 것이다.</p>
-<p class="empty">&nbsp;</p>
-<p class="empty">&nbsp;</p>
-<p class="empty">&nbsp;</p>
-</div>
 
+</div>
+<!-- 본문 끝 -->
+
+<!-- 하단 버튼 -->
 <div class="btn-wrap">
   <a class="btn" href="/fic/">
     <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
@@ -735,10 +944,70 @@
 
 <div class="footer">© 2026 @worldbyyp. All Rights Reserved.</div>
 
+<!-- 설정 패널 -->
+<div id="settings-wrap">
+  <button id="gear-btn" onclick="toggleSettings()">⚙</button>
+  <div id="settings-panel">
+    <div class="panel-row">
+      <span class="panel-label">글씨</span>
+      <button class="ctrl-btn font-sm" onclick="changeFontSize(-1)">－</button>
+      <button class="ctrl-btn font-md" onclick="changeFontSize(0)">가</button>
+      <button class="ctrl-btn font-lg" onclick="changeFontSize(1)">＋</button>
+    </div>
+    <div class="panel-row">
+      <button class="ctrl-btn mode-btn" id="modeBtn" onclick="toggleMode()">🌙 다크모드</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOP 버튼 -->
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
+
 <script>
+  // 우클릭/드래그 방지
   document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, true);
   document.addEventListener('selectstart', function(e){ e.preventDefault(); return false; }, true);
   document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; }, true);
+
+  // 진행바 + TOP 버튼
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (scrollTop / docHeight * 100) + '%';
+    var btn = document.getElementById('top-btn');
+    if (scrollTop > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // 설정 패널 토글
+  function toggleSettings() {
+    document.getElementById('settings-panel').classList.toggle('open');
+  }
+  // 패널 외부 클릭시 닫기
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('settings-wrap');
+    if (!wrap.contains(e.target)) {
+      document.getElementById('settings-panel').classList.remove('open');
+    }
+  });
+
+  // 폰트 크기 (본문만, 제목 제외)
+  var fontSizes = [14, 16, 18];
+  var fontIdx = 1;
+  function changeFontSize(dir) {
+    if (dir === 0) { fontIdx = 1; }
+    else { fontIdx = Math.max(0, Math.min(2, fontIdx + dir)); }
+    document.querySelector('.content').style.fontSize = fontSizes[fontIdx] + 'px';
+  }
+
+  // 다크/라이트 모드
+  function toggleMode() {
+    document.body.classList.toggle('dark-mode');
+    document.getElementById('modeBtn').textContent =
+      document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
+  }
+
+
 </script>
 </body>
 </html>
