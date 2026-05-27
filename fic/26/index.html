@@ -16,9 +16,9 @@
   .dark-mode {
     --bg: #111111;
     --text: #ffffff;
-    --header-bg: #0b0b14;
-    --btn-wrap-bg: #0b0b14;
-    --footer-bg: #0b0b14;
+    --header-bg: #111120;
+    --btn-wrap-bg: #111120;
+    --footer-bg: #111120;
   }
 
   * {
@@ -43,15 +43,6 @@
   .content { cursor: default !important; }
   a, button {
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
-  }
-
-
-  .bgm2-wrap {
-    background: var(--bg);
-    display: flex;
-    justify-content: center;
-    padding: 20px 20px 0;
-    transition: background 0.3s;
   }
 
   /* 진행바 */
@@ -111,6 +102,16 @@
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
   }
   .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
+
+
+  .bgm2-wrap {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 20px 20px 0;
+    transition: background 0.3s;
+  }
+
   /* 톱니바퀴 + 패널 */
   #settings-wrap {
     position: fixed;
@@ -140,6 +141,12 @@
     pointer-events: auto;
     transform: translateX(0);
   }
+  .panel-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+  }
   .panel-row:last-child {
     justify-content: center;
   }
@@ -166,7 +173,7 @@
   .ctrl-btn.font-sm { font-size: 13px; }
   .ctrl-btn.font-md { font-size: 13px; }
   .ctrl-btn.font-lg { font-size: 13px; }
-  .ctrl-btn.mode-btn { font-size: 13px; width: 120px; display: flex; align-items: center; justify-content: center; text-align: center; gap: 4px; }
+  .ctrl-btn.mode-btn { font-size: 13px; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; gap: 4px; }
   .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); color: #ffffff; }
   #gear-btn {
     width: 36px;
@@ -610,7 +617,7 @@
 <p>이 웃음조차도, 가장된 것일까? 머리를 자연스레 쓰다듬는 이 손길까지도, 정교히 설계된 것일까.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<div class="bgm-wrap bgm2-wrap"><button class="bgm-btn" id="bgmBtn2" onclick="toggleBGM2()">▶ La vie en Rose</button></div>
+<div class="bgm-wrap bgm2-wrap"><button class="bgm-btn" id="bgmBtn2" onclick="toggleBGM2()">▶</button></div>
 <p>쿠쿵, 순간이었다. 하늘의 조도가 급격하게 내려앉았다.</p>
 <p class="empty">&nbsp;</p>
 <p>일정한 간격으로 빛나던 파장이 흐려지더니, 저 멀리 서쪽 하늘에서부터 먹구름이 빠르게 밀려온다. 대기 중의 습도가 순식간에 90% 이상으로 치솟았다. 기압의 미세한 변화를 감지한 공원의 센서들이 급히 전광판에 붉은 표시를 내보낸다. 10분 이내에 강수량 15mm 내외의 강우가 발생할 예정.</p>
@@ -938,9 +945,9 @@
   <div id="settings-panel">
     <div class="panel-row">
       <span class="panel-label">글씨</span>
-      <button class="ctrl-btn font-sm" onclick="changeFontSize(-1)">➖</button>
+      <button class="ctrl-btn font-sm" onclick="changeFontSize(-1)">－</button>
       <button class="ctrl-btn font-md" onclick="changeFontSize(0)">가</button>
-      <button class="ctrl-btn font-lg" onclick="changeFontSize(1)">➕</button>
+      <button class="ctrl-btn font-lg" onclick="changeFontSize(1)">＋</button>
     </div>
     <div class="panel-row">
       <button class="ctrl-btn mode-btn" id="modeBtn" onclick="toggleMode()">🌙 다크모드</button>
@@ -995,32 +1002,6 @@
       document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
   }
 
-
-  // BGM2
-  var player2;
-  var isPlaying2 = false;
-  function onYouTubeIframeAPIReady2() {}
-  // BGM2 iframe
-  var tag2 = document.createElement('div');
-  tag2.style = 'position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;';
-  tag2.innerHTML = '<iframe id="ytplayer2" src="https://www.youtube.com/embed/LfGDTV3HPSQ?enablejsapi=1&autoplay=0" allow="autoplay" allowfullscreen></iframe>';
-  document.body.appendChild(tag2);
-  setTimeout(function() {
-    player2 = new YT.Player('ytplayer2', { events: { 'onReady': function(e) {} } });
-  }, 2000);
-  function toggleBGM2() {
-    var btn = document.getElementById('bgmBtn2');
-    if (!isPlaying2) {
-      if (player2 && player2.playVideo) player2.playVideo();
-      btn.textContent = '■ La vie en Rose';
-      isPlaying2 = true;
-    } else {
-      if (player2 && player2.stopVideo) player2.stopVideo();
-      btn.textContent = '▶ La vie en Rose';
-      isPlaying2 = false;
-    }
-  }
-
   // BGM — BGM 없는 작품은 아래 두 함수 삭제
   var player;
   var isPlaying = false;
@@ -1042,6 +1023,26 @@
       isPlaying = false;
     }
   }
+
+  var player2; var isPlaying2 = false;
+  var tag2 = document.createElement('div');
+  tag2.style = 'position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;';
+  tag2.innerHTML = '<iframe id="ytplayer2" src="https://www.youtube.com/embed/LfGDTV3HPSQ?enablejsapi=1&autoplay=0" allow="autoplay" allowfullscreen></iframe>';
+  document.body.appendChild(tag2);
+  setTimeout(function() {
+    player2 = new YT.Player('ytplayer2', { events: { 'onReady': function(e){} } });
+  }, 2000);
+  function toggleBGM2() {
+    var btn = document.getElementById('bgmBtn2');
+    if (!isPlaying2) {
+      if (player2 && player2.playVideo) player2.playVideo();
+      btn.textContent = '■'; isPlaying2 = true;
+    } else {
+      if (player2 && player2.stopVideo) player2.stopVideo();
+      btn.textContent = '▶'; isPlaying2 = false;
+    }
+  }
+
 </script>
 </body>
 </html>
