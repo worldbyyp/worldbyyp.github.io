@@ -6,119 +6,96 @@
   <title>FIC — YOUNGPIL Webzine : 世界2</title>
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box;
-      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default;
-    }
-    body {
-      background: #0b0b14;
-      font-family: 'Nanum Gothic', sans-serif;
-      min-height: 100vh;
-    }
-    .nav-outer {
-      padding: 40px 0;
-      background: #0b0b14;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default; }
+    body { background: #0b0b14; font-family: 'Nanum Gothic', sans-serif; min-height: 100vh; }
+
+    /* 네비 */
+    .nav-outer { padding: 40px 0; background: #0b0b14; }
     .nav-wrap {
-      position: relative;
-      display: block;
-      width: 50%;
-      margin: 0 auto;
-      line-height: 0;
+      position: relative; display: block;
+      width: 50%; margin: 0 auto; line-height: 0;
     }
     .nav-wrap img { display: block; width: 100%; height: auto; pointer-events: none; }
     .nav-wrap img.base { position: relative; }
-    .nav-wrap img.hover-img {
-      position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.1s;
-    }
+    .nav-wrap img.hover-img { position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.1s; }
     .zone {
       position: absolute; z-index: 10; text-decoration: none;
       cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
     }
-    .zone-home   { left: 0%;  top: 0%; width: 13%; height: 100%; }
-    .zone-fic    { left: 76%; top: 0%; width: 11%; height: 100%; }
-    .zone-art    { left: 87%; top: 0%; width: 13%; height: 70%; }
-    .zone-behind { left: 87%; top: 50%; width: 13%; height: 50%; }
+    .zone-home   { left: 0%;   top: 0%; width: 13%; height: 100%; }
+    .zone-fic    { left: 76%;  top: 0%; width: 8%;  height: 100%; }
+    .zone-art    { left: 84%;  top: 0%; width: 16%; height: 70%; }
+    .zone-behind { left: 84%;  top: 50%; width: 16%; height: 50%; }
 
-    .page-wrap {
-      max-width: 560px;
-      margin: 0 auto;
-      padding: 0 20px 80px;
-    }
-    .list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    /* 본문 */
+    .page-wrap { max-width: 560px; margin: 0 auto; padding: 0 20px 0; }
+    .list { display: flex; flex-direction: column; gap: 10px; }
+
+    /* 카드 */
     .card {
-      position: relative;
-      width: 100%;
-      display: block;
-      text-decoration: none;
-      overflow: hidden;
-      border-radius: 6px;
+      position: relative; width: 100%; display: block;
+      text-decoration: none; overflow: hidden; border-radius: 6px;
       cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
     }
-    .card img.bg {
-      width: 100%; height: auto; display: block;
-      transition: filter 0.35s;
-    }
+    .card img.bg { width: 100%; height: auto; display: block; transition: filter 0.35s; }
     .card:hover img.bg { filter: brightness(0.55); }
-
-    /* 제목/작가 영역 - 오른쪽 여백 줄여서 제목 공간 확보 */
     .inner {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
       padding: 9% 18% 8% 22%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 0;
+      display: flex; flex-direction: column; justify-content: center; gap: 0;
     }
     .title {
       font-size: clamp(8px, 3.2vw, 22px);
-      font-weight: 700;
-      color: #ffffff;
+      font-weight: 700; color: #ffffff;
       letter-spacing: 2px;
       text-shadow: 0 1px 6px rgba(0,0,0,0.9);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1;
-      position: relative;
-      top: -1px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      line-height: 1; position: relative; top: -1px;
     }
     .author {
       font-size: clamp(6px, 1.6vw, 13px);
-      color: #888888;
-      letter-spacing: 0.5px;
+      color: #888888; letter-spacing: 0.5px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-      line-height: 1;
-      position: relative;
-      top: 1px;
+      line-height: 1; position: relative; top: 1px;
     }
 
-    /* 태그 - 아래쪽 + 약간 왼쪽 */
+    /* 태그 - 아래쪽, 더 왼쪽으로 */
     .tags {
-      position: absolute;
-      bottom: 18%;
-      right: 5%;
-      display: flex;
-      flex-direction: row;
-      gap: 4px;
-      align-items: center;
+      position: absolute; bottom: 18%; right: 3%;
+      display: flex; flex-direction: row; gap: 4px; align-items: center;
     }
     .tag {
-      font-size: clamp(5px, 1vw, 9px);
-      color: #ffffff;
-      border: 1px solid rgba(255,255,255,0.7);
-      border-radius: 4px;
-      padding: 2px 5px;
-      background: rgba(0,0,0,0.35);
-      white-space: nowrap;
-      font-family: 'Nanum Gothic', sans-serif;
-      line-height: 1.4;
-      text-align: center;
+      font-size: clamp(5px, 1vw, 9px); color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.7); border-radius: 4px;
+      padding: 2px 5px; background: rgba(0,0,0,0.35);
+      white-space: nowrap; font-family: 'Nanum Gothic', sans-serif;
+      line-height: 1.4; text-align: center;
     }
+
+    /* 하단 여백 + 카피라이트 */
+    .footer-area {
+      height: 300px;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: 40px;
+    }
+    .copyright {
+      font-size: 11px; color: #444444; letter-spacing: 1px; text-align: center;
+    }
+
+    /* TOP 버튼 */
+    #top-btn {
+      position: fixed; bottom: 36px; right: 28px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #888888; font-size: 11px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
+      opacity: 0; transition: opacity 0.3s;
+      text-decoration: none;
+    }
+    #top-btn.visible { opacity: 1; }
+    #top-btn:hover { background: rgba(255,255,255,0.15); color: #ffffff; }
   </style>
 </head>
 <body>
@@ -355,7 +332,12 @@
       <div class="tags"><span class="tag">디스토피아</span><span class="tag">센티넬버스</span></div>
     </a>
     </div>
+    <div class="footer-area">
+      <p class="copyright">© 2026 @worldbyyp. All Rights Reserved.</p>
+    </div>
   </div>
+
+  <a id="top-btn" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">TOP</a>
 
   <script>
     var currentHover = null;
@@ -369,6 +351,10 @@
       currentHover = null;
       document.querySelectorAll('.hover-img').forEach(function(el) { el.style.opacity = '0'; });
     }
+    window.addEventListener('scroll', function() {
+      var btn = document.getElementById('top-btn');
+      btn.classList.toggle('visible', window.scrollY > 200);
+    });
   </script>
 </body>
 </html>
