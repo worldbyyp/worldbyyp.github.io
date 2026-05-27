@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BEHIND — YOUNGPIL Webzine : 世界2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box;
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default;
+    }
+    body { background: #0b0b14; font-family: 'Nanum Gothic', sans-serif; }
+
+    /* 네비 */
+    .nav-outer { padding: 60px 0; }
+    .nav-wrap {
+      position: relative;
+      width: 100%; max-width: 672px;
+      margin: 0 auto; line-height: 0;
+    }
+    .nav-wrap img { display: block; width: 100%; height: auto; pointer-events: none; }
+    .nav-wrap img.hover-img { position: absolute; top:0; left:0; opacity:0; transition: opacity 0.1s; }
+    .zone {
+      position: absolute; z-index: 10; text-decoration: none;
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
+    }
+    .zone-home   { left:0%;  top:0%; width:13%; height:100%; }
+    .zone-fic    { left:76%; top:0%; width:6%;  height:100%; }
+    .zone-art    { left:82%; top:0%; width:18%; height:70%; }
+    .zone-behind { left:82%; top:50%; width:18%; height:50%; }
+
+    /* 본문 */
+    .page-wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+
+    /* 버튼 그리드 */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+    .author-btn {
+      width: 100%;
+      height: 36px;
+      background: transparent;
+      border: 1px solid #444444;
+      color: #aaaaaa;
+      font-size: 12px;
+      font-family: 'Nanum Gothic', sans-serif;
+      letter-spacing: 1px;
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
+      transition: border-color 0.2s, color 0.2s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .author-btn:hover { border-color: #ffffff; color: #ffffff; }
+    .author-btn.active { border-color: #ffffff; color: #ffffff; }
+
+    /* 후기 박스 */
+    .review-box {
+      display: none;
+      border: 1px solid #333333;
+      padding: 32px 36px;
+      margin-bottom: 40px;
+      color: #cccccc;
+      font-size: 14px;
+      line-height: 2;
+      letter-spacing: 0.5px;
+      animation: fadeIn 0.3s ease;
+    }
+    .review-box.show { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .review-name {
+      font-size: 16px;
+      color: #ffffff;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+    .review-title {
+      font-size: 12px;
+      color: #666666;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    /* 하단 */
+    .footer-area {
+      height: 300px; display: flex;
+      align-items: flex-end; justify-content: center;
+      padding-bottom: 40px;
+    }
+    .copyright { font-size: 12px; color: #ffffff; font-family: 'Nanum Gothic', sans-serif; text-align: center; }
+
+    #top-btn {
+      position: fixed; bottom: 36px; right: 28px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #888; font-size: 11px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
+      text-decoration: none;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    #top-btn.visible { opacity: 1; }
+    #top-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="nav-outer">
+    <div class="nav-wrap">
+      <img class="base" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-basic_vnsvwz.png" alt="">
+      <img class="hover-img" id="imgHome"   src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-home_lm2jsl.png" alt="">
+      <img class="hover-img" id="imgFic"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-fic_nwj22t.png" alt="">
+      <img class="hover-img" id="imgArt"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-art_zvol24.png" alt="">
+      <img class="hover-img" id="imgBehind" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-behind_toqrv9.png" alt="">
+      <a class="zone zone-home"   href="/home"   onmouseenter="showHover('imgHome')"   onmouseleave="hideAll()"></a>
+      <a class="zone zone-fic"    href="/fic"    onmouseenter="showHover('imgFic')"    onmouseleave="hideAll()"></a>
+      <a class="zone zone-art"    href="/art"    onmouseenter="showHover('imgArt')"    onmouseleave="hideAll()"></a>
+      <a class="zone zone-behind" href="/behind" onmouseenter="showHover('imgBehind')" onmouseleave="hideAll()"></a>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="btn-grid">
+      <!-- fic 01~27 -->
+      <button class="author-btn" onclick="toggleReview('r45')">世界</button>
+      <button class="author-btn" onclick="toggleReview('r01')">김수한무</button>
+      <button class="author-btn" onclick="toggleReview('r02')">나른</button>
+      <button class="author-btn" onclick="toggleReview('r03')">나선</button>
+      <button class="author-btn" onclick="toggleReview('r04')">네보름</button>
+      <button class="author-btn" onclick="toggleReview('r05')">노스</button>
+      <button class="author-btn" onclick="toggleReview('r06')">노원</button>
+      <button class="author-btn" onclick="toggleReview('r07')">달링</button>
+      <button class="author-btn" onclick="toggleReview('r08')">당연</button>
+      <button class="author-btn" onclick="toggleReview('r09')">대상</button>
+      <button class="author-btn" onclick="toggleReview('r10')">마치</button>
+      <button class="author-btn" onclick="toggleReview('r11')">멜란지</button>
+      <button class="author-btn" onclick="toggleReview('r12')">박타</button>
+      <button class="author-btn" onclick="toggleReview('r13')">부이</button>
+      <button class="author-btn" onclick="toggleReview('r14')">삐룸</button>
+      <button class="author-btn" onclick="toggleReview('r15')">온즈</button>
+      <button class="author-btn" onclick="toggleReview('r16')">요일</button>
+      <button class="author-btn" onclick="toggleReview('r17')">이칠</button>
+      <button class="author-btn" onclick="toggleReview('r18')">주포스</button>
+      <button class="author-btn" onclick="toggleReview('r19')">쥐양이</button>
+      <button class="author-btn" onclick="toggleReview('r20')">채원</button>
+      <button class="author-btn" onclick="toggleReview('r21')">콜프</button>
+      <button class="author-btn" onclick="toggleReview('r22')">키나</button>
+      <button class="author-btn" onclick="toggleReview('r23')">페달</button>
+      <button class="author-btn" onclick="toggleReview('r24')">필름</button>
+      <button class="author-btn" onclick="toggleReview('r25')">하테</button>
+      <button class="author-btn" onclick="toggleReview('r26')">KaKi</button>
+      <button class="author-btn" onclick="toggleReview('r27')">track</button>
+      <!-- art 28~44 -->
+      <button class="author-btn" onclick="toggleReview('r28')">김끼잉</button>
+      <button class="author-btn" onclick="toggleReview('r29')">나흘</button>
+      <button class="author-btn" onclick="toggleReview('r30')">덕수</button>
+      <button class="author-btn" onclick="toggleReview('r31')">두덩</button>
+      <button class="author-btn" onclick="toggleReview('r32')">두부</button>
+      <button class="author-btn" onclick="toggleReview('r33')">따불</button>
+      <button class="author-btn" onclick="toggleReview('r34')">마카</button>
+      <button class="author-btn" onclick="toggleReview('r35')">빠삐</button>
+      <button class="author-btn" onclick="toggleReview('r36')">뽀동</button>
+      <button class="author-btn" onclick="toggleReview('r37')">음이</button>
+      <button class="author-btn" onclick="toggleReview('r38')">청바</button>
+      <button class="author-btn" onclick="toggleReview('r39')">필폭스</button>
+      <button class="author-btn" onclick="toggleReview('r40')" style="letter-spacing:-0.3px;">loveubettter</button>
+      <button class="author-btn" onclick="toggleReview('r41')">mai</button>
+      <button class="author-btn" onclick="toggleReview('r42')">ravie</button>
+      <button class="author-btn" onclick="toggleReview('r43')">Shark</button>
+      <button class="author-btn" onclick="toggleReview('r44')">uyoonim</button>
+    </div>
+
+    <!-- 후기 박스들 (나중에 내용 채우기) -->
+    <div class="review-box" id="r01"><div class="review-name">김수한무</div><div class="review-title">도취</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r02"><div class="review-name">나른</div><div class="review-title">형제의 방식</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r03"><div class="review-name">나선</div><div class="review-title">배덕(背徳)</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r04"><div class="review-name">네보름</div><div class="review-title">만월의 낙원</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r05"><div class="review-name">노스</div><div class="review-title">피어나라, 이솝 학원!</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r06"><div class="review-name">노원</div><div class="review-title">반쪽짜리 둘을 합한다 하여도</div>안녕하세요, 노원입니다. 모든 것에 결핍이 있고, 사랑이란 건 결국 그 결핍의 요철을 맞추는 가장 강력한 매개체가 아닐까? 둘이 합해 하나가 아니라 각자 둘이라는 것을 인정할 때 건강한 사랑이 아닐까? 같은 소소하고 시덥지 않은 생각으로 쓰기 시작한 글이었는데 영필에 맞게 더 멋지고 성대했으면 좋지 않았을까 아쉬움이 남습니다. 하지만 영필의 사랑이 계속 되고 있으니, 아쉬움은 지금에 두고 영필로 아쉬움의 빈자리를 채우겠습니다. 멋진 기회 주신 주최자분들, 읽어주신 영필러분들께 감사드립니다. 모두 영필 안에서 영원히 행복하시길 바랍니다 :)</div>
+    <div class="review-box" id="r07"><div class="review-name">달링</div><div class="review-title">파흔(破痕)</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r08"><div class="review-name">당연</div><div class="review-title">나를 모르느냐 하지 마시고</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r09"><div class="review-name">대상</div><div class="review-title">동류(動流)</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r10"><div class="review-name">마치</div><div class="review-title">사바의 연</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r11"><div class="review-name">멜란지</div><div class="review-title">그럼에도 불구하고</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r12"><div class="review-name">박타</div><div class="review-title">애인과 만나고 싶으면 애인을 공략하랍니다.</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r13"><div class="review-name">부이</div><div class="review-title">낭만주의</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r14"><div class="review-name">삐룸</div><div class="review-title">푸른 바다의 이방인</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r15"><div class="review-name">온즈</div><div class="review-title">불온한 명명법</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r16"><div class="review-name">요일</div><div class="review-title">멸망지구</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r17"><div class="review-name">이칠</div><div class="review-title">천사의 날개를 떼는 방법</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r18"><div class="review-name">주포스</div><div class="review-title">파이널 피스</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r19"><div class="review-name">쥐양이</div><div class="review-title">영영</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r20"><div class="review-name">채원</div><div class="review-title">不時着</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r21"><div class="review-name">콜프</div><div class="review-title">나의 히어로, XXXXX</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r22"><div class="review-name">키나</div><div class="review-title">Tango Down</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r23"><div class="review-name">페달</div><div class="review-title">마진 콜</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r24"><div class="review-name">필름</div><div class="review-title">영원</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r25"><div class="review-name">하테</div><div class="review-title">비나이다, 비나이다</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r26"><div class="review-name">KaKi</div><div class="review-title">절대 사랑보존의 법칙</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r27"><div class="review-name">track</div><div class="review-title">우리가 잃어버린 것에 대하여</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r28"><div class="review-name">김끼잉</div><div class="review-title">여름 키우기</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r29"><div class="review-name">나흘</div><div class="review-title">천계의 사랑!</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r30"><div class="review-name">덕수</div><div class="review-title">소원이 머물다 간 자리</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r31"><div class="review-name">두덩</div><div class="review-title">형은 가끔</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r32"><div class="review-name">두부</div><div class="review-title">페어</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r33"><div class="review-name">따불</div><div class="review-title">적당한 상실</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r34"><div class="review-name">마카</div><div class="review-title">나에게서 당신에게</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r35"><div class="review-name">빠삐</div><div class="review-title">59.5AU</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r36"><div class="review-name">뽀동</div><div class="review-title">만개의 조건</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r37"><div class="review-name">음이</div><div class="review-title">龍虎相搏</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r38"><div class="review-name">청바</div><div class="review-title">천사는 오늘도 일합니다</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r39"><div class="review-name">필폭스</div><div class="review-title">그 여름을 기억해</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r40"><div class="review-name">loveubettter</div><div class="review-title">At the sight of thee</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r41"><div class="review-name">mai</div><div class="review-title">up all (k)night</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r42"><div class="review-name">ravie</div><div class="review-title">Server Maintenance</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r43"><div class="review-name">Shark</div><div class="review-title">우리 집, 어느 날 (Our Home, One Day)</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r44"><div class="review-name">uyoonim</div><div class="review-title">From that rainy night</div>★ 후기 준비 중</div>
+    <div class="review-box" id="r45"><div class="review-name">世界</div><div class="review-title">주최</div>★ 후기 준비 중</div>
+
+    <div class="footer-area">
+      <p class="copyright">© 2026 @worldbyyp. All Rights Reserved.</p>
+    </div>
+  </div>
+
+  <a id="top-btn" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">TOP</a>
+
+  <script>
+    var cur = null;
+    function showHover(id) {
+      if (cur === id) return;
+      cur = id;
+      document.querySelectorAll('.hover-img').forEach(function(el){ el.style.opacity='0'; });
+      document.getElementById(id).style.opacity = '1';
+    }
+    function hideAll() {
+      cur = null;
+      document.querySelectorAll('.hover-img').forEach(function(el){ el.style.opacity='0'; });
+    }
+    function toggleReview(id) {
+      var box = document.getElementById(id);
+      var allBoxes = document.querySelectorAll('.review-box');
+      var allBtns = document.querySelectorAll('.author-btn');
+      var isOpen = box.classList.contains('show');
+      // 모두 닫기
+      allBoxes.forEach(function(b){ b.classList.remove('show'); });
+      allBtns.forEach(function(b){ b.classList.remove('active'); });
+      // 이미 열려있으면 닫기, 아니면 열기
+      if (!isOpen) {
+        box.classList.add('show');
+        event.target.classList.add('active');
+        // 박스 위치로 스크롤
+        setTimeout(function(){ box.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 50);
+      }
+    }
+    window.addEventListener('scroll', function() {
+      document.getElementById('top-btn').classList.toggle('visible', window.scrollY > 200);
+    });
+  </script>
+</body>
+</html>
