@@ -10,7 +10,7 @@
     body { background: #0b0b14; font-family: 'Nanum Gothic', sans-serif; }
 
     /* ── 네비 ── */
-    .nav-outer { padding: 40px 0; }
+    .nav-outer { padding: 60px 0; }
     .nav-wrap {
       position: relative;
       width: 100%; max-width: 560px; margin: 0 auto;
@@ -32,13 +32,15 @@
     .page-wrap { max-width: 560px; margin: 0 auto; padding: 0 20px; }
     .list { display: flex; flex-direction: column; gap: 10px; }
 
+    .card, .card * {
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+    }
     .card {
       position: relative; display: block;
       text-decoration: none; overflow: hidden; border-radius: 6px;
-      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
     }
     .card img.bg { display: block; width: 100%; height: auto; transition: filter 0.35s; }
-    .card:hover img.bg { filter: brightness(0.55); }
+    .card:hover img.bg { filter: brightness(0.55); transition: filter 0.35s; }
 
     /* 제목/작가: 왼쪽 22%, 오른쪽 20% 여백으로 제목 공간 확보 */
     .inner {
@@ -64,7 +66,7 @@
     /* 태그: 우측 하단, right 고정값으로 */
     .tags {
       position: absolute;
-      bottom: 16%; right: 7%;
+      bottom: 19%; right: 10%;
       display: flex; gap: 4px; align-items: center;
     }
     .tag {
