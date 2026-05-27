@@ -15,11 +15,16 @@
       min-height: 100vh;
     }
 
-    /* 네비 */
+    /* 네비 - 원본 비율 유지, 가운데 정렬, 상하 여백 */
+    .nav-outer {
+      padding: 40px 0 40px;
+      background: #0b0b14;
+    }
     .nav-wrap {
       position: relative;
       display: block;
-      width: 100%;
+      width: 50%;
+      margin: 0 auto;
       line-height: 0;
       overflow: visible;
     }
@@ -39,9 +44,9 @@
 
     /* 본문 */
     .page-wrap {
-      max-width: 600px;
+      max-width: 560px;
       margin: 0 auto;
-      padding: 40px 20px 80px;
+      padding: 0 20px 80px;
     }
     .list {
       display: flex;
@@ -67,14 +72,14 @@
     .inner {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      padding: 9% 30% 8% 22%;
+      padding: 9% 32% 8% 22%;
       display: flex;
       flex-direction: column;
       justify-content: center;
       gap: 6%;
     }
     .title {
-      font-size: clamp(10px, 3.8vw, 28px);
+      font-size: clamp(8px, 3.2vw, 22px);
       font-weight: 700;
       color: #ffffff;
       letter-spacing: 2px;
@@ -83,44 +88,48 @@
       overflow-wrap: break-word;
     }
     .author {
-      font-size: clamp(7px, 2vw, 16px);
+      font-size: clamp(6px, 1.6vw, 13px);
       color: #888888;
       letter-spacing: 0.5px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.8);
     }
     .tags {
       position: absolute;
-      top: 25%; right: 10%;
+      top: 50%;
+      right: 6%;
+      transform: translateY(-50%);
       display: flex;
       flex-direction: row;
-      gap: 0.5vw;
+      gap: 4px;
       align-items: center;
     }
     .tag {
-      font-size: clamp(6px, 1.4vw, 13px);
+      font-size: clamp(5px, 1vw, 9px);
       color: #ffffff;
       border: 1px solid rgba(255,255,255,0.7);
-      border-radius: 6px;
-      padding: 0.2vw 0.7vw;
+      border-radius: 4px;
+      padding: 2px 6px;
       background: rgba(0,0,0,0.35);
       white-space: nowrap;
       font-family: 'Nanum Gothic', sans-serif;
-      line-height: 1.8;
+      line-height: 1.4;
       text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="nav-wrap">
-    <img class="base" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-basic_vnsvwz.png" alt="메뉴">
-    <img class="hover-img" id="imgHome"   src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-home_lm2jsl.png"   alt="">
-    <img class="hover-img" id="imgFic"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-fic_nwj22t.png"    alt="">
-    <img class="hover-img" id="imgArt"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-art_zvol24.png"    alt="">
-    <img class="hover-img" id="imgBehind" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-behind_toqrv9.png" alt="">
-    <a class="zone zone-home"   href="/home"   onmouseenter="showHover('imgHome')"   onmouseleave="hideAll()"></a>
-    <a class="zone zone-fic"    href="/fic"    onmouseenter="showHover('imgFic')"    onmouseleave="hideAll()"></a>
-    <a class="zone zone-art"    href="/art"    onmouseenter="showHover('imgArt')"    onmouseleave="hideAll()"></a>
-    <a class="zone zone-behind" href="/behind" onmouseenter="showHover('imgBehind')" onmouseleave="hideAll()"></a>
+  <div class="nav-outer">
+    <div class="nav-wrap">
+      <img class="base" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-basic_vnsvwz.png" alt="메뉴">
+      <img class="hover-img" id="imgHome"   src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-home_lm2jsl.png"   alt="">
+      <img class="hover-img" id="imgFic"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-fic_nwj22t.png"    alt="">
+      <img class="hover-img" id="imgArt"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-art_zvol24.png"    alt="">
+      <img class="hover-img" id="imgBehind" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-behind_toqrv9.png" alt="">
+      <a class="zone zone-home"   href="/home"   onmouseenter="showHover('imgHome')"   onmouseleave="hideAll()"></a>
+      <a class="zone zone-fic"    href="/fic"    onmouseenter="showHover('imgFic')"    onmouseleave="hideAll()"></a>
+      <a class="zone zone-art"    href="/art"    onmouseenter="showHover('imgArt')"    onmouseleave="hideAll()"></a>
+      <a class="zone zone-behind" href="/behind" onmouseenter="showHover('imgBehind')" onmouseleave="hideAll()"></a>
+    </div>
   </div>
 
   <div class="page-wrap">
@@ -214,9 +223,9 @@
       <div class="tags"><span class="tag">회귀물</span></div>
     </a>
     <a class="card" href="/fic/12.html">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="애인과 만나고 싶으면 애인을 공략하랍니다. ~공략해야할 애인이 너무 많아!~">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="애인과 만나고 싶으면 애인을 공략하랍니다.">
       <div class="inner">
-        <div class="title">애인과 만나고 싶으면 애인을 공략하랍니다. ~공략해야할 애인이 너무 많아!~</div>
+        <div class="title">애인과 만나고 싶으면 애인을 공략하랍니다.</div>
         <div class="author">박타</div>
       </div>
       <div class="tags"><span class="tag">공략물</span><span class="tag">멀티버스</span></div>
