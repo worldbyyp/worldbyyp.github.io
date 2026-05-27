@@ -11,15 +11,17 @@
     }
     body {
       background: #0b0b14;
-      color: #ffffff;
       font-family: 'Nanum Gothic', sans-serif;
       min-height: 100vh;
     }
+
+    /* 네비 */
     .nav-wrap {
       position: relative;
       display: block;
       width: 100%;
       line-height: 0;
+      overflow: visible;
     }
     .nav-wrap img { display: block; width: 100%; height: auto; pointer-events: none; }
     .nav-wrap img.base { position: relative; }
@@ -35,16 +37,19 @@
     .zone-art    { left: 87%; top: 0%; width: 13%; height: 70%; }
     .zone-behind { left: 87%; top: 50%; width: 13%; height: 50%; }
 
+    /* 본문 */
     .page-wrap {
-      max-width: 680px;
+      max-width: 600px;
       margin: 0 auto;
-      padding: 48px 20px 80px;
+      padding: 40px 20px 80px;
     }
     .list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
+
+    /* 카드 */
     .card {
       position: relative;
       width: 100%;
@@ -55,12 +60,10 @@
       cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
     }
     .card img.bg {
-      width: 100%;
-      height: auto;
-      display: block;
+      width: 100%; height: auto; display: block;
       transition: filter 0.35s;
     }
-    .card:hover img.bg { filter: brightness(0.5); }
+    .card:hover img.bg { filter: brightness(0.55); }
     .inner {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -71,15 +74,16 @@
       gap: 6%;
     }
     .title {
-      font-size: clamp(10px, 4.5vw, 32px);
+      font-size: clamp(10px, 3.8vw, 28px);
       font-weight: 700;
       color: #ffffff;
       letter-spacing: 2px;
       text-shadow: 0 1px 6px rgba(0,0,0,0.9);
       word-break: keep-all;
+      overflow-wrap: break-word;
     }
     .author {
-      font-size: clamp(8px, 2.5vw, 18px);
+      font-size: clamp(7px, 2vw, 16px);
       color: #888888;
       letter-spacing: 0.5px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.8);
@@ -89,18 +93,20 @@
       top: 25%; right: 10%;
       display: flex;
       flex-direction: row;
-      gap: 1vw;
+      gap: 0.5vw;
       align-items: center;
     }
     .tag {
-      font-size: clamp(7px, 2vw, 14px);
+      font-size: clamp(6px, 1.4vw, 13px);
       color: #ffffff;
       border: 1px solid rgba(255,255,255,0.7);
       border-radius: 6px;
-      padding: 0.3vw 1vw;
+      padding: 0.2vw 0.7vw;
       background: rgba(0,0,0,0.35);
       white-space: nowrap;
       font-family: 'Nanum Gothic', sans-serif;
+      line-height: 1.8;
+      text-align: center;
     }
   </style>
 </head>
