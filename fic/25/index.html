@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비나이다, 비나이다</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #222222;
+    --header-bg: #0b0b14;
+    --btn-wrap-bg: #0b0b14;
+    --footer-bg: #0b0b14;
+  }
+  .dark-mode {
+    --bg: #111111;
+    --text: #ffffff;
+    --header-bg: #111120;
+    --btn-wrap-bg: #111120;
+    --footer-bg: #111120;
+  }
+
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }
+  html, body {
+    background: var(--bg);
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 16px;
+    line-height: 2;
+    color: var(--text);
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default;
+    transition: background 0.3s, color 0.3s;
+  }
+  .header, .btn-wrap, .footer {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
+  }
+  .content { cursor: default !important; }
+  a, button {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+
+  /* 진행바 */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: #888888;
+    z-index: 9999;
+    transition: width 0.1s;
+  }
+
+  /* 헤더 */
+  .header {
+    background: var(--header-bg);
+    color: #ffffff;
+    text-align: center;
+    padding: 60px 20px 50px;
+    transition: background 0.3s;
+  }
+  .header-img-wrap {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .header-img-placeholder {
+    font-size: 28px;
+    color: #555555;
+    /* 이미지 생기면 아래로 교체:
+    <img src="★이미지주소★" alt="" style="width:80px; height:auto;"> */
+  }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
+  .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
+  .header .trigger { font-size: 13px; color: #888888; }
+
+  /* BGM — BGM 없는 작품은 .bgm-wrap 째로 삭제 */
+  .bgm-wrap {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 0;
+    transition: background 0.3s;
+  }
+  .bgm-btn {
+    width: 48px;
+    height: 32px;
+    border: 1px solid var(--text);
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
+
+  /* 톱니바퀴 + 패널 */
+  #settings-wrap {
+    position: fixed;
+    bottom: 36px;
+    left: 28px;
+    z-index: 999;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  #settings-panel {
+    background: rgba(30, 30, 40, 0.82);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-10px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  #settings-panel.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+  .panel-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+  }
+  .panel-row:last-child {
+    justify-content: center;
+  }
+  .panel-label {
+    font-size: 10px;
+    color: #888888;
+    font-family: 'Nanum Gothic', sans-serif;
+    width: 28px;
+    user-select: none !important;
+  }
+  .ctrl-btn {
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: #cccccc;
+    font-family: 'Nanum Gothic', sans-serif;
+    padding: 3px 10px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .ctrl-btn.font-sm { font-size: 13px; }
+  .ctrl-btn.font-md { font-size: 13px; }
+  .ctrl-btn.font-lg { font-size: 13px; }
+  .ctrl-btn.mode-btn { font-size: 13px; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; gap: 4px; }
+  .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); color: #ffffff; }
+  #gear-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  #gear-btn:hover {
+    background: rgba(40, 40, 55, 0.8);
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* 본문 */
+  .content {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s, font-size 0.2s;
+  }
+  .content p { margin-bottom: 0; min-height: 1.4em; }
+  .content p.empty { height: 1.4em; }
+  em { font-style: italic; }
+  strong { font-weight: 700; }
+
+  /* 하단 버튼 */
+  .btn-wrap {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    padding: 120px 0 90px;
+    background: var(--btn-wrap-bg);
+    transition: background 0.3s;
+  }
+  .btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 28px;
+    border: 1px solid #555555;
+    background: transparent;
+    color: #cccccc;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    font-family: 'Nanum Gothic', sans-serif;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .btn:hover { border-color: #ffffff; color: #ffffff; }
+  .btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+  /* 푸터 */
+  .footer {
+    background: var(--footer-bg);
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: #ffffff;
+    font-family: 'Nanum Gothic', sans-serif;
+    transition: background 0.3s;
+  }
+
+  /* TOP 버튼 */
+  #top-btn {
+    position: fixed;
+    bottom: 36px;
+    right: 28px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 11px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 1; pointer-events: auto; }
+  #top-btn:hover {
+    background: rgba(40, 40, 55, 0.8);
+    color: rgba(255,255,255,0.9);
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 22px; }
+    .content { padding: 30px 18px 50px; }
+  }
+</style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+<!-- 진행바 -->
+<div id="progress-bar"></div>
+
+
+
+<!-- 헤더 -->
+<div class="header">
+  <div class="header-img-wrap">
+    <div class="header-img-placeholder">★</div>
+    <!-- 이미지 생기면 위 div 지우고 아래 주석 해제:
+    <img src="★이미지주소★" alt="" style="width:80px; height:auto;">
+    -->
+  </div>
+  <h1>비나이다, 비나이다</h1>
+  <div class="author">하테</div>
+  <div class="trigger" style="color:#0b0b14;">*No Trigger Warning</div>
+</div>
+
+
+
+
+
+<!-- 본문 시작 -->
+<div class="content">
+
+<p><em>비나이다, 비나이다.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>산신님께 비나이다.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>부디 바라건대, 태평성대 하길.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>어진 임금이 어버이 되어</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>어리숙한 백성을 자식처럼 품어,</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>살아갈 세상을 평온케 하길.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>평온을 해하려는 자, 사지를 도려주시고</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>마음을 어지럽게 하는 자의 혀를 뽑아내시어</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>평온한 세상에 뿌리내린 마음 혼돈케 마소서.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>비나이다, 비나이다.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>산신님께 비나이다.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>산신님께 제물을 바치어 희락을 드리면</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>산신님께서는 평화를 주소서.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>비나이다, 비나이다.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>비나이다, 비나이다.</em></p>
+<p class="empty">&nbsp;</p>
+<p>서걱- 서걱-</p>
+<p class="empty">&nbsp;</p>
+<p>걸음걸음마다 살을 에는 추위가 원필의 발목을 붙잡았다. 빛 한 점 내리쬐지 않는 산등성이의 눈과 얼음은 녹아내릴 생각조차 하지 않았다. 이미 꽁꽁 얼어 감각이 무뎌진 손을 조심스레 꺼내어 호 입김을 불었다. 작트마한 열기에 손끝의 냉기가 사라질 기미가 보이지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>이미 발끝은 모두 얼어 감각이 사라진 지 오래. 하지만 걸음은 멈출 수 없었다. 계속 걸어 나가야만 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>‘왕자, 결단을 내리셔야지요. 불쌍한 백성들이 다 죽어 나가기 전에.’</p>
+<p class="empty">&nbsp;</p>
+<p>패전한 국가의 왕자. 그것이 원필의 현 위치였다. 아버지이자 한나라의 왕, 그의 항복과 동시에 원필은 승전국에 담보처럼 끌려갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>끌려가는 길 내내 머릿속이 어지럽고 심장이 두방망이질하듯 사나웠으나 겉으로 조금의 티도 낼 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필과 함께 승전국으로 끌려가는 백성들을 가만히 보고 있으니, 원필은 절대로 겁먹지 않아야만 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>이번에는 내가 이들을 꼭 지켜내겠다.</p>
+<p class="empty">&nbsp;</p>
+<p>어린 날 연약한 몸을 타고난 탓에 백성들은 왕자를 위해 하늘 위 높으신 곳에 계실 산신께 그리도 절절하게 기도했다. 저들이 먹을 것이 없어 배를 곯아도, 산신님께 바칠 술과 음식을 잔뜩 준비해 놓고는 그리도 간절히 기도했다.</p>
+<p class="empty">&nbsp;</p>
+<p>춘풍이 살랑 불어오는 날에도, 장맛비가 내리는 날에도, 천고마비의 계절에도, 눈이 펑펑 내리는 날에도.</p>
+<p class="empty">&nbsp;</p>
+<p>그들의 기도는 멈추지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>어린 시절 한겨울에도 추위를 잊은 것처럼 간절히 기도하는 사람들의 모습을 보고 원필은 그들이 이해가 가지 않았다. 내가 뭐라고 나를 위하여 이리도 기도를 열심히 하는가. 내가 살아나면 그대들에게 뭐 좋은 일이 있다고.</p>
+<p class="empty">&nbsp;</p>
+<p>그러면서도 원필도 남몰래 산신님께 빌곤 하였다.</p>
+<p class="empty">&nbsp;</p>
+<p><em>산신님.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>날이 많이 추워졌어요.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>제가 더는 아프지 않아,</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>저들이 저리도 힘들게 기도하지 않도록 하여주세요.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>이 술잔을 산신님께 올리 오니,</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>제가 이 술을 마실 수 있는 날까지만이라도 살아가게 해주세요.</em></p>
+<p class="empty">&nbsp;</p>
+<p>왕자를 걱정하는 백성의 마음과 백성을 걱정하는 왕자의 마음을 기특하게 생각한 것인지 원필의 병세는 차츰 좋아지기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러니 이번에는 내 차례야.</p>
+<p class="empty">&nbsp;</p>
+<p>꽉 쥔 손에 손톱이 찔려 피가 날 정도로 그리 절실히 다짐했다. 온갖 수모를 겪으리라 마음을 굳게 먹었지만, 막상 도착한 승전국은 예상과 달랐다.</p>
+<p class="empty">&nbsp;</p>
+<p>패전국이라는 명칭이 무색하게 환대받았다. 그 환대가 도리어 두려워 원필과 그의 백성들은 긴장감 속에 몇 날 며칠을 보냈다. 하지만 승전국 사람들의 태도는 변하지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>이대로라면 백성들을 잘 지켜낼 수도 있을 것 같다는 희망의 싹이 조금씩 자라려는 순간. 승전국은 본색을 드러내기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p>‘왕자님! 큰일 났습니다!’</p>
+<p class="empty">&nbsp;</p>
+<p>백성들이 죽어 나가기 시작했다. 이유는 다양했다. 독살부터 전염병에 상해까지. 다양한 방법으로 백성들이 죽어 나갔다. 하루에 열 명씩. 더도 말고 덜도 말고 딱 열 명씩. 죽어 나갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러니 이를 자연스러운 현상이라 생각할 수가 없었다. 누군가의 계획. 그것이 아니라면 있을 수 없는 일이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러니 원필이 나설 수밖에 없었다. 더는 백성들이 죽어 나가는 꼴을 가만히 두고 볼 수 없었다. 그리하여 승전국의 왕과 대화할 기회를 잡으려 애썼다.</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 왕은 쉽사리 원필과 만나주지 않았다. 그 순간에도 백성들은 이유 모를 죽음을 맞이했다.</p>
+<p class="empty">&nbsp;</p>
+<p>애가 끊어질 듯한 고통. 각자 다른 모습으로 죽어버린 백성들의 시신을 묻어주고 애도해 줄 수도 없었다. 패전국 놈들의 시신들을 감히 귀한 땅에 묻을 수 없다는 이유였다.</p>
+<p class="empty">&nbsp;</p>
+<p>결국 불타오르는 시신들을 보며 원필은 피눈물을 흘려야만 했다. 차라리 희망조차 주지 말지. 어찌 이러는가.</p>
+<p class="empty">&nbsp;</p>
+<p>결국 원필은 밤에 산책하는 왕의 뒤를 밟았다. 그의 심복들에게 금방 발각되어 손이 묶인 채 앞에 무릎을 꿇리게 되었지만.</p>
+<p class="empty">&nbsp;</p>
+<p>이렇게라도 독대할 수만 있다면 그 어떤 모습이든 상관없었다. 하지만 왕은 이날을 기다렸다는 듯 입가에 미소를 지었다. 그리고 본론을 꺼냈다.</p>
+<p class="empty">&nbsp;</p>
+<p>‘귀한 피가 제물로 필요합니다. 그 늙은이 아니 산신의 노여움을 왕자가 풀어준다면 남은 백성들의 목숨은 살려주지. 더 나아가 산신의 목숨까지 앗아온다면 백성들을 고향으로 돌려보내 줄 수도 있고.’</p>
+<p class="empty">&nbsp;</p>
+<p>나이를 계속 먹어도 죽지 않는 불사의 존재.</p>
+<p class="empty">&nbsp;</p>
+<p>어릴 적에는 입에 달고 살았던 산신을 죽이라고? 산신님을 만날 수라도 있던가? 애초에 이루지 못할 바를 내어주고 이루라 하는구나. 기만이 따로 없다 그리 여겨졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 언제나 간절함은 이루지 못할 것까지도 이루는 법. 선택권이 없는 제안이었다. 그러니 원필은 고개를 끄덕일 수밖에 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>‘내 왕자를 위하여 산신의 목숨을 앗아가는 법까지는 일러드리지. 산신이 애정하는 그것으로 산신을 해하시오. 그렇게 한다면 들어가지 않을 칼날도 심장을 꿰뚫어 버릴 것이니.’</p>
+<p class="empty">&nbsp;</p>
+<p>그 무슨 말도 안 되는 말인지. 인간인 나에게 요력이라도 원하는가. 이해되지 못할 이야기에 입술만 짓씹고 잊던 때에 저 멀리서 사람들의 비명이 들려왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>살려달라, 구해달라, 닿지 못할 곳에 부르짖는 목소리.</p>
+<p class="empty">&nbsp;</p>
+<p>‘아, 그러고 보니 저쪽 처소에 곧 불이라도 날 것 같더니. 왕자의 사람들이 지내는 곳이 아닐는지?’</p>
+<p class="empty">&nbsp;</p>
+<p>웃음기 섞인 왕의 목소리에 원필의 눈에서 눈물이 후두둑 떨어졌다. 눈을 깜박이지 않아도 눈물이 쏟아졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>내게 요력이 없어도 좋다. 그 어떤 방법을 써서라도 산신님의 목숨을 앗아와 내 백성들을 살리리라.</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 그리 다짐했다. 그리하여 이 아귀 아가리 같은 산속에 스스로 몸을 내던졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>산을 조금만 벗어나면 온통 봄꽃들과 싱그러움이 가득했으나, 한걸음 씩 걸어갈수록 산속은 한겨울이었다. 이럴 줄 모르고 가볍게 채비한 원필은 손발이 얼어붙는 듯하였으나, 발걸음을 돌릴 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>아니, 돌리고 싶지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p><em>제발 나타나 주세요. 산신님.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>내 당장 당신의 목숨이 필요합니다.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>그리하여 내 백성들과 함께 고향으로 꼭 돌아갈 것입니다.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>그러니 제발 나타나 주세요.</em></p>
+<p class="empty">&nbsp;</p>
+<p>이를 악물었다. 그렇다고 추위가 가시는 건 아니었다. 점점 목도 말라오고, 눈을 깜박이는 속도도 느려졌다. 이러다가 툭하고 기절하듯 잠들어 버릴 것만 같았다. 하지만 여기서 잠들면 산신님의 목숨은커녕 원필의 목숨이 날아갈지 몰랐다.</p>
+<p class="empty">&nbsp;</p>
+<p>똑-똑-똑-</p>
+<p class="empty">&nbsp;</p>
+<p>그때 원필의 귓가에 물방울이 떨어지는 소리가 들렸다. 이건 물가에 물방울이 떨어지는 소리렸다. 목이라도 축이기 위해 원필은 남은 힘을 쥐어 짜내 달렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>“이게 다… 뭐야….”</p>
+<p class="empty">&nbsp;</p>
+<p>꽝꽝 얼어버린 드넓은 샘터. 그 주위엔 동굴이 있었고, 거기엔 맑은 고드름이 녹아내려 물을 한 방울씩 떨어트리고 있었다. 원필은 다가가 붉어진 입술을 벌렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>입 안으로 한 방울씩 물이 들어갔다. 갈증이 더하여졌다. 이걸론 부족해. 원필은 고드름을 조심스럽게 핥았다. 붉은 혀가 얼음덩이를 지분거렸다. 이윽고 덩이를 입에 넣고 쭉쭉 빨기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p>갈증이 가시려나?</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 갈증은 여전히 가시지 않았다. 볼우물이 생길 정도로 고드름을 빨아댔다. 그렇게 무아지경으로 갈증을 해소하려 하는데 주변에 점점 물안개가 차오르는 것이 느껴졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>마치 다른 이들에게 원필의 모습을 감추려는 듯 안개는 더욱 짙어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>정신을 차리고 주위를 둘러보았을 즈음 이미 시야는 물안개로 차단 되어버린 상태였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“뭐, 뭐야….”</p>
+<p class="empty">&nbsp;</p>
+<p>그때, 들짐승이 그르렁거리는 소리가 들렸다. 아니 어쩌면 사람이 내는 소리 같기도 했다. 그 소리의 주인공이 누군지 가늠하지도 못한 원필은 기절하고야 말았다.</p>
+<p class="empty">&nbsp;</p>
+<p>***</p>
+<p class="empty">&nbsp;</p>
+<p>“감히 인간 주제에 건방지게 산신님의 품에 안겨 왔다니요. 저는 용서할 수 없습니다. 가뜩이나 저 녀석은!”</p>
+<p class="empty">&nbsp;</p>
+<p>“송아. 그쯤 하여라. 산신님을 향한 너의 충정은 갸륵하나, 그렇다고 인간의 목숨을 쉬이 앗아갈 순 없다. 만에 하나 산신님께 들키기라도 한다면.”</p>
+<p class="empty">&nbsp;</p>
+<p>“그러니 제가 목숨을 앗아버리면 되는 것 아니겠습니까? 산신님도 모르시게.”</p>
+<p class="empty">&nbsp;</p>
+<p>“으유, 미련한 것아. 넌 산신님을 모른다. 아직도 산신님 몰래 무언가를 할 수 있으거라 생각하니?”</p>
+<p class="empty">&nbsp;</p>
+<p>머리맡에 도란도란 들리는 사람들의 목소리에 원필은 계속 눈을 감고 잠든 척을 하였다.</p>
+<p class="empty">&nbsp;</p>
+<p>아마도 인간이라 함은 자신을 뜻하는 것일 거고, 산신님의 품에 안겨 왔다고? 그 어르신께서 나를 들고 직접…? 그렇다면 여기는 산신님의 터라는 소리인데….</p>
+<p class="empty">&nbsp;</p>
+<p>“그나저나 저 인간은 깨어날 기미가 보이지 않습니다. 깨어나면 산신님을 못 보게 눈알부터 내가 도려갈 것인데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“송아. 너 아까 산신님께서 시킨 일은 다 하고 기다리는 거니?”</p>
+<p class="empty">&nbsp;</p>
+<p>“아차! 석님! 그럼 전 일하고 돌아오겠습니다. 여길 지켜주세요! 저 인간의 목숨을 앗아가는 것은 꼭 제가 할 것입니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“산신님이 지켜온 목숨을 네가 무슨 방법으로…. 되었다 일단 가거라.”</p>
+<p class="empty">&nbsp;</p>
+<p>그러더니 재빠르게 사라지는 발걸음 소리가 들렸다. 두 명에서 한 명으로 이곳을 지키는 사람이 줄었다.</p>
+<p class="empty">&nbsp;</p>
+<p>적어도 남아있는 석이라는 자는 나의 목숨을 노리는 것 같지 않은데, 잘 이야기해 보면 나를 이곳에 받아주지 않을까? 우선 산신님의 터에 남아야만 해.</p>
+<p class="empty">&nbsp;</p>
+<p>그리 머리를 굴리고 있던 찰나에 목소리가 작게 들려왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>“당분간은 계속 누워있거라. 들었으니 알 것이다. 하지만 안타깝게도 너를 투기하는 아이들이 많다. 그러니 목숨을 잃기 싫다면 이 방을 나서지 말도록 하여라. 내 마지막 베푸는 아량이다.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 말한 뒤 방 안은 고요해졌다. 홀로 남은 원필은 그제야 눈을 떴다. 살고 싶다면 계속 누워지내라는 그 말.</p>
+<p class="empty">&nbsp;</p>
+<p>이 목숨이 온전히 내 것이라면 그 말을 들었을지도 모르겠지만, 원필의 목숨은 오로지 원필의 것이 아니었으니 몸을 천천히 일으켰다.</p>
+<p class="empty">&nbsp;</p>
+<p>얼어붙어 감각이 없던 손발이 따듯하게 녹아있었다. 덕분에 움직이기 편안해져 원필은 한 걸음씩 발걸음을 바닥에 내디뎠다.</p>
+<p class="empty">&nbsp;</p>
+<p>나를 시기하는 사람들이 많다면 하루라도 빨리 산신님의 목숨을 빼앗고 나는 돌아간다. 나의 백성을 구한다.</p>
+<p class="empty">&nbsp;</p>
+<p>그리 생각을 정리하였다. 다른 이들을 마주하기 전에 산신을 어서 마주해야 한다는 생각에, 어서 백성을 구하고자 하는 마음에 조급증이 일었다.</p>
+<p class="empty">&nbsp;</p>
+<p>주변을 파악하지도 못하였고, 걸음도 불편한 와중에 문을 벌컥 열고 발을 내딛는 순간 문턱에 발이 걸려 훅 고꾸라질 뻔했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그때 누군가가 원필의 허리를 감았다. 깜짝 놀란 원필은 고개를 들었다.</p>
+<p class="empty">&nbsp;</p>
+<p>검은빛의 천을 두르고 있는 젊은 남자가 원필을 내려다보고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“괜찮으냐?”</p>
+<p class="empty">&nbsp;</p>
+<p>“가, 감사합니다. 실례를 범했습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>남자와의 너무 가까워 놀란 원필이 몸을 재빠르게 뒤로 물렀다. 하지만 남자의 시선이 원필에게 고정되어 물러날 기미를 보이지 않았다. 마치 자신을 꿰뚫어 버릴 것 같은 시선에 원필의 몸은 긴장으로 굳었다.</p>
+<p class="empty">&nbsp;</p>
+<p>‘이 사람도 나를 죽이고 싶어하는 사람 중 하나일까?’</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 불안한 눈빛으로 원필은 남자를 바라보았다. 가만히 자신을 바라보고 있던 남자가 손을 뻗어왔다. 혹여 해할까 싶어 원필은 눈을 질끈 감아버렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>그때, 원필의 손가락을 건드려오는 손길이 느껴졌다. 그 손길이 너무나도 조심스러워 원필은 조심스럽게 눈을 떴다.</p>
+<p class="empty">&nbsp;</p>
+<p>손을 대면 곧이라도 깨질듯한 수정구를 다루듯 너무나도 조심스러운 손길이었다. 이 행동 하나만으로도 이 자는 나를 해칠 것 같지 않다는 믿음이 생겼다.</p>
+<p class="empty">&nbsp;</p>
+<p>“잘 움직이는군.”</p>
+<p class="empty">&nbsp;</p>
+<p>그 손길은 곧 원필의 발목으로 향했다. 놀란 원필이 그대로 남자의 품에 푹 안겼다. 남자는 마루에 엉덩이를 붙이고 앉았다. 원필은 남자의 품에 푹 안기게 되었다. 누군가 이리도 살을 붙이고 앉아 있는 것이 처음이라 원필의 얼굴이 붉게 달아올랐다.</p>
+<p class="empty">&nbsp;</p>
+<p>남자는 신경 쓰지 않고, 한 손에 원필의 가느다란 발목을 붙잡았다. 남자의 시선은 원필의 발끝을 하나하나 정성스레 살폈다. 얼어붙었던 손발을 확인하는 것만 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“다행히 하나도 떨어지지 않았구나.”</p>
+<p class="empty">&nbsp;</p>
+<p>그 추위에서 꼼짝없이 얼어 죽을 뻔한 나를 구해준 사람이라고? 산신님이 구해주셨다고 했는데…. 남자의 품에 가만히 안겨 원필은 눈만 깜박였다. 확인할 것을 다 한 남자는 그대로 원필을 품에 꺼내두고 자리를 떠나려 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그때, 원필이 그 남자의 옷자락을 필사적으로 붙잡았다. 그 손길에 남자는 자리를 떠나지 못하고 시선을 다시 원필에게로 돌렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>“저를 도와주신 분이시죠. 가, 감사합니다. 덕분에 목숨 부지하였습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…그렇지. 넌 내가 살렸다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“정말 감사합니다. 그런데…. 산신님께서 살렸다고 들었는데…. 호, 혹시.”</p>
+<p class="empty">&nbsp;</p>
+<p>눈앞에 있는 남자가 산신님일지도 모른다는 생각에 원필은 자꾸 말을 더듬었다. 저도 모르게 땀까지 삐질삐질 새어 나왔다. 산신님을 만나면 당장이라도 죽일 거야 기세 좋게 움직였으나, 직접 그 존재를 마주하게 된다는 건 다른 문제니까.</p>
+<p class="empty">&nbsp;</p>
+<p>호흡도 쉬이 되지 않았다. 그의 존재가 두렵기도 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“산신이 아니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…네?”</p>
+<p class="empty">&nbsp;</p>
+<p>“난 산신이 아니야. 산신님의 호위무사다. 그리고 사실 너를 구한 것도 산신님이 아니라 나야.”</p>
+<p class="empty">&nbsp;</p>
+<p>남자는 장난스레 웃으며 말했다. 극도의 긴장감으로 인해 쉬이 되질 않던 호흡이 조금씩 돌아왔다. 처음 본 남자의 미소가 원필을 금방 진정시켰다.</p>
+<p class="empty">&nbsp;</p>
+<p>“비밀로 해줘. 아마도 산신님께서 널 구해왔다고 자랑이라고 하고 싶으셨던 모양이니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…아! 물론입니다! 약조합니다. 믿어주세요. 저 이, 입이 저 무겁습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>남자는 원필을 위아래로 훑어보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그럴 거 같기도 하고. 뭐, 믿어주지.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…감사합니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>뭐가 감사한지도 모르고 원필은 인사를 했다. 그러자 남자는 작게 웃었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그럼 넌 나를 믿을 수 있겠어? 원래 비밀을 공유한 사이는 서로를 믿어야 하는 법인데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>나라가 통째로 집어삼켜지고 원필은 인간을 믿지 못하는 사람이었다. 하지만 처음 본 이 사람은 왜인지 괜찮을 것만 같았다. 자신이 다친 곳을 꼼꼼히 살피는 것부터 해서 바라보는 눈빛이 위험하지 않은 이라 말해주고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>무엇보다도 자신을 품어주는 그 품이 따스하기도 했다. 그간 누군가의 온기를 이렇게 느껴본 적이 있는가. 남자의 웃음 한 번에 이리도 안정되기도 했고. 적어도 이 사람은 나를 구했으니, 목숨도 쉬이 빼앗지 못하지 않을까. 그리 생각하였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“믿겠습니다. 무사님.”</p>
+<p class="empty">&nbsp;</p>
+<p>비장하게 그리고 천천히 원필은 고개를 끄덕였다. 그러자 남자는 만족스럽다는 표정으로 고개를 끄덕였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“좋다. 그럼 처소부터 옮기자.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…처소요? 어찌….”</p>
+<p class="empty">&nbsp;</p>
+<p>“여기서 지내야 할 거 아냐? 당장 돌아갈 생각이었나?”</p>
+<p class="empty">&nbsp;</p>
+<p>아차, 원필은 재빠르게 두 손을 내어 저었다. 우선은 산신님이 있는 이곳에 원필도 있어야 했다. 그래야지 우선 산신님을 만나기라도 하지. 그다음은…. 그다음은….</p>
+<p class="empty">&nbsp;</p>
+<p>“내 처소로 가자. 혼자 지내기엔 넓기도 하고. 내가 구해온 자니, 내가 책임져야 하지 않겠어?”</p>
+<p class="empty">&nbsp;</p>
+<p>생각이 커지는 찰나에 남자는 그리 원필에게 말했다. 참으로 신기한 사람이었다. 만난 지 얼마 되지 않았으나, 원필이 조금이라도 어두운 생각을 하려하면 그걸 막아섰다. 게다가 자신을 책임져 주겠다니. 이 말이 그간 얼마나 절실했는가.</p>
+<p class="empty">&nbsp;</p>
+<p>괜히 고맙고 울컥한 마음에 원필은 입술을 삐죽거리다 남자에게 손을 내밀었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“제 이름은 …김원필입니다. 어, 그. 평범한 양반가에서 자랐습니다. 수학을 위하여 수도로 가다 길을 잃었습니다. 혹시 무사님의 성함은…?”</p>
+<p class="empty">&nbsp;</p>
+<p>“강영현.”</p>
+<p class="empty">&nbsp;</p>
+<p>“이, 이름이 참으로 멋지십니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>저도 모르게 진심이 툭 튀어나왔다. 그러자 영현이 피식 웃었다. 그 미소에 눈치를 보고 있던 원필의 마음에 또 한 차례의 안정이 찾아왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>“혼자 지내시기 적적하시다 하시니, 잠시 신세를 지겠습니다. 물론 오래 기거하진 않을 것입니다. …저도 나중엔 제자리로 돌아가야 할 테니까요.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“그, 그리고. 구해주셔서 정말 감사합니다. 저, 무사님이 살려주신 이 목숨, 끝까지 잘 지켜내며 살아가 보겠습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현…. 간절한 목소리로 원필은 영현의 이름을 불렀다. 그러자 영현은 웃지도 울지도 못할 표정으로 원필을 가만히 내려다보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>감사하다는 인사를 전했을 뿐인데, 왜 저런 표정을 짓고 있는 거지? 그 찰나의 표정이 안쓰러워 원필은 저도 모르게 영현에게 손을 뻗을 뻔했다. 하지만 영현은 순식간에 표정을 지워냈다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그럼 함께 가시죠. 제 처소로.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 등을 돌려 앞장을 서고, 그 뒤를 원필이 따라나섰다. 산신님이 사는 곳이라고 하여 대궐 같은 곳이려니 생각했는데 생각보다는 그리 크지도 화려하지도 않았다. 무엇보다도 처소까지 가는 길에 마주하는 이가 아무도 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>산신님이 사는 곳은 생각보다 인간들이 사는 곳과 크게 다를 바가 없어 보였다. 아무래도 산신님께서도 나이가 많이 드셔서 넓은 곳보다 작은 곳이 편하시겠지 하는 생각이 들었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러다 문득 자신의 앞에 걸어가는 영현의 너른 등판이 눈에 보였다. 저 정도로 다부져야지만 산신님의 호위무사가 될 수 있구나. 아무리 검술 훈련을 받아도 나아지지 않던 제 실력이 절로 떠올랐다. 가뜩이나 어린 시절 연약했던 탓에 다른 사내들보다 강하지 못한 것이 내심 아쉽기도 했었는데….</p>
+<p class="empty">&nbsp;</p>
+<p>저리 강한 몸을 가지고 있으면 나라를 빼앗기지 않을 수 있었을까? 나의 사람들을 잘 지켜낼 수 있지 않았을까?</p>
+<p class="empty">&nbsp;</p>
+<p>그리 생각하며 다시 영현의 등에 시선을 빼앗겼다. 순간 우뚝 영현이 멈춰섰다.</p>
+<p class="empty">&nbsp;</p>
+<p>“자, 여기다.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 원필에게 손을 내밀었다. 아무런 생각 없이 원필은 그 손을 잡았다. 영현은 원필의 손을 꼭 쥐고 석단을 올랐다.</p>
+<p class="empty">&nbsp;</p>
+<p>“자꾸 다른 생각을 하니 넘어질 뻔하잖아. 조심해. 또 다칠라.”</p>
+<p class="empty">&nbsp;</p>
+<p>다정스러운 목소리에 원필은 또 얼굴에 열이 올랐다. 이번에는 영현과 붙잡고 있는 손까지 뜨거워지는 것만 같았다. 이를 들키면 안 되는데 또 다른 생각에 빠졌지만, 영현과 손을 잡고 있으니 적어도 다치진 않겠다 싶었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“와…. 무사의 처소가 대단합니다. 이 큰 처소에 홀로 지내셨다고요?”</p>
+<p class="empty">&nbsp;</p>
+<p>“아…. 그게…. 처음엔 혼자가 아니었는데, 어찌어찌하다 보니 혼자가 되었어. 그러니까 불편해하진 말고.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…무사님 정말 감사합니다. 제가 신세를 지고 있으니…. 산신님께 인사라도 드려야 하지 않을까요?”</p>
+<p class="empty">&nbsp;</p>
+<p>영현에게 온 신경을 빼앗겨 잠시 잊었으나, 원필이 이곳에 온 이유는 따로 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>정신을 차리고 싶지 않아지지만, 나의 사람들을 생각하면 정신을 꽉 붙잡아야 했다. 그러니 산신님의 위치를 알고 있어야만 해.</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 점점 영현과 가까워질수록 그런 생각이 들었다. 이곳에 오래 머물러서는 안 될 것 같다는 생각이. 그럼 산신님의 목숨을 빼앗는 일은 더 어려워질 것만 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p>나의 정체를 꼭꼭 숨기고, 산신의 목숨만 빼앗고 하루라도 빨리 돌아가야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“원필은 산신에 대해 어떻게 생각합니까?”</p>
+<p class="empty">&nbsp;</p>
+<p>갑작스러운 영현의 질문에 원필은 생각에 빠졌다. 여기 도착하고 나서는 오로지 산신님의 목숨을 빼앗을 생각뿐이었으니까. 지금 원필의 상황에선 산신님에 대한 다른 생각을 할 여지가 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>산신님에 대하여 생각한다 한들 원필이 수행해야할 일에 도움이 되지 않을테니까. 하지만 한 가지는 확실했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“감사해요.”</p>
+<p class="empty">&nbsp;</p>
+<p>“산신에게?”</p>
+<p class="empty">&nbsp;</p>
+<p>“…네.”</p>
+<p class="empty">&nbsp;</p>
+<p>어린 시절 자신을 살려주었으니, 그로 인해 백성들이 배를 곯으며 기도할 일도 끝이 났었으니. 산신에 대한 감사는 원필의 뿌리가 되어있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>죽어 나가는 사람들을 생각하면서는 그를 잠시 외면하기로 하였는데, 영현의 질문으로 또 그 감정과 마주하게 되었다.</p>
+<p class="empty">&nbsp;</p>
+<p>이런 마음으로 산신님의 목숨을 앗아갈 수 있을까? 원필의 얼굴에 먹구름이 드리워지는 순간이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“허, 사실 산신은 그리 대단한 작자는 아니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>뭐야, 호위무사라면서 산신님을 믿고 따르는 거 아닌가? 불퉁하게 대답하는 영현에 원필은 눈이 동그래졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>처음엔 왜 산신님을 미워하는 거지? 속상한 마음이 들었지만 이내 지워버렸다. 산신님을 죽이려면 그런 감정은 사치니까. 그래서 다르게 생각하기로 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>이거 어쩌면 영현과 손잡고 산신을 해치우면 일이 조금 더 수월해질 수 있지 않을까? 그렇게 산신님을 해치고, 영현을 데리고 함께 돌아가는 거다. 고향으로.</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 의심 가득한 표정을 지으며 영현에게로 한 걸음 더 가까이 다가갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>“산신님의 터에서 그리 말하여도 되나요? 산신님은 여기 일어나는 모든 걸 알고 계신다던데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“못할 것이 무엇이 있겠어. 모두 알면 무엇 해. 관여하지 않으시려 하는데. 산신님은 하늘에 버림받아 여기 있는 거다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“산신님께서 버림받으셨다고요? 어, 어찌하여.”</p>
+<p class="empty">&nbsp;</p>
+<p>“인간들의 세상에 관여하지 않는다고 내쫓겼어. 인간들이 잘하면 상주고 못하면 벌주어야 하는데 그 무엇도 하기 싫으시대. 너희들끼리 알아서 살라고. 어차피 살려봤자 또 저들끼리 죽일 텐데. 살려서 뭐하나 싶으시다고….”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“원필아. 너 지금 우는 거야?”</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 말에 원필의 눈에 눈물이 훅 고였다. 자신만을 기다릴 제 사람들이 다시금 떠올라 울컥했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“산신님이 잘못하셨습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“응?”</p>
+<p class="empty">&nbsp;</p>
+<p>“살려봤자 또 죽일 거라 살리지 않는다. 그건 산신님이 잘 못 생각하고 있는 겁니다. 일단 살릴 수 있는 기회가 있다면 살려야지요. 산신님은 모릅니다. 그 생명들이 얼마나 귀한지. 그들이 살아가기 위해 얼마나 치열하게 살아가는지. 그 산신님은 정말 아무것도 모릅니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>여기서 더 말했다간 정말 와르르 무너질 것 같아 원필은 입술을 꾹 깨물었다. 꾹꾹 힘주어 말하는 원필을 가만히 바라보던 영현은 바르르 떨리는 원필의 입술을 가만히 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“안쓰러워.”</p>
+<p class="empty">&nbsp;</p>
+<p>그 말에 원필은 떨구어지던 고개를 들어 올렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>“이리 처량히 우니 마음이 안쓰럽네. 그만 울어. 내가 산신이랑 잘 이야기해 볼게. 그동안 그 추운 곳을 하염없이 걷느라 고생했을 테니 오늘은 일단 쉬어.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 말하고 영현은 자리를 떴다. 그 자리에 홀로 남은 원필은 눈물을 벅벅 닦아냈다. 약한 소리는 이제 그만.</p>
+<p class="empty">&nbsp;</p>
+<p>내 백성을 살리기 위해 원필에게는 계획이 필요했다. 여기는 무사들이 쓰는 방일 테니 검들이 있을 것이다. 이 중에서 산신님께서 애정하는 것이 있으면 좋겠는데….</p>
+<p class="empty">&nbsp;</p>
+<p>이리저리 무기들이 나열 되어있는 곳들을 살폈다. 실질적으로 사용할 수 없는 은으로 만들어진 장식용 칼들이 즐비해 있었다. 이런 걸론 과일 껍질 하나 깎아내지 못할 만큼 예쁘기만 하고 여린 단검들뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그래도 혹시 모르니까, 챙겨둬 보자. 이걸로 내 몸을 지킬 수도 있으니까.</p>
+<p class="empty">&nbsp;</p>
+<p>그중에서도 가장 평범하고 무난한 은 단검을 집어 원필은 제 품에 챙겨 넣었다.</p>
+<p class="empty">&nbsp;</p>
+<p>***</p>
+<p class="empty">&nbsp;</p>
+<p>“네 놈이 숨는다고 내가 발견하지 못할 줄 알았더냐?”</p>
+<p class="empty">&nbsp;</p>
+<p>목소리만 익숙했던 두 사람과 원필은 떡 하니 마주쳤다. 원필이 영현과 함께 지낸 지도 수일이 지나고 있었다. 영현 덕분에 이곳의 생활에도 점차 익숙해지고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>아직 산신님을 한 번도 못 보았지만, 살뜰하게 자신을 돌봐주는 영현 덕분에 적어도 길은 잃지 않을 수 있게 되었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 대부분의 시간을 원필과 보내는데 할애하였다. 두 사람이 무언가를 크게 하는 것은 아니었으나, 일상을 함께 보내었다. 나무 그늘 아래에서 쉬기도 하고, 연못가를 구경하기도 하고, 가끔은 활을 쏘기도 하고, 검술을 배우기도 하였다. 영현은 기본기는 없어 보였으나, 기술은 있는 듯하였다. 그쪽으로는 좋은 스승까진 될 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필의 낮은 그리하여 행복하였고, 평온하였다. 하지만 밤만 되면 살려달라 울부짖는 사람들의 소리가 귓가에 닿아왔다. 제 발목을 붙잡고 늘어지는 손길들이 생생했다. 그럴 때면 영현이 여지없이 나타나 원필의 손을 잡아주었다.</p>
+<p class="empty">&nbsp;</p>
+<p>시작은 손이었으나, 점차 어깨를 내어주기도 하였고, 품을 내어주는 경우도 더러 있었다. 그 따스한 품에 원필이 익숙해지는 건 순식간이었다. 자신을 애지중지하는 영현 덕분에 원필은 다른 이들과 마주칠 일이 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>분명 산신님의 호위무사라 하였는데 영현은 마치 원필의 호위무사처럼 굴었다. 그 와중에도 은근하게 산신님에 대한 질문을 하였고, 영현은 자신이 아는 선에서는 모두 착실히 응답하여 주었다. 그러니 원필은 앉은 자리에서 손쉽게 산신님에 대해 알아갈 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 영현에 대해서도.</p>
+<p class="empty">&nbsp;</p>
+<p>몸이 편안해지니, 마음까지 편안해졌을 무렵 영현이 조금 바빠지기 시작했다. 그리하여 원필이 홀로 있을 시간이 많아졌고, 평소 잘 나가지 않았던 산책을 나간 것이 화근이 되었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“마음 같아선 너의 사지를 다 잘라버리고 싶지만!”</p>
+<p class="empty">&nbsp;</p>
+<p>날카로운 목소리에 당장이라도 주먹이 날아들 줄 알았지만, 쏟아지는 건 날카로운 목소리뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“송아!”</p>
+<p class="empty">&nbsp;</p>
+<p>“산신님께서 베푸는 은혜에 감사하도록 해!”</p>
+<p class="empty">&nbsp;</p>
+<p>“…산신님께서요?”</p>
+<p class="empty">&nbsp;</p>
+<p>“그래. 내가 진짜 산신님만 생각하면 속이 타들어가 정말! 마음이 너무 넓으신 것도 잘못이고! 왜 하필 너를 아끼셔서! 예전부터!”</p>
+<p class="empty">&nbsp;</p>
+<p>“송아, 그쯤 하거라.”</p>
+<p class="empty">&nbsp;</p>
+<p>버럭버럭 화를 내던 송은 석의 만류에 말을 멈췄다. 하지만 여전히 화가 나 있는지 거친 호흡을 뱉고 있었다. 석은 자신의 손에 들고 있던 물건을 고스란히 원필에게 전했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“자, 네가 입은 은혜가 많을 테니 너도 감사한 마음으로 준비하거라.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필의 손에 석이 건넨 한 무더기의 종이 등이 얹어졌다. 이게 대체 뭔가 싶어 살피는데 툭 한마디가 덧붙었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“곧 산신님의 생신이시다. 연회가 벌어질 터이니 돕거라. 지금 당장 손이 부족하니 도와라. 너도 잘 알고 있을 것이다. 산신님께서 너를 얼마나 봐주고 있는 줄.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“잘 알고 있으면, 이 등을 보이는 나무들마다 예쁘게 달아두거라.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…네, 알겠습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“나랑 단둘이 마주치기만 해봐라! 진짜 가만두지 않을 거니까! 운 좋은 줄 알아!!”</p>
+<p class="empty">&nbsp;</p>
+<p>그제야 송과 석은 자리를 벗어났다. 두 사람이 멀어지면서도 무어라 떠드는 소리가 들렸지만 어렴풋할 뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 제 손에 쥐어진 등을 보았다. 어쩐지 며칠 전부터 기류가 묘하게 복닥복닥해졌다 싶었다. 그게 전부 산신님의 탄신 준비 때문일 줄이야.</p>
+<p class="empty">&nbsp;</p>
+<p>그제야 분주한 이들의 모습이 눈에 보였다. 그들은 바빠 보이면서도 행복해 보였다. 저들이 사랑하고 존경하고 따르는 산신의 탄신이 얼마나 기쁠까?</p>
+<p class="empty">&nbsp;</p>
+<p>그런 이들의 표정을 보고 있자니 원필은 자연스레 자신의 고향이 떠올랐다. 어린 시절 크게 앓고 난 뒤의 축하 연회.</p>
+<p class="empty">&nbsp;</p>
+<p>사람들은 분주했고, 행복해 보였다. 원필에게 다가오는 이들은 모두 진심으로 웃으며 그의 행복을 빌어왔다. 마치 자신이 죽었다 살아난 것처럼 그리도 자신을 아껴주었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그 기쁨이 너무나도 진심으로 보여 원필은 웃지도 울지도 못하곤 하였다. 언제나 늘 고맙고 미안하기도 해서.</p>
+<p class="empty">&nbsp;</p>
+<p>그리 이들에게 사랑받는 산신의 목숨을 앗아간다면. 이들은 어떻게 될까?</p>
+<p class="empty">&nbsp;</p>
+<p>자신이 승전국에 포로로 끌려가던 날 바닥에 엎드려 섧게 울어대던 사람들이 떠올랐다. 자기 부모가 끌려가듯 애처롭게 울던 사람들. 자신의 몸에는 상처들이 즐비했고 여기저기 터져 피멍울이 지어져 있는데도 포로로 끌려가는 원필을 위해 그리도 울어주었던 사람들.</p>
+<p class="empty">&nbsp;</p>
+<p>‘이들도 그리 아프게 울어댈까?’</p>
+<p class="empty">&nbsp;</p>
+<p>함박웃음을 짓고 있는 얼굴들을 보며 원필은 단전이 꽉 막혀있는 것만 같았다. 명치께를 꾹 누르고 있던 찰나였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“어디 아파?”</p>
+<p class="empty">&nbsp;</p>
+<p>“영현…. 아니요. 괜찮습니다. 바쁘지 않아요? 여기 있어도 괜찮아요? 산신님 곁을 지키셔야 하는 거 아녜요?”</p>
+<p class="empty">&nbsp;</p>
+<p>“…그 산신은 생각보다도 더 튼튼해서 괜찮아. 그나저나 표정이 안 좋은데. 들어가서 쉬지 그래.”</p>
+<p class="empty">&nbsp;</p>
+<p>“아닙니다. 저도 도와야죠. 안 그럼 사지를 잘라버리신다고 하셨습니다. 이거 달아야 해요.”</p>
+<p class="empty">&nbsp;</p>
+<p>살포시 미소를 지으며 원필은 품에 있는 종이등을 들고 자리에서 일어섰다. 종이등이 절그럭 소리를 냈다. 영현이 그런 원필의 뒤에 서 혹시나 등을 떨어트릴까 안절부절못하며 따라다녔다.</p>
+<p class="empty">&nbsp;</p>
+<p>“제가 그리 불안하십니까. 걱정하지 마세요. 산신님을 위한 등은 부서트리지 않을 테니.”</p>
+<p class="empty">&nbsp;</p>
+<p>“그 등보다 원필이 먼저 부서질까, 걱정이지.”</p>
+<p class="empty">&nbsp;</p>
+<p>“하하, 이래 보여도 저는 사내입니다. 이거 보세요. 이 등을 아주 높은 곳에 올려둘 것입니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 등 하나를 입에 앙 물고 열심히 나무를 올랐다. 영현은 나무 밑에서 팔짱을 끼고 열심히 등을 다는 원필을 가만히 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>왕자라 하여도 무술을 얼마나 열심히 배웠는데 잽싸게 몸을 움직였다. 나무 위 높은 곳에 도착하여 등을 걸려는 순간 원필이 밟고 있던 나뭇가지가 우지끈 소리를 내며 부러졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>‘안 돼…!’</p>
+<p class="empty">&nbsp;</p>
+<p>여기서 다치면 안 되는데. 지금 다쳐버리면 아무것도 할 수 없는데! 내 사람들을 구해야 하는데…!</p>
+<p class="empty">&nbsp;</p>
+<p>그리 나무에서 떨어지면서도 원필의 머릿속은 백성을 구할 생각뿐이었다. 그때 검은 옷자락이 원필의 머리를 뒤덮었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 원필을 품에 꼭 안고 있었다. 어느새 영현은 나무에 올라 있었고, 나무 기둥을 붙잡고 추락하려던 원필의 허리를 한 손으로 꽉 안아 붙들고 있었다. 놀란 원필은 영현의 품에서 눈만 끔벅였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“어, 언제 올라오셨어요! 역시 산신님의 호위무사는 정말 다르네요. 영현, 고마워요.”</p>
+<p class="empty">&nbsp;</p>
+<p>고맙다는 인사에도 영현의 표정은 풀어지지 않았다. 오히려 더 싸늘하게 굳어 있었다. 원필은 괜히 영현의 눈치가 보였다. 내가 그렇게 까지 큰일 날 행동을 한 건가….</p>
+<p class="empty">&nbsp;</p>
+<p>조금 전 주마등을 느낀 것을 잊은 원필은 영현을 흘끔 쳐다보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“원필아. 다시는 나무 위를 오르지 마.”</p>
+<p class="empty">&nbsp;</p>
+<p>“네? 안 되는데, 아직 남은 종이등이 많습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“저따위 등 산신은 보지도 않을 거야. 그러니까, 신경 쓰지 말고 너를 좀 돌봐.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 시선이 흔들림 없이 원필을 똑바로 바라보았다. 그 시선에 원필은 자신의 심장께가 간질한 기분이 일었다. 영현의 시선은 언제나 원필에게로 향해 있었다. 자신을 그저 평범한 사람이라 소개했음에도 영현은 원필을 귀하게 대했다. 나라가 패망하기 전 여러 사람에게 사랑받았던 기분을 영현은 혼자 느끼게 해주었다.</p>
+<p class="empty">&nbsp;</p>
+<p>이렇게 낮은 목소리로 자신을 혼을 낼 때도 있었지만, 이 모든 행동에서 자꾸만 애정이 느껴졌다. 그런데 그 애정이 싫지 않은 것이 문제였다. 여기에 자신은 산신의 목숨줄을 끊으러 왔는데…. 영현의 존재감은 계속 커져만 갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>언제나 자신의 곁을 지켜주는 영현이 계속 곁에 있어 주면 좋겠다는 위험한 생각이 들었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“…영현이 돌봐주고 있으니, 내가 자꾸 나를 돌보지 않는가 봅니다. 미안해요.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필의 허리를 꽉 붙잡고 있던 영현의 손에 힘이 들어갔다. 그러더니 별안간 원필의 자신의 어깨 위에 들춰 매고는 가뿐하게 나무에서 내려왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>제법 빠른 속도에 원필은 눈을 꾹 감아버렸다. 아무리 호위무사라도 이 높은 나무 위에서 이런 속도를 낼 수 있다는 것이 놀라웠다.</p>
+<p class="empty">&nbsp;</p>
+<p>“어? 이제 내려주어도 되는데!”</p>
+<p class="empty">&nbsp;</p>
+<p>나무를 내려와서도 영현은 원필을 내려줄 생각이 없었다. 그대로 뚜벅뚜벅 두 사람이 함께 지내고 있는 방으로 걸어갔다. 원필은 영현의 어깨에 대롱대롱 매달려 괜히 단단해 보이는 영현의 등을 손가락으로 쿡 찔렀다. 그러자 저벅저벅 걷던 영현의 발걸음이 멈췄다.</p>
+<p class="empty">&nbsp;</p>
+<p>“아, 죄송, 죄송합니다. 근데 저 진짜 내려주셔도 되는데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“사내의 몸은 함부로 건드는 게 아니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“죄송합니다. 영현은 몸을 열심히 단련하시나 봐요. 저도 이렇게 단단한 등을 가지고 싶었는…! 잠시만요!”</p>
+<p class="empty">&nbsp;</p>
+<p>그러자 영현의 발걸음이 배로 빨라졌다. 그렇게 원필은 방에 가두어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>“연회가 끝날 때까지 나오지 마. 원필…. 넌 정말…. 위험한 게 뭔지 모르니 이거….”</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 영현은 원필을 두고 사라졌다. 등 한번 찌른 게 그리도 큰 잘못인걸까…. 유일하게 기대고 있는 사람의 떠나는 등을 바라보니 그것도 그것대로 기분이 조금 묘했다.</p>
+<p class="empty">&nbsp;</p>
+<p>고요한 방 안에 홀로 앉아 있는데 바깥에서는 웃음소리가 들려왔다. 원필은 방에 있는 문을 살짝 열어 보았다. 날은 어느새 어두워져 있었고, 오가는 사람들의 얼굴에 모두 미소가 완연했다. 모두가 행복해 보였다. 마치 자신이 여기 오기 전까지의 상황들이 꿈인 것처럼.</p>
+<p class="empty">&nbsp;</p>
+<p>연회는 연회구나. 이런 연회가 얼마 만인지. 하지만 원필은 가벼운 마음으로 저들처럼 마음껏 즐길 수는 없었다. 연회를 마음 편하게 즐겨본 적이 얼마나 되었지…. 원필은 문을 닫았다.</p>
+<p class="empty">&nbsp;</p>
+<p>여전히 바깥의 소리의 잔여물들이 남아있었으나, 대체로 고요했다. 홀로 몸을 웅크리곤 그 소리를 듣지 않으려 했다. 나는 그런 걸 즐길 자격이 없는 사람이니까.</p>
+<p class="empty">&nbsp;</p>
+<p>어서 빨리 산신의 목숨줄을 끊어 자유를 찾아야 하니까. 내 사람들을 지켜야 하니까. 난 태어났을 때부터 백성을 지켜야 하는 사람이었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p>그리 생각하니 외로움이 사무치게 몰아쳤다. 산신님의 목숨을 앗아가고 나면 그땐 정말 행복할 수 있을까? 진짜 행복이란 무엇인가. 자꾸 생각들이 원필의 머릿속을 떠나려 하지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“고 작은 머리로 무슨 생각을 그렇게 하는지.”</p>
+<p class="empty">&nbsp;</p>
+<p>익숙한 목소리에 원필은 웅크리고 있던 몸을 피워냈다. 영현이 한 손으로 주안상을 들고 방 안으로 들어섰다.</p>
+<p class="empty">&nbsp;</p>
+<p>“영현…. 왜 여기에…. 산신님의 연회잖아요. 나가서 즐기셔야지요.”</p>
+<p class="empty">&nbsp;</p>
+<p>“응. 즐기려 여기 왔잖아.”</p>
+<p class="empty">&nbsp;</p>
+<p>“호위무사잖아요. 그럼 산신님 곁을 지켜야지….”</p>
+<p class="empty">&nbsp;</p>
+<p>“나 말고도 지키고 있을 녀석들이 많아. 나 하나 정도는 농을 부려도 괜찮고. 그러니 이리 와서 한잔할까? 연회에 내어지는 술은 귀하고 맛있거든.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 한 마디 한 마디에 울적했던 기분이 금시에 휘발되었다. 그가 내미는 손길이 너무나도 반가웠다.</p>
+<p class="empty">&nbsp;</p>
+<p>‘이거 봐. 영현은 자꾸만…. 자꾸만…. 나를 기쁘게 만들어.’</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 움직일 생각을 하지 않자, 영현은 한 마디를 덧붙였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“오늘 하루만 나랑 편하게 있을까?”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“지금 다들 연회 즐기기 바쁠거고, 우리 신경 쓸 사람은 아무도 없을 거니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 언제나 원필에게 필요한 이야기를 꺼내왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>가뜩이나 무거운 마음을 가볍게 해주는 건 언제나 영현이었다. 그래 오늘 딱 하루만. 아니 하루도 아니야. 이 밤만 내 앞에 사람에게만 잠깐 집중할게요.</p>
+<p class="empty">&nbsp;</p>
+<p>그리 생각하며 원필은 영현을 흘긋 쳐다보았다. 영현은 술잔을 들어 원필의 잔에 채워주었다. 두 사람의 술잔이 투명한 분홍빛 술로 가득 채워졌다. 두 사람의 잔은 각자의 손에 들려 단숨에 삼켜졌다. 목구멍을 타고 내려가는 싸한 기분에 원필은 한숨을 내쉬었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“술을 다 마실 줄 아네.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 작게 말을 뱉었지만, 원필을 들을 새가 없었다. 이 얼마 만에 삼켜보는 술인가. 기분이 좋아진 원필은 영현에게 잔을 밀었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“맛있나 보네. 내 곁에 있으니, 잔을 채워주지.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 말하며 영현은 곧장 원필의 잔에 술을 가득 채워주었다. 그렇게 술은 한두 잔씩 술술 넘어 들어갔다. 그렇게 술병은 하나씩 하나씩 비워졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>“영현은 산신님을 별루 안 좋아하는거 같은데에. 근데 호위 무사하는 거 괜찮아요?”</p>
+<p class="empty">&nbsp;</p>
+<p>술에 점점 취해가는 원필은 눈을 삭 접으며 영현에게 그간 하지 못했던 질문들을 쏟아내기 시작했다. 영현도 기분 좋은 표정으로 그런 원필을 바라보며 받은 질문에 대한 답은 모두 내어주었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“왜, 내가 걱정 돼?”</p>
+<p class="empty">&nbsp;</p>
+<p>“으응…. 아무래도. 하기 싫은 걸 하는게 얼마나 힘든 줄 아니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>술에 노곤하게 취해 평소보다 가벼이 말하는 원필의 이야기를 영현은 가만히 들어주고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>잘 들어주는 이가 곁에 있으니 원필은 조금 더 쉬이 자신의 이야기를 털어놓을 수 있었다. 어쩌면 그간 마음속 깊숙하게 묻어두어 그 누구에게도 하지 못한 말. 영원히 이 어두운 마음속에서 벗어날 수 없었던 말.</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 그런 이야기를 꺼내놓을 수 있게 만들었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“후우…. 어렸을 때부터 하기 싫은 것들 천지였는데…. 해야만 했어요. 세상은 내가 모든 걸 마음대로 할 수 있는 사람으로 보았는데, 정작 나는 아무것도 할 수 있는 게 없었어. 아무것도. 내 사람을 지키는 것까지도.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 자신의 이야기를 쓰게 뱉었다. 그럴 때마다 영현은 조금씩 원필과의 거리를 붙였다. 원필이 풍기는 안쓰러운 분위기가 영현을 저도 모르게 움직이게 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그런 기척도 느끼지 못할 만큼 취한 원필은 술잔이 담긴 잔을 빙글빙글 돌렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>“내가요, 어릴 때 많이 아팠어요. 그래서 나 좀 안 아프게 해달라고 산신님께 술을 올렸거든요? 그러면서 이거 마실 수 있게 될 때까지만 살게 해달라고 했었는데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“진짜 마시게 되었네?”</p>
+<p class="empty">&nbsp;</p>
+<p>“그러니까요. 그때 그렇게 되었으면 영현이랑 만날 수도 없었겠다. 그죠? 헤헤, 취하니 내가 이런 말도 다 하네. 나 근데 이렇게 내 이야기 하는 거 처음인데.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 술잔을 든 채 검지를 꺼내어 영현의 가슴팍을 꾹 눌렀다.</p>
+<p class="empty">&nbsp;</p>
+<p>“영현이 처음.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 두 사람의 눈이 마주쳤다. 영현은 그대로 원필의 손목을 잡고 자신에게로 당겼다. 원필이 들고 있는 술잔을 자신의 입술에 가져가 모두 삼켜냈다. 그 모습을 가만히 바라보고 있던 원필이 저도 모르게 침을 삼켰다.</p>
+<p class="empty">&nbsp;</p>
+<p>“내가 사내 몸은 건드는 게 아니라고 말했을 텐데.”</p>
+<p class="empty">&nbsp;</p>
+<p>술에 젖어 반짝이는 입술에 넋을 놓은 원필이 몸을 재빠르게 움직여 영현의 입술에 입을 맞췄다. 그리고 저도 놀라 몸을 뒤로 훅 빼려던 순간이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 그대로 원필의 뒷덜미를 붙잡고 깊게 입을 맞췄다. 진득하게 맞춰지는 입술에 취기가 훅 오르듯 열이 올랐다.</p>
+<p class="empty">&nbsp;</p>
+<p>연회가 한참이라 사방이 소란할 터였음에도 아무 소리도 들리지 않았다. 그저 혀가 뒤섞이는 소리와 은근하게 들리는 숨소리, 앓는 소리가 전부였다. 몸을 더 가까이 붙이고 싶어졌다. 영현과 더 닿고 싶어져 원필은 안달이 일었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“영현…. 싫으면 내 손을 뿌리쳐도 좋아요.”</p>
+<p class="empty">&nbsp;</p>
+<p>“허…. 언제 이렇게 자라서는.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 하는 말은 죄 모르는 척하며 원필은 영현의 허벅지 위로 올랐다. 그리고 영현의 양 볼을 붙잡고 마저 입맞춤을 이어갔다. 영현은 쏟아지는 원필이 넘어질까 붙잡고 열렬하게 몰려오는 입맞춤에 응했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러면서도 제 몸에 어떻게든 붙여오려는 원필의 몸짓에 영현도 끝끝내 붙잡고 있던 인내의 자락을 툭 놓아버렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>푹신한 요 위에 원필을 눕히고는 그 위를 영현이 덮었다. 길게 이어지는 입맞춤에 두 사람의 몸에 열기가 일렁였다. 그러니 옷을 한 자락씩 벗어내기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p>이윽고 모든 옷이 벗겨 지고는 영현은 원필의 몸 이곳저곳에 입을 맞췄다. 그럴 때마다 원필의 입에서는 신음이 터졌다. 자신의 맨살에 영현이 닿을 때마다 좋았다. 황홀하였다. 술기운까지 같이 올라 원필도 자신이 하는 행동에 스스럼이 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 목을 끌어안기도 하고, 맨다리로 그의 허리를 감기도 했다. 더 꽉 안아달라는 말을 행동으로 보였다. 그럴 때마다 영현은 주저 없이 원필을 꽉 끌어안았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“흐으…. 영현, 눈을 보고 싶어요.”</p>
+<p class="empty">&nbsp;</p>
+<p>“여기있어. 원필이 니가 그리 찾던 내 눈.”</p>
+<p class="empty">&nbsp;</p>
+<p>“어서, 어서, 안으로 들어와 줘. 응?”</p>
+<p class="empty">&nbsp;</p>
+<p>“넌 정말…. 다음부터는 술을 절대 안 돼.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 말하면서도 영현은 부지런히 원필의 뒤에 손가락을 넣어 공간을 만들어 내었다. 자신의 것을 쉽게 삽입할 수 있도록. 그 손놀림에 원필은 뱃가죽을 바르르 떨더니 이내 파정해 버리고야 말았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“원필아. …내가 널 이리 키우지 않았을 텐데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“으응…. 영현…. 빨리, 더, 응?”</p>
+<p class="empty">&nbsp;</p>
+<p>“하여간 사람 안달 내는 법을 이리도 잘 알아서는.”</p>
+<p class="empty">&nbsp;</p>
+<p>손만 대어도 좋다 울어대는 원필이 사랑스러워 영현은 원필의 얼굴 여기저기에 입을 맞췄다. 마구잡이로 입을 맞추다 두 사람의 시선이 맞춰졌다. 두 사람은 순간 심장께가 뻐근해지는 기분을 느꼈다.</p>
+<p class="empty">&nbsp;</p>
+<p>이럴 수 있는 건가? 누군가와 함께 있는 것이 이리도 행복하여, 지금 이 순간 숨이 멎는다하여도 괜찮다는 생각이 드는 게 맞는 건가? 원필의 머릿속은 평상시와 달랐다. 그저 영현과 함께하는 이 순간이 영원하길 바랬다.</p>
+<p class="empty">&nbsp;</p>
+<p>“으흣, 영현, 나 지금, 행복해요.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필의 말에 영현이 이미 단단해져 선단에서 체액이 줄줄 흐르는 성기를 단박에 안으로 밀어 넣었다. 뿌리 끝까지 들어오는 성기에 원필은 숨을 멈췄지만, 영현은 그대로 원필의 목덜미를 물어뜯었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“평생 그리 살게 만들어 주지.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 허리를 움직이기 시작했다. 원필의 입에서는 신음만이 연신 흘렀다. 호흡도 엉망이었다. 평소라면 영현이 가만히 원필을 지켜보았을 만큼 엉망인 호흡. 하지만 지금 이순간 영현은 원필을 취하기 급급했다.</p>
+<p class="empty">&nbsp;</p>
+<p>마치 원필이 산행을 하던 중 고드름을 만나 쭉쭉 빨았던 것처럼, 두 사람은 서로를 그리도 갈망하고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 져버린 해가 떠오르는 줄도 모르고 두 사람은 연신 몸을 섞었다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필의 몸에는 영현이 남긴 흔적들로 그득하였고, 영현의 몸에도 원필의 흔적이 그득하였다. 서로의 몸에 자신이 남길 원하였다. 이미 마음에 서로가 가득할 지언데, 어찌나 욕심이 나는지 몸에까지 자신을 남기려 하였다.</p>
+<p class="empty">&nbsp;</p>
+<p>그런데 그 욕심이 기꺼웠다. 오히려 더 부려주길 원하였다. 나를 욕심 내는 상대가 그저 사랑스러울 뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>새벽닭이 울기 시작할 즈음 영현은 이미 반쯤 기절해 있는 원필의 몸을 붙잡고 계속 삽입을 반복하고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“흐으으…. 영현, 좋아, 좋아요.”</p>
+<p class="empty">&nbsp;</p>
+<p>“하아, 하아, 내가 좋은 거야? 아니면 다른게 좋은 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 말하며 영현은 자신의 것을 더 깊게 박아 넣었다. 그러자 원필의 입에서 짧은 신음이 훅 터졌다. 그리고는 호흡을 다듬고는 반쯤 감긴 눈으로 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“…영현이 좋아요. 내 모든걸 포기하고 싶어질 정도로.”</p>
+<p class="empty">&nbsp;</p>
+<p>마지막 말을 남긴 원필은 기대로 기절해 버리고야 말았다. 원필의 말에 울컥한 영현은 그대로 원필의 안에 자신의 물건을 박아 넣은 채로 사정했다. 거친 숨소리가 안을 가득 채웠다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그래, 다행이다. 내 너의 곁에 오랫동안 머물 것이다. 원필아.”</p>
+<p class="empty">&nbsp;</p>
+<p>듣지 못할 이야기를 뱉은 영현은 원필의 동그란 머리통에 입을 맞췄다.</p>
+<p class="empty">&nbsp;</p>
+<p>***</p>
+<p class="empty">&nbsp;</p>
+<p>“그쯤 하셨어야 했습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“내가 뭘.”</p>
+<p class="empty">&nbsp;</p>
+<p>“산신님께서 또 인간들의 생사에 관여하셨잖습니까. 게다가 또 그 아이지 않습니까. 어릴 때 한 번 살리시는 바람에 그 난리를 피우시고 어찌하여 또!”</p>
+<p class="empty">&nbsp;</p>
+<p>“저들이 먼저 빌었어. 평온케 해달라고 나에게 빌었단 말이야.”</p>
+<p class="empty">&nbsp;</p>
+<p>“그 뜻이 그 뜻이 아님을 잘 알고 계시면서. 덕분에 산신님을 저주하는 이들이 늘었습니다. 저리 두면 산신님께 어떤 일을 벌일지 모릅니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“석아. 권능에 도전하고 싶다면 응해주어야지.”</p>
+<p class="empty">&nbsp;</p>
+<p>불평 가득한 석의 표정을 보고 영현은 피식 웃었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“내 아이가 죽어가는 걸 내 어찌 가만둘 수가 있겠어.”</p>
+<p class="empty">&nbsp;</p>
+<p>“그래서 어린 날에 이미 살려주시지 않으셨습니까! 그 대가로 이 산속에 박혀 살게 되셨으면서. 제가 이 정도면 다른 아이들은 더 난동을 부릴 거라는 거 아시죠?”</p>
+<p class="empty">&nbsp;</p>
+<p>“원필이를 더 꼭꼭 숨겨야겠구나. 죄 잡아먹을 이들뿐이니.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 장난스레 말하던 중 영현이 답답해진 자신의 가슴께를 툭툭 쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p>“또 시작이구나. 인간들은 참으로 부지런해. 나를 미워하는 일에 이리도 열심히니.”</p>
+<p class="empty">&nbsp;</p>
+<p>“그러게 인간들의 다툼에 왜 관여하셔서는. 저는 이제 더는 모를 일입니다. 하지만 그 인간이 산신님을 위협한다면 이제 저도 더는 손 놓고 있진 않을 것입니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>더는 대화하기 싫은 석이 자리를 떴다. 바위 위에 앉아 있던 영현은 그대로 벌렁 드러누워 버렸다. 하늘에 지나가는 구름이 보였다. 아직 몸을 감추지 못한 동그란 달이 보였다. 마치 그 아이의 눈동자를 닮아있는 그 눈.</p>
+<p class="empty">&nbsp;</p>
+<p>작은 몸으로 자신을 향해 하소연을 쏟아내던 나긋한 목소리. 사실은 죽고 싶지 않다며 빌어대던 작은 손. 나라를 잃고 애써 힘주던 몸. 제 사람을 지켜내려 힘껏 디딘 발. 그 모든 것을 기억한다. 하지만 내 너를 어찌 사랑하게 되었는지, 지키고 싶어졌는지는 기억나지 않는다.</p>
+<p class="empty">&nbsp;</p>
+<p>그게 어쩌면 나에게 내려진 진짜 형벌은 아니었을까?</p>
+<p class="empty">&nbsp;</p>
+<p>그렇다면 그 형벌은 꽤나 달콤한 형벌이로구나. 영현은 몸을 벌떡 일으켜 안으로 들어섰다. 자신을 사랑한다 말하고, 자신이 아끼는 그 아이가 잠들어 있는 곳으로.</p>
+<p class="empty">&nbsp;</p>
+<p>“으음….”</p>
+<p class="empty">&nbsp;</p>
+<p>여전히 원필은 가만히 잠들어 있었다. 영현은 그런 원필을 천천히 쓰다듬었다. 나를 사랑한다 뻗어오던 손길과 자신만을 따라오던 시선이 자꾸만 생각나 입가에 절로 미소가 지어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>그 어린아이가 언제 이리 커서는 먼저 입맞춤까지 해오고. 영현은 원필의 목숨을 지키기 위해 무던히 애썼다. 자신에게 기도를 올리는 순간부터 자꾸 시선을 빼앗던 그 아이.</p>
+<p class="empty">&nbsp;</p>
+<p>몸만큼이나 마음까지도 여려. 자신보다 자꾸만 다른 사람을 먼저 생각했던 그 작은 아이. 패전하여 나라가 빼앗기고 목숨까지 빼앗길 위기에 휩싸였던 아이를 영현은 저도 모르게 도왔다. 도저히 원필이 죽는 모습은 볼 수 없었다. 그리하여 승전국이 힘을 쓰지 못하도록 해버렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>그리하여 원필은 목숨은 겨우 건져낼 수 있었다. 그 이후로는 사는 게 사는 것이 아닐테지만.</p>
+<p class="empty">&nbsp;</p>
+<p>목숨은 건졌으니, 지금부터는 내가 책임지면 되는 게 아닌가. 영현은 그리 생각했다. 내가 지켜주면 된다. 내 품에 꽉 끼우고 내어주지 않으면 된다. 그리 생각하였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“미안해, 하지만 난 네가 죽는 건 죽어도 못 볼 것 같아.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 조심스레 원필의 말랑한 입술에 다정히 입을 맞췄다.</p>
+<p class="empty">&nbsp;</p>
+<p>그때, 밖에서 소리가 들려왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>“산신님, 잠시 나와보셔야겠습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“싫어.”</p>
+<p class="empty">&nbsp;</p>
+<p>“어제 연회 내내 얼굴도 비추지 않으셨잖아요. 어서요. 여차하면 송이를 데려올 것입니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“쳇, 알았어. 나가면 될 거 아냐. 아까 나를 그리 두고 가버리더니.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 원필을 쓰다듬던 손길을 아쉬워 죽겠다는 듯 거두고는 몸을 일으켰다. 그렇게 영현이 사라진 자리에 원필이 홀로 눈을 떴다.</p>
+<p class="empty">&nbsp;</p>
+<p>“영현이…. 산신님이라고…?”</p>
+<p class="empty">&nbsp;</p>
+<p>사실 원필은 영현이 자리를 벗어날 때부터 잠에서 깨어있었다. 하지만 눈을 뜨지 않고 가만히 그 기척을 느꼈다. 자신이 잠들어있는 줄 알고 영현이 어떤 행동을 할지 궁금해서였다.</p>
+<p class="empty">&nbsp;</p>
+<p>그런데…. 영현이 산신일 줄이야.</p>
+<p class="empty">&nbsp;</p>
+<p>여전히 심장이 빠르게 뛰었고, 쉬이 진정될 생각을 하지 않았다. 어느 순간부터 영현이 평범한 호위무사는 아니라고 생각은 하였다.</p>
+<p class="empty">&nbsp;</p>
+<p>그렇지만 이곳은 평범한 것이 하나도 없으니 그럴 수 있을 거라고만 생각했다. 그런데…. 영현이 산신님일 거라고는 정말 상상조차 하지 못했다.</p>
+<p class="empty">&nbsp;</p>
+<p>‘왜, 왜 하필 영현이 산신님인 걸까?’</p>
+<p class="empty">&nbsp;</p>
+<p>어젯밤 영현과 살을 섞는 순간에는 잊었으나, 원필은 제가 감내해야 할 일에 대해서는 명확하게 인지하고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>산신님을 해하여야 한다. 산신을 해하고 영현을 데리고 고향으로 함께 데려갈 생각까지 하고 있었다. 이곳을 영현이 별로 좋아하지 않으니, 잘 따라와 주지 않을까 싶었다.</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 영현이 산신이라면 상황은 달라졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러니까. 원필이 죽여야하는 사람이 영현이라니. 이걸 어찌 감당해야할까…. 원필은 결국 자리에서 일어나 방에서 빠져나갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>여전히 다리에 힘이 들어가지 않아 절뚝이며 뒤뜰을 거닐었다. 그러다 등을 달겠다고 올랐던 나무와 마주쳤다. 그 나무를 올려다보며 원필은 영현과 함께 보냈던 시간 들을 떠올렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>이제 어찌해야 하지? 난 어떻게 해야하는 거야….</p>
+<p class="empty">&nbsp;</p>
+<p>“원필아!”</p>
+<p class="empty">&nbsp;</p>
+<p>그때 멀리서 영현의 다급한 목소리가 들렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>“방에 있지, 돌아다니기 아직 힘이 들텐데.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 말하며 영현이 원필에게 손을 뻗었다. 하지만 원필은 그런 영현의 손길을 거부했다. 두 사람 사이에 정적이 일었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그, 그게….”</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 자신이 영현의 정체를 알았다는 사실을 숨기고 싶었다. 하지만 이렇게 몸으로 티가 나 버리고 말았다. 아직 당신을 어찌 대해야 할지 갈피를 잡지 못하였는데, 갑자기 마주하게 되니 몸이 절로 반응해버렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>“…그래. 어제 많이 놀랐지?”</p>
+<p class="empty">&nbsp;</p>
+<p>“…미, 미안합니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“괜찮아. 내가 너무 원필이를 힘들게 해서 그렇지. 내 잘못이야. 바람이 차니, 너무 오래 돌아다니진 말고.”</p>
+<p class="empty">&nbsp;</p>
+<p>난 그럼, 먼저 돌아가 있을게, 산신님이 찾으신다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 그리 말하고는 걸음을 돌렸다. 자신이 걸어온 그 길을 그대로 돌아갔다. 원필은 그런 영현의 뒷모습을 가만히 바라만 보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>행복했던 순간은 야속하게도 금시에 사라지고야 말았다.</p>
+<p class="empty">&nbsp;</p>
+<p>혼란스러운 마음에 원필이 가장 먼저 한 행동은 최선을 다해 영현을 피하는 일이었다. 무언가를 이리도 열심히 피한 것은 처음이었다. 원망스럽게도 시간은 여전히 흘렀으며 그럴수록 원필의 초조한 마음은 크게 일렁였다. 영원히 피할 수 없음을 알면서도 지금 당장이라도 피하고픈 얄팍한 마음이 일었다.</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 영현은 평소와 다를바 없이 원필을 대하였다. 곁에서 여전히 호위무사처럼 굴었다. 원필과 다른 이들이 마주칠 수 없도록 끼니를 해결하는 것부터 그 모든 걸 도왔다. 그리 영현의 손을 타면서도 원필은 거리를 두었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현과 자신이 닿을 수 없도록.</p>
+<p class="empty">&nbsp;</p>
+<p>가장 긴밀한 사랑을 나누었으나, 지금은 몸도 마음도 닿지 못할 사이가 되어버렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>그렇다고 영원히 회피할 수는 없다. 언젠가는 주어진 운명을 마주해야 할 터. 영현이 가장 애정하는 것으로 영현을 해야한다는 상상만으로도 원필은 숨이 멎는듯한 느낌이 일었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그걸 제 손으로 할 생각에. 처음으로 마음이 주춤거렸다. 원필의 생에 백성들이 우선이 아니었던 적이 없었다. 처음으로 원필은 영현을 우선으로 생각하게 되었다.</p>
+<p class="empty">&nbsp;</p>
+<p>‘아마 난 안 될 거야.’</p>
+<p class="empty">&nbsp;</p>
+<p>홀로 마루에 앉아 있던 원필이 자신의 머리칼을 쥐었다. 이토록 괴로웠던 때가 있었을까? 차라리 나의 목숨이 끝나면 괜찮을까? 까지 생각이 닿았을 때 저 멀리서 쉽사리 다가오지도 못하고 서있는 영현을 마주했다.</p>
+<p class="empty">&nbsp;</p>
+<p>다가오면 자신이 또 도망가 버릴까 다가오지도 못하는 그. 산신이라는 그 대단한 이가 저의 행동 하나에 눈치를 보고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그게 또 안타까웠다.</p>
+<p class="empty">&nbsp;</p>
+<p>여전히 그를 은애하고 있어 더 안타까웠다. 영현도 살고, 자신도 살고, 더불어 백성들까지 모두 살게 할 방법이 정녕 없는 걸까?</p>
+<p class="empty">&nbsp;</p>
+<p>그 방법을 찾아내면 얼마나 좋을까. 하지만 지금 당장 찾아낼 방도가 없으니, 원필은 자신을 향하는 영현을 시선에 등을 돌리는 것 외에는 할 수 있는 게 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>***</p>
+<p class="empty">&nbsp;</p>
+<p>연회 이후로 또 한차례 내부가 소란해졌다. 원필은 이제 더 이상 영현과 함께하지 못하게 되었다. 영현이 얼굴을 비추지 않았다. 하긴…. 저라도 그랬을 것이다.</p>
+<p class="empty">&nbsp;</p>
+<p>사랑을 속삭일 땐 언제고 갑자기 냉랭해져 눈길이 닿을까 싶을 때마다 등을 돌리는 사람에게 더 이상 잘해주고 싶지 않겠지. 영현이 눈에 보이지 않아 마음이 씁쓸하고 아렸으나, 다른 한켠으로는 다행이라는 감정도 같이 일었다.</p>
+<p class="empty">&nbsp;</p>
+<p>지금 눈에 보이지 않는 것이 나을 수도 있다. 그게 나을 수도 있어. 마주하면 꼭 영현을 죽여야 할 것만 같으니까.</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 곁에 없으니, 이곳에서 원필은 온전히 혼자가 되었다. 그간 자신의 곁을 영현이 얼마나 열심히 채우고 있었는지 실감하기도 하였다.</p>
+<p class="empty">&nbsp;</p>
+<p>하늘이 꾸물거린다 싶더니 비가 쏟아져 내리기 시작했다. 홀로 마루에 서서 떨어지는 빗방울을 가만히 바라보고 있었다. 빗방울은 땅을 적셔주는데, 메말라 버린 원필의 마음은 적시지 못하였다.</p>
+<p class="empty">&nbsp;</p>
+<p>이대로 사라지고 싶다. 영현을 그저 지켜주고 싶다는 생각이 점점 더 커져만 가던 때였다. 그때 원필의 목에 날카로운 칼날이 드리워졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>“평온해 보이십니다. 왕자.”</p>
+<p class="empty">&nbsp;</p>
+<p>자신을 왕자라 부를 사람이 적어도 이곳에 존재할 순 없었다. 게다가 이렇게 칼을 드리운다는 건 승전국 사람임이 분명했다. 나를 감시하기 위해 이곳까지 온 것인가. 하지만 어떻게? 여기까지?</p>
+<p class="empty">&nbsp;</p>
+<p>“제가 여기에 다다를 줄 저도 몰랐지요. 하지만 주군의 저주 덕에 산신의 요력도 점점 약해지는가 봅니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“그, 그 무슨!”</p>
+<p class="empty">&nbsp;</p>
+<p>“기회가 왔다는 뜻입니다. 그리고 이 말을 꼭 전하라 하셨습니다. 왕자가 주저하는 이 순간에도 그들이 죽어가고 있다는걸.”</p>
+<p class="empty">&nbsp;</p>
+<p>“누구야.”</p>
+<p class="empty">&nbsp;</p>
+<p>절망스러운 말에 원필이 분노를 뱉어내려는 순간, 영현의 목소리가 닿았다. 원필의 시선이 영현에게로 돌아가는 순간이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필의 목덜미에 닿아있던 칼날을 거둔 남자는 망설임 없이 자신의 목을 찔렀다. 피는 사방으로 분수처럼 터지고 생명력을 잃은 남자의 몸은 툭 소리를 내고 무너졌다. 그 앞에 남자의 피를 뒤집어쓴 원필이 눈도 깜박이지 못한 채 영현을 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>피를 뒤집어쓴 원필을 보고 있던 영현의 표정이 고통으로 물들었다. 영현을 만나고 처음 보는 표정이었다. 그리고는 재빠르게 다가가 피로 물든 원필의 얼굴을 제 옷으로 망설임 없이 벅벅 닦았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“석아!!! 석아!!! 송아!!! 송아!!! 어서 당장 이것을 치워라!”</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 처절한 외침에 사람들이 몰려왔다. 피를 흘리며 죽어있는 시신을 보고 다들 놀라는 눈치였으나, 내색하지 않고는 이내 곧 조금 전까지 살아있던 시신을 당장 치우기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 원필을 품에 안고는 그 모습을 볼 수 없게 막았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“따듯한 물을 준비해 두어라.”</p>
+<p class="empty">&nbsp;</p>
+<p>“산신님…. 이렇게 인간이 마구 드나들 정도면 산신님께서도….”</p>
+<p class="empty">&nbsp;</p>
+<p>“물, 물을 준비해. 난 지금 당장 내 아이를 씻겨야겠으니.”</p>
+<p class="empty">&nbsp;</p>
+<p>단호한 영현의 언행에 다들 고개를 숙이고는 일사천리로 움직였다. 그리고 영현은 그대로 원필을 안아 들고는 욕탕으로 향했다.</p>
+<p class="empty">&nbsp;</p>
+<p>따듯한 물은 금시에 준비가 되어있었다. 여전히 넋을 놓은 상태인 원필을 안아든 채로 탕 안으로 들어갔다. 두 사람의 몸이 따듯한 물에 풀어졌다. 영현은 손수 원필의 피 묻은 얼굴을 닦아주었다. 그러자 초점을 잃었던 원필의 시선이 영현에게로 제대로 가 닿았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“다친 곳은 없지? 그 작자가 어떻게 들어오게 되었는지 내가 직접 알아낼 테니, 걱정하지 말거라.”</p>
+<p class="empty">&nbsp;</p>
+<p>“...산신님.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필의 목소리에 굳어 있던 영현의 표정이 어쩔 수 없다는 듯 힘이 풀렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그리 부르지 말아라. 적어도 너는, 원필이 너는, 그리 부르지 말아줘.”</p>
+<p class="empty">&nbsp;</p>
+<p>애처로운 부탁에 원필은 눈을 천천히 깜빡였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“영현, 아파요?”</p>
+<p class="empty">&nbsp;</p>
+<p>자신의 목에 칼을 대었던 사내의 말과 석이라는 이의 언행의 조각을 짜 맞추었다. 지금 산신님의 힘은 얼마나 약해져 있기에 산신님의 터에 이런 살육이 벌어질 수 있었던 걸까?</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 영현은 원필의 말을 듣지 않은 것처럼 굴었다. 조금 전 그 사내가 칼날을 대었던 원필의 목에 손가락을 가져다 대었다. 작은 상처가 남아있었다. 영현은 그를 마치 제 몸에 상처가 남은 것처럼 안타까워했다.</p>
+<p class="empty">&nbsp;</p>
+<p>자신이 아픈 건 마치 없는 일처럼 굴었다. 그러니 원필의 시선이 영현에게로 온전히 닿을 수밖에 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“이제야 나를 보아주는구나. 이 눈이 나를 향하기까지 얼마나 기다렸는지 모른다.”</p>
+<p class="empty">&nbsp;</p>
+<p>보고 싶었다. 하지만 이 말이 입 밖으로 도저히 내뱉어 지지가 않았다. 지금도 나의 사람들이 죽어가고 있었고, 지금 자신의 앞에 애정 가득한 눈으로 바라보고 있는 상대를 죽여야만 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그래야 내 사람들이 살았다. 영현이 애정하는 것이 자신임을 원필은 인정해야만 했다. 그렇다면 결국 내 손으로…. 습한 욕탕의 기운에 원필의 눈가도 축축해질 즈음이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 원필을 가만히 바라보다 원필의 손을 들어 제 목에 가져다 대었다. 놀란 원필이 손을 빼려 하였으나 영현은 손을 놓아주지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“이, 이게 무슨!”</p>
+<p class="empty">&nbsp;</p>
+<p>“이렇게 하고 싶어하는 거 같아서.”</p>
+<p class="empty">&nbsp;</p>
+<p>“아니, 아닙니다. 저는.”</p>
+<p class="empty">&nbsp;</p>
+<p>“응. 아닌 거 알아. 그런데. 내 목숨을 앗아갈 인간이 있다며 그건 너뿐일 거야. 그건 확실해.”</p>
+<p class="empty">&nbsp;</p>
+<p>그런 말 하지 마세요. 원필의 눈동자에 눈물이 고였다. 싫어, 싫다. 그러기 싫어. 목숨을 잃어서 사람들을 구할 방법이 있다면 원필은 제 목숨을 내놓고 싶어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>“이거 놔주세요. 놓지 않으면 이 물에 내 얼굴을 처 박을 겁니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>그 말에 영현이 원필의 손을 풀어주었다. 손에 자유가 주어지자 원필이 가장 먼저한 것은 영현과 멀어지는 일이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“원필아. 그렇게 무서운 이야기는 함부로 하는 것이 아니야.”</p>
+<p class="empty">&nbsp;</p>
+<p>“나도 얼마나 무서웠는 줄 알아? 내가 당신을 왜 죽여. 난 죽이지 않을 거야 절대로!”</p>
+<p class="empty">&nbsp;</p>
+<p>울부짖었다. 나는 당신을 죽일 수 없다. 결국 인정하고야 말았다. 눈앞에 있는 이 사내는 어린 시절부터 나를 살렸고, 어른이 되어서도 나를 살렸다. 그 대가로 인간 세상에 뚝 떨어져 있었고.</p>
+<p class="empty">&nbsp;</p>
+<p>그래 놓고 자신의 목숨까지 내놓으려 하고 있었다. 오로지 나를 위하여.</p>
+<p class="empty">&nbsp;</p>
+<p>“당신을 죽이는 건 나를 위한 게 아니야. 내가, 당신을 얼마나 좋아하게 된 줄도 모르고….”</p>
+<p class="empty">&nbsp;</p>
+<p>세상이 떠나가라 울었다. 매번 눈물은 뚝뚝 떨어트릴 줄만 알았지, 엉엉 소리 내어서는 아이 때부터 울지도 못했던 원필이 소리 내어 울기 시작했다. 그러면서도 자신의 손을 잡겠다며 물 아래에서 손을 허우적거렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>참나, 닿지도 못하게 하였으면서. 이럴 때는 또 잡고 싶어서 안달이라니. 게다가 이리도 울면서 나를 잡고 싶다 손짓하면 그걸 거절할 수 있는 방법이 애초에 있기나 한 걸까?</p>
+<p class="empty">&nbsp;</p>
+<p>“원필아. 난 너 없이 살 수가 없다. 하지만 넌 나 없이도 잘 살아왔잖아?”</p>
+<p class="empty">&nbsp;</p>
+<p>어르고 달랬다. 원필이 그 어떤 선택을 하더라도 마음에 멍울은 지어진 채 평생을 살아가야 할 것이다. 그러니 원필이 스스로 선택을 못 하게 하는 방법을 택하고자 하였다.</p>
+<p class="empty">&nbsp;</p>
+<p>그저 원필의 손에 자신이 죽어주면 되는 것. 어차피 원필의 삶에 관여한 순간부터 하늘에 버림받았고. 승전국의 저주는 퍼부어져 힘은 약해질 대로 약해진 상태였다.</p>
+<p class="empty">&nbsp;</p>
+<p>그럼 더 쉬운 방법을 택하는 게 맞겠지.</p>
+<p class="empty">&nbsp;</p>
+<p>원필을 향한 욕심이 없다면 그것은 거짓이겠으나, 하지만 지금 이 상황에서 원필이 가장 행복하게 살아갈 수 있는 방법은 자신이 사라지는 것뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그러니까 울지 말아라. 내 마음이 미어진다.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필의 손을 잡아당겨 품에 안았다. 맞닿은 가슴팍에 쿵쿵쿵 살아있는 신호탄이 울렸다. 그 신호는 서로에게 전해졌다. 그 신호탄이 온몸을 울렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>“아파, 너무 아파. 나 마음이 너무너무 아파.”</p>
+<p class="empty">&nbsp;</p>
+<p>“괜찮아. 괜찮다. 내가 사라지면 다 나을 병이다.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 말에 원필은 영현의 어깨를 꽉 물었다. 인정사정없이 물어대는 탓에 핏방울이 맺혔다. 원필은 사나운 표정을 짓고는 영현을 노려보았다. 한참을 울어대어 눈가는 짓물렀고, 입술도 깨물어 죄 망가져 있었다. 자신을 붙잡고 있는 손에도 손톱을 죄다 씹어놓아 선홍빛 살이 그대로 드러나 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>널 이렇게 망가트릴 순 없다.</p>
+<p class="empty">&nbsp;</p>
+<p>망가진 너를 이렇게 가만두고 볼 수가 없다.</p>
+<p class="empty">&nbsp;</p>
+<p>“원필아. 나는 오래 살았어. 불사의 몸으로 죽지 못하고 계속 살아왔지. 그러니 이 지친 여행을 끝내주는 게 어떨까? 평생 너 하나만을 애정하였으니, 너만 해줄 수 있는 건데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“싫어. 절대 하지 않을 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p>“어렸을 때부터 고집만 부려서. 내가 너무 오냐오냐 길렀나 보다.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 타일렀다. 하지만 원필은 절대 들어줄 생각이 없어 보였다.</p>
+<p class="empty">&nbsp;</p>
+<p>그렇지만 이 얽혀버린 타래를 끊어버릴 수 있는 단검은 오로지 원필의 손에 쥐어져 있었다. 하지만 원필은 칼을 집에서 빼낼 생각조차 하지 않았다. 그 타래를 끊어버릴 수가 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그렇다면 돌아가.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 말에 원필의 눈이 휘둥그레졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>“날 죽일 생각이 없으면 이곳을 떠나. 나도 더는 여기 있을 수 없을 테니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>말을 마친 영현은 홀로 욕탕에서 몸을 일으키고는 그곳을 벗어났다. 홀로 욕탕에 남겨진 원필은 다시 목 놓아 울기 시작했다. 마치 영현이 들으라는 듯 소리 내어 울었다.</p>
+<p class="empty">&nbsp;</p>
+<p>어서 와서 나를 달래줘. 돌아가라고 하지 마. 난 갈 곳이 없어. 나 울고 있잖아. 달래줘.</p>
+<p class="empty">&nbsp;</p>
+<p>그리 영현을 불러대었으나, 영현은 다시 돌아오지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>***</p>
+<p class="empty">&nbsp;</p>
+<p>“이게 무엇입니까?”</p>
+<p class="empty">&nbsp;</p>
+<p>사위가 고요하였다.</p>
+<p class="empty">&nbsp;</p>
+<p>모든 이들이 이곳을 떠난 것처럼. 무사의 처소라 감쪽같이 믿었던 산신님의 처소에 영현과 원필 단둘만 남아있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>가운데 주안상을 두고 마주 앉아 있는 두 사람 사이에는 비장함마저 맴돌았다. 원필은 제 앞에 차려진 주안상을 가만히 내려다 보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“원필이가 좋아하는 거.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…그래서 지금 사이좋게 술잔을 기울이자구요?”</p>
+<p class="empty">&nbsp;</p>
+<p>“어째, 내가 산신인걸 알고 나서 더 불손해진 것 같아.”</p>
+<p class="empty">&nbsp;</p>
+<p>장난기 어린 영현의 목소리에 원필이 자리에서 벌떡 일어났다. 자리를 피하려 움직이려는 원필을 영현의 목소리가 붙잡았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“당장 나가라 하지 않을게. 하지만 그들의 위협은 계속될 거야. 그럼에도 나와 함께하고 싶다면 그렇다면 남아도 좋아.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…….”</p>
+<p class="empty">&nbsp;</p>
+<p>“나와 남는다는 건. 무얼 뜻하는지 알고 있겠지? 너의 사람들이 모두 죽어나가도 좋다는….”</p>
+<p class="empty">&nbsp;</p>
+<p>그 순간 원필이 영현의 입을 틀어막았다. 언제가 처소에서 훔쳐 가지고 있던 장식용 은 단검이 바닥에 툭 떨어졌다. 자신에게 달려드는 원필에 힘에도 영현은 뒤로 넘어지지 않고 버텼다. 그리고 자신의 입을 막아오는 원필의 허리를 감쌌다. 원필은 그대로 영현의 허벅지 위에 앉았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그만해, 더 말하지 마.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 보란 듯 눈을 접어 웃고는 원필의 손을 툭툭 건드렸다. 원필은 그제야 천천히 손을 거두었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“이렇게 원필이한테 숨이 막혀 죽는 줄 알았는데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“내 손으로 난 절대 당신을 죽이지 않아. 내 손에 죽을 생각이었다면 꿈 깨.”</p>
+<p class="empty">&nbsp;</p>
+<p>“알았어. 알았다니까. 미안해, 자꾸 그런 말 해서 미안해.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 손이 원필의 볼을 감쌌다. 그리고는 조금 더 가까이 다가가 입을 맞췄다. 원필의 눈물이 흘러 짠맛이 입술을 타고 들어왔다. 그 맛이 영현은 쓰게 느껴졌다. 원필의 눈물은 영현을 쓰게 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“산신님…. 영현…. 우리 그냥 딱 하루만 이렇게 더 살면 안 될까? 딱 하루만. 나 욕심내지 않을 테니까. 딱 하루만요, 응?”</p>
+<p class="empty">&nbsp;</p>
+<p>“그 하루가 지나면? 또 다른 하루가 올 텐데.”</p>
+<p class="empty">&nbsp;</p>
+<p>“거기까지 생각하지 않을래. 그냥 난 딱 하루만 더 영현이랑 살고 싶어요. 하루만 더 욕심내게 해주세요. 제발.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 말하며 원필이 영현을 꽉 끌어안았다. 울먹임이 짙어졌다. 영현은 알겠다는 듯 원필을 토닥였다. 영현의 손길에 원필이 점차 진정되어갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>“다 울었으면 하루 주어진 시간을 잘 보내야지. 그만 울고. 원필이가 어렸을 적 내게 주었던 술이다. 같이 나눠 먹고 싶은데. 상대가 되어주련?”</p>
+<p class="empty">&nbsp;</p>
+<p>그 말에 원필이 고개를 끄덕였다. 그러자 영현이 병을 집어 입에 술을 머금었다. 그대로 원필과 입을 맞추어 술을 넘겨주었다. 술과 함께 혀를 섞는 소리가 짙게 울렸다. 그렇게 화합주를 나눠마시듯 두 사람은 술을 나눠 삼켰다.</p>
+<p class="empty">&nbsp;</p>
+<p>“…사실 이 술에 무슨 짓을 했을 거라고 생각했어요.”</p>
+<p class="empty">&nbsp;</p>
+<p>고백하듯 원필이 툭 이야기를 털어놓았다. 그 말에 영현은 안타깝다는 얼굴로 원필을 바라보았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그래서 같이 마셔주기 싫었어.”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 말하며 원필은 영현의 잔에 술을 채워 넣었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그리 의심이 많아서야.”</p>
+<p class="empty">&nbsp;</p>
+<p>술병을 건네받은 영현이 원필의 잔에도 술을 채워 넣었다. 두 사람의 잔에 술이 찰랑였다. 마치 처음 몸을 섞었던 그날의 밤과 같았다. 그때와 같은 느낌에 원필은 영현이 자신에게 하루를 져 주었음을 확신했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그럼에도 가슴이 욱신거렸다. 귓가에 다시금 살려달라는 백성들의 울음소리가 울리기 시작했다. 원필은 이를 악물고 애써 웃으며 영현에게 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“오래도록 곁에 있어 주기로 약조 했어요.”</p>
+<p class="empty">&nbsp;</p>
+<p>“물론이지. 원필이가 나를 죽이지 않는 이상 난 불사다. 그 약조는 네가 지키도록 노력해야 할 것이야.”</p>
+<p class="empty">&nbsp;</p>
+<p>“네. 어떻게서든 지킬겁니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“그런데 원필아. 나에게 하루는 그다지 긴 시간이 아니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“…네?”</p>
+<p class="empty">&nbsp;</p>
+<p>그리 말하고 영현은 자신의 술잔을 단숨에 비워냈다. 그리고는 영현이 들고 있던 잔이 바닥으로 툭 떨어졌다. 이미 바닥에 떨어져 있던 장식용 은 단검과 챙 소리가 나며 부딪치자, 은 단검이 새카맣게 물들었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“…설마.”</p>
+<p class="empty">&nbsp;</p>
+<p>“내 너를 살리지 않았니. 난 원필이가 조금이라도 더 행복하게 살아가길 바란다.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 입술 색이 파리하게 변하기 시작했다. 원필의 눈가에 원망과 분노, 슬픔이 일렁였다. 그리고 영현이 가지고 있던 잔을 찾으려 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>독은 술이 아닌 영현의 잔에 있었다. 원필이 따른 술을 삼켰으니, 애정하는 이가 영현의 목숨을 앗았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“…이런게 어디있어.”</p>
+<p class="empty">&nbsp;</p>
+<p>그때부터 원필은 다급하게 영현이 마신 잔을 찾았다. 나도 죽을 거야. 나도 그 잔에 술을 채워 넣고 마셔서 따라 죽을 거야. 원필의 다급한 몸짓이 그리 말하고 있었다. 하지만 영현은 그 잔을 당장 주워들어 바닥에 내리쳤다. 잔이 영현의 손에 산산조각이 났다.</p>
+<p class="empty">&nbsp;</p>
+<p>그의 손에 피들이 맺히고, 상처 난 살갗에 독이 스몄다.</p>
+<p class="empty">&nbsp;</p>
+<p>“시, 싫어.”</p>
+<p class="empty">&nbsp;</p>
+<p>남은 방법이라곤 모두 사라졌다. 영현의 숨결은 서서히 꺼져갈 것이고 원필은 홀로 남았다.</p>
+<p class="empty">&nbsp;</p>
+<p>“나도 죽을 거야. 나만 두고 가지 마.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 영현을 붙잡았다. 자신에게 쏟아져 내리는 원필에 영현은 뒤로 넘어졌다. 그런 영현의 가슴팍에 얼굴을 묻고 원필은 계속 울어댔다.</p>
+<p class="empty">&nbsp;</p>
+<p>“원필아. 하루가 나에게는 짧다. 하지만 너에겐 그 하루가 길어. 그리고 널 기다리고 있을 너의 사람들의 하루는 얼마나 더 소중한지 모른다.”</p>
+<p class="empty">&nbsp;</p>
+<p>“말하지 마. 더는 더는….”</p>
+<p class="empty">&nbsp;</p>
+<p>“살릴 수 있는 기회가 있다면 살려야지. 네가 알려주었잖아. 그들이 얼마나 치열하게 사는지. 나의 삶보단 그들의 삶이 더 귀할지도 모른다.”</p>
+<p class="empty">&nbsp;</p>
+<p>그러니 어서 돌아가. 너의 사람을 살려라. 난 여기서 정말 끝이 난듯하니. 하지만 기억해 줄 수 있다면 이것 하나만 기억해 주길, 내 너를 많이 아꼈다고.</p>
+<p class="empty">&nbsp;</p>
+<p>내 모든 걸 내어버릴 정도로 이 애정의 시작점조차 잊어버릴 정도로 아끼고 아꼈다는 걸. 네 생이 다할 때까지 절대 잊지 말아줘. 너의 생에는 이제 내 몫도 있다는 걸 기억해줘.</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 영현의 몸은 점점 차갑게 식어갔다. 온기의 사라짐을 느끼며 원필은 하염없이 울기만 했다. 이 모든 게 정말 꿈만 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p>그때, 밖에서 여러 사람의 발걸음 소리가 몰려 들어왔다. 이내 우지끈 소리를 내며 문이 무너졌고, 장비를 차고 있는 승전국의 군대가 몰려들었다. 그 사이에 완전무장을 한 승전국의 왕이 서 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“좋은 구경거리를 내 놓쳤구나. 왕자 잘하였다. 내 약조는 지켜주지.”</p>
+<p class="empty">&nbsp;</p>
+<p>울컥한 원필이 왕에게 달려들려 했으나, 몸이 움직이지 않았다. 큰 충격을 받은 탓에 눈앞이 흐릿해지고 어지러웠다. 그대로 원필은 그 자리에서 기절하고야 말았다.</p>
+<p class="empty">&nbsp;</p>
+<p>***</p>
+<p class="empty">&nbsp;</p>
+<p>“왕자님, 나와보세요! 눈이 내립니다! 어서요 어서!”</p>
+<p class="empty">&nbsp;</p>
+<p>어린아이들의 성화로 원필은 겨우 작은 문을 열어 보았다. 승전국이 약조를 지킨 덕분에 목숨을 보전한 백성들과 고향으로 돌아올 수 있었으나, 조건이 붙었다. 원필은 더 이상 궁에서 살 수 없었으며, 혼인조차 불가했다.</p>
+<p class="empty">&nbsp;</p>
+<p>승전국에서 보낸 이들로 궁은 꾸려졌고, 원필이 할 수 있는 것이라곤 그저 시간을 죽이는 것뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그간 노고의 대가라 생각하고 휴식을 취하라는 말에 원필은 웃지도 울지도 못하였다.</p>
+<p class="empty">&nbsp;</p>
+<p>하루가 이리도 고통스러운 날일 줄이야.</p>
+<p class="empty">&nbsp;</p>
+<p>목숨을 끊고 싶어도 그리할 수 없었다. 자신을 지켜보는 백성들 때문에. 자신을 보며 하루하루 살아갈 힘을 내고있는 자들 때문에.</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 자신의 생에 영현의 몫이 존재하기 때문에.</p>
+<p class="empty">&nbsp;</p>
+<p>“…정말 눈이 오네.”</p>
+<p class="empty">&nbsp;</p>
+<p>그날도 그리하였는데, 처음으로 산신님께 기도를 올리는 날도 이리하였는데. 원필은 가만히 하늘을 올려다보았다.</p>
+<p class="empty">&nbsp;</p>
+<p><em>비나이다, 비나이다.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>산신님께 비나이다.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>부디 바라건대, 태평성대 하길.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>어진 임금이 어버이 되어</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>어리숙한 백성을 자식처럼 품어,</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>살아갈 세상을 평온케 하길.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>산신님께 나를 바치오니,</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>산신님이 돌아와 주길.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>내 손을 잡아주길,</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>나를 안아주길,</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>나와 눈을 맞춰주길.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>그리하여 잡은 손 다시는 놓지 않길.</em></p>
+<p class="empty">&nbsp;</p>
+<p><em>내게 하였던 그 약조를 지켜주길.</em></p>
+<p class="empty">&nbsp;</p>
+<p>그리 원필은 하늘을 향해 빌었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“원필아.”</p>
+<p class="empty">&nbsp;</p>
+<p>그 순간 자신을 부르던 영현의 나지막하고 따듯한 목소리가 원필의 귓가에 닿는 것만 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p>마치 원필이 간절히 빌었던 소원이 이루어지는 것처럼….</p>
+<p class="empty">&nbsp;</p>
+<p>-마침-</p>
+
+</div>
+<!-- 본문 끝 -->
+
+<!-- 하단 버튼 -->
+<div class="btn-wrap">
+  <a class="btn" href="/fic/">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
+    목록으로
+  </a>
+  <a class="btn" href="https://forms.gle/eaJu5Zz7BGjGH1bR9" target="_blank">
+    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    후기쓰기
+  </a>
+</div>
+
+<div class="footer">© 2026 @worldbyyp. All Rights Reserved.</div>
+
+<!-- 설정 패널 -->
+<div id="settings-wrap">
+  <button id="gear-btn" onclick="toggleSettings()">⚙</button>
+  <div id="settings-panel">
+    <div class="panel-row">
+      <span class="panel-label">글씨</span>
+      <button class="ctrl-btn font-sm" onclick="changeFontSize(-1)">－</button>
+      <button class="ctrl-btn font-md" onclick="changeFontSize(0)">가</button>
+      <button class="ctrl-btn font-lg" onclick="changeFontSize(1)">＋</button>
+    </div>
+    <div class="panel-row">
+      <button class="ctrl-btn mode-btn" id="modeBtn" onclick="toggleMode()">🌙 다크모드</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOP 버튼 -->
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
+
+<script>
+  // 우클릭/드래그 방지
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, true);
+  document.addEventListener('selectstart', function(e){ e.preventDefault(); return false; }, true);
+  document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; }, true);
+
+  // 진행바 + TOP 버튼
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (scrollTop / docHeight * 100) + '%';
+    var btn = document.getElementById('top-btn');
+    if (scrollTop > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // 설정 패널 토글
+  function toggleSettings() {
+    document.getElementById('settings-panel').classList.toggle('open');
+  }
+  // 패널 외부 클릭시 닫기
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('settings-wrap');
+    if (!wrap.contains(e.target)) {
+      document.getElementById('settings-panel').classList.remove('open');
+    }
+  });
+
+  // 폰트 크기 (본문만, 제목 제외)
+  var fontSizes = [14, 16, 18];
+  var fontIdx = 1;
+  function changeFontSize(dir) {
+    if (dir === 0) { fontIdx = 1; }
+    else { fontIdx = Math.max(0, Math.min(2, fontIdx + dir)); }
+    document.querySelector('.content').style.fontSize = fontSizes[fontIdx] + 'px';
+  }
+
+  // 다크/라이트 모드
+  function toggleMode() {
+    document.body.classList.toggle('dark-mode');
+    document.getElementById('modeBtn').textContent =
+      document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
+  }
+
+
+</script>
+</body>
+</html>
