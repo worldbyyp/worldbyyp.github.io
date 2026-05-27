@@ -1,0 +1,3340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>푸른 바다의 이방인</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #222222;
+    --header-bg: #0b0b14;
+    --btn-wrap-bg: #0b0b14;
+    --footer-bg: #0b0b14;
+  }
+  .dark-mode {
+    --bg: #111111;
+    --text: #ffffff;
+    --header-bg: #111120;
+    --btn-wrap-bg: #111120;
+    --footer-bg: #111120;
+  }
+
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }
+  html, body {
+    background: var(--bg);
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 16px;
+    line-height: 2;
+    color: var(--text);
+    cursor: default;
+    transition: background 0.3s, color 0.3s;
+  }
+  .header, .btn-wrap, .footer, #settings-wrap, #top-btn {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
+  }
+  .content { cursor: default !important; }
+  a, button {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+
+  /* 진행바 */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: #888888;
+    z-index: 9999;
+    transition: width 0.1s;
+  }
+
+  /* 헤더 */
+  .header {
+    background: var(--header-bg);
+    color: #ffffff;
+    text-align: center;
+    padding: 60px 20px 50px;
+    transition: background 0.3s;
+  }
+  .header-img-wrap {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .header-img-placeholder {
+    font-size: 28px;
+    color: #555555;
+    /* 이미지 생기면 아래로 교체:
+    <img src="★이미지주소★" alt="" style="width:80px; height:auto;"> */
+  }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
+  .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
+  .header .trigger { font-size: 13px; color: #888888; }
+
+  /* BGM — BGM 없는 작품은 .bgm-wrap 째로 삭제 */
+  .bgm-wrap {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 0;
+    transition: background 0.3s;
+  }
+  .bgm-btn {
+    width: 48px;
+    height: 32px;
+    border: 1px solid var(--text);
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
+
+  /* 톱니바퀴 + 패널 */
+  #settings-wrap {
+    position: fixed;
+    bottom: 36px;
+    left: 28px;
+    z-index: 999;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  #settings-panel {
+    background: rgba(30, 30, 40, 0.82);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-10px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  #settings-panel.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+  .panel-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+  }
+  .panel-row:last-child {
+    justify-content: center;
+  }
+  .panel-label {
+    font-size: 10px;
+    color: #888888;
+    font-family: 'Nanum Gothic', sans-serif;
+    width: 28px;
+    user-select: none !important;
+  }
+  .ctrl-btn {
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: #cccccc;
+    font-family: 'Nanum Gothic', sans-serif;
+    padding: 3px 10px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .ctrl-btn.font-sm { font-size: 13px; }
+  .ctrl-btn.font-md { font-size: 13px; }
+  .ctrl-btn.font-lg { font-size: 13px; }
+  .ctrl-btn.mode-btn { font-size: 13px; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; gap: 4px; }
+  .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); color: #ffffff; }
+  #gear-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  #gear-btn:hover {
+    background: rgba(40, 40, 55, 0.8);
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* 본문 */
+  .content {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s, font-size 0.2s;
+  }
+  .content p { margin-bottom: 1em; min-height: 1.4em; }
+  .content p.empty { height: 1.4em; margin-bottom: 0; }
+  em { font-style: italic; }
+  strong { font-weight: 700; }
+
+  /* 하단 버튼 */
+  .btn-wrap {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    padding: 60px 0 60px;
+    background: var(--btn-wrap-bg);
+    transition: background 0.3s;
+  }
+  .btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 28px;
+    border: 1px solid #555555;
+    background: transparent;
+    color: #cccccc;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    font-family: 'Nanum Gothic', sans-serif;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .btn:hover { border-color: #ffffff; color: #ffffff; }
+  .btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+  /* 푸터 */
+  .footer {
+    background: var(--footer-bg);
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: #ffffff;
+    font-family: 'Nanum Gothic', sans-serif;
+    transition: background 0.3s;
+  }
+
+  /* TOP 버튼 */
+  #top-btn {
+    position: fixed;
+    bottom: 36px;
+    right: 28px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 11px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 1; pointer-events: auto; }
+  #top-btn:hover {
+    background: rgba(40, 40, 55, 0.8);
+    color: rgba(255,255,255,0.9);
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 22px; }
+    .content { padding: 30px 18px 50px; }
+  }
+</style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+<!-- 진행바 -->
+<div id="progress-bar"></div>
+
+
+
+<!-- 헤더 -->
+<div class="header">
+  <div class="header-img-wrap">
+    <div class="header-img-placeholder">★</div>
+    <!-- 이미지 생기면 위 div 지우고 아래 주석 해제:
+    <img src="★이미지주소★" alt="" style="width:80px; height:auto;">
+    -->
+  </div>
+  <h1>푸른 바다의 이방인</h1>
+  <div class="author">삐룸</div>
+  <div class="trigger" style="color:#0b0b14;">*Trigger Warning</div>
+</div>
+
+
+
+
+
+<!-- 본문 시작 -->
+<div class="content">
+
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>※ 100% 창작 글로 실제 상황이나 규칙들과는 상이할 수 있습니다.</p>
+<p>※ 외국어 대화는 &lt;“ “&gt;로, 한국어 대화는 “ “로 기재돼 있습니다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>프롤로그.</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>20XX년, 머지않은 미래의 지구는 전부터 경고해오던 지구온난화에 직면했다. 녹아내린 빙하로 해수면이 상승했고, 바다 면적이 늘어났다. 몇몇 지형은 바다 아래로 침수됐다.</p>
+<p class="empty">&nbsp;</p>
+<p>그렇다면 인간은 어떻게 되었는가? 답은 간단했다. 인간은 적응의 동물이었다. 육지 안으로 파고들어 숨기보다 바다를 이용하는 편을 택했다. 육로가 마비된 자리에는 항로가 들어섰고, 기차나 자동차 대신 배를 이용하는 사람들이 늘어나기 시작했다. 바다는 그렇게 생활의 일부가 되어갔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그러나 바다가 생활 반경에 들어온다는 것은 곧, 해상 범죄도 늘어난다는 이야기였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>유례없이 해적이 급증했다. 그들은 바다를 활보하는 바다의 권력자이자 해군이나 해경과는 대립하는 존재였다.</p>
+<p class="empty">&nbsp;</p>
+<p>늘어난 해적들은 대륙마다 거점을 하나씩 가지며 세력을 넓혀갔다. 개중 해적들의 가장 큰 거점이 한국 영토 근처, 정확하게는 과거 일본 땅이었던 곳이었다.</p>
+<p>현재 일본은 해수면 상승의 직격타를 맞아 영토의 반 이상이 잠겨 급하게 수도까지 옮긴 나라였다. 불안정한 공권력과 행정력 아래에 버려진 섬들이 제대로 관리가 될 리 없었다.</p>
+<p>그 버려진 섬들에 해적섬이 있었다. 사실상 무정부나 다름없고 면적이 가장 넓은 섬. 국제적으로 봤을 때 일본이라는 틀에 속해있어 타국에서 쉽게 건들기 힘들다는 교묘한 맹점을 갖고 있는 섬이었다. 해적들에게는 더할 나위 없이 좋은 방패를 갖춘 셈이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>각국 대표들이 만나 그냥 보고만 있을 거냐며 해적들에 대한 회담을 진행했으나, 그 역시 무의미했다. 말로만 떠들어대봤자 늘어나는 해적들을 막을 수 없었고 무엇보다 더 큰 문제는 따로 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>바로 해적들의 대다수가 센티넬이라는 점이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>센티넬은 간단히 말해 이능력자였다. 가지고 있는 특유의 가이딩 파장을 이용해 능력을 쓸 수 있는 이능력자. 존재 자체가 드물어 애당초 일반인과는 같은 선상에 놓일 수 없는 이들이었다.</p>
+<p>일반인들은 그들의 능력을 추앙하면서도 한편으로는 괴물 취급하며 배척했다. 육지에서 반겨주는 자가 없으니 그들은 육지를 등지고 바다로, 해양으로 나아갔다.</p>
+<p>그들이 곧 해적이 됐다.</p>
+<p>발현 확률도 극악에 달하는데, 그나마 남은 인원도 해적이 되어 버렸다. 정부에서 뒤늦게 센티넬들을 포섭하려 하였으나 뒤돌아선 마음은 쉬이 돌아오지 못했다. 육지에 남은 센티넬의 수는 여전히 적었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>상황이 여의치 않게 돌아가니 나라에서는 해적 센티넬 수를 줄이고자 해상 전투를 벌였다. 오로지 그들이 믿는 건 소수의 센티넬 특수부대와 첨단 무기. 딱 두 가지뿐이었다.</p>
+<p>7년 전 해상 전투는 그렇게 일어났다. 정말이지, 호기롭기 짝이 없는 무지한 선택이었다. 된통 피해를 본 쪽은 해적이 아니라 해군과 해경이었다. 이쯤 되면 너 나 할 것 없이 가이딩 수치가 떨어져 해적 센티넬들도 더 이상 전투에 참여하기 어려우리라 예상했는데, 웬걸, 무슨 가이딩을 대체 어떻게 받고 있는 건지 해적들은 끊임없이 쌩쌩하게 전투에 나섰다. 단 한 명의 폭주한 센티넬을 제외하고는 전부. 그 상황에서 폭주한 센티넬이 만들어낸 거대한 물회오리가 군함을 덮쳐오기까지 하니, 자리에 있던 해군과 해경 모두 전의가 싹 증발했다. 무엇을 위한 전투냐는 의견이 피어나기 시작하고, 내부에서도 싸우기 시작하니 정부는 부랴부랴 해적 쪽과 평화 협정에 나섰다. 전투를 멈추고 우리나라 국민들을 건들지 말아달라 싹싹 빌며 진행한, 다소 굴욕적인 협정이었다. —협정 내용에 대해서 구체적으로 알려진 바는 없다.— 이후 해군과 해경이 먼저, 그다음으로 해적이 해상에서 철수했다. 그 모습을 본 국민들은 이제 정부의 무능함을 탓함과 동시에 해적들을 선망하기 시작했다. 안 그래도 센티넬이라는 존재 때문에 해적들에 대한 호기심이 커져 있던 시기였다.</p>
+<p class="empty">&nbsp;</p>
+<p>해적에 대한 대중 선호도가 점점 상승하니 정부로서는 미칠 노릇이었다. 해적 무리를 없애고 이탈하는 젊은이들을 붙잡아 강대국으로 거듭나자는 반(反) 해적파인 정부와는 대립하여, 여론은 해적과의 화합을 통해 국력을 강화하자는 친(親) 해적 성격으로 변해갔다. 정부는 여전히 해적을 경계했고, 친 해적 여론이 형성되는 상황을 저지하고자 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그런 상황 속에서 대한민국 해군 작전사령부 중위 김원필에게 임무가 떨어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해적섬에 있는 민간인 정보를 빼와.”</p>
+<p class="empty">&nbsp;</p>
+<p>흔치 않은 작전 하달이었다. 때아닌 잠입 명령에 민간인을 구해오라니.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…민간인들이 납치라도 당한 겁니까?”</p>
+<p class="empty">&nbsp;</p>
+<p>민간인이 납치되었다면 진즉에 소식을 알아차렸을 텐데, 원필은 단 한 글자도 들은 게 없었다. 적어도 원필이 아는 선에선 평화 협정 이후 해적들은 민간인을 먼저 건드리지 않았다. 해군 쪽으로 접수되는 해적에 대한 신고들도 대부분 허위신고인 경우가 많았다. 포상금을 받기 위한 허위 신고.</p>
+<p class="empty">&nbsp;</p>
+<p>원필의 앞에서 장 대위가 안타깝다는 듯 고개를 끄덕였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“우리 쪽 의견은 그래. 처음 있는 일도 아니니 일어날 만하지. 28년 전 유괴 사건 알지?”</p>
+<p class="empty">&nbsp;</p>
+<p>알다마다. 28년 전 해적이 해군 제독 자녀를 유괴했던 사건은 온 나라를 떠들썩하게 했던 전대미문의 비극이었다. 당시 5살이던 원필이 여전히 기억하고 있을 정도였으니 말할 것도 없다. 어떤 해적이 유괴했는지도 모른 채 아이마저 찾지 못한 미제 사건이 되어 전 국민이 안타까워했었다. 그 영향으로 지금 대통령 후보까지 오르신 분이 계시긴 하지만….</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…물증은 없는 겁니까?”</p>
+<p>“센티넬도 아니고 민간인들이면 해적들에게 끌려가지 않은 이상 해적섬에 가진 않겠지. 실종 접수가 된 민간인도 있으니 확인해 보라는 거다. 김원필 중위.”</p>
+<p class="empty">&nbsp;</p>
+<p>가서 민간인이랑 접촉해서 구해와. 정보만 빼 와도 좋다. 인심이라도 쓰듯 얘기했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해경과 합동 작전이고 해경 쪽에서도 파견 나갈 거야. 이름이… 강영수 경사랬던가.”</p>
+<p class="empty">&nbsp;</p>
+<p>해경과 합동 작전이면 생각보다 규모가 큰 작전인 것 같았다. 그런 합동 작전에 왜 장 대위도 아니고 내가. 원필은 설명을 늘리던 장 대위의 말이 끝나자마자 질문을 던졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“왜 제가 가는지 여쭤봐도 됩니까.”</p>
+<p>“김 중위.”</p>
+<p>“중위 김원필.”</p>
+<p>“이렇게 센티넬들이 해적섬에 들어가야 하는 임무에서 제일 적임자는, 해적에게도 낯선 얼굴이야.”</p>
+<p class="empty">&nbsp;</p>
+<p>장 대위가 원필을 위아래로 훑었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“최근 5년간 보고서에 한 번도 해적의 이름이 오르지 않은 건 자네밖에 없어.”</p>
+<p class="empty">&nbsp;</p>
+<p>해군은 출동 시에 해적과 마주치면 보고서에 기재하게 되어 있었다. 그게 하찮은 F급 해적 센티넬이라 하더라도. 갓 해군에 입대한 후임들도 종종 해적과 마주쳐 보고서 작성법을 물어왔으나, 정작 선임인 원필의 보고서는 그런 내용 한 줄 없는, 멀끔한 보고서였다. 그럴 수밖에 없다. 원필의 출동은 비교적 단순한 해상 작전이거나, 민간 어선 관리 정도뿐이었다.</p>
+<p>처음부터 그래왔던 건 아니었다. 최근 5년 사이, 아니 정확하게는 7년 전 해상 전투 이후부터 이런 식이었다. 연차가 제법 찬 현역 해군이 술자리만 가면 안줏거리처럼 해상 전투 이야기를 하듯, 원필 역시 7년 전 해적과의 해상 전투에 참여했던 인원 중 한 명이었다. 그러나 원필은 전투 중 바다에 빠져 평화 협정을 맺은 후에야 정신을 차렸다. 그게 화근이었다. 구해줬던 은인도 찾지 못했는데, 원필은 전투 중 이탈로 징계를 받아 아직까지 중위에 머물러 있었다. 대부분 중요한 해상 작전에는 원필이 배제되는 일도 잦았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“김 중위도 진급해야 하지 않겠어?”</p>
+<p class="empty">&nbsp;</p>
+<p>그게 아니었다면 입대 동기인 장 대위보다 원필이 먼저 진급을 했을 거라고, 모두가 입을 모아 이야기했다. 상관들 앞에서는 다들 쉬쉬했지만.</p>
+<p class="empty">&nbsp;</p>
+<p>“게다가 김 중위는 일반인이니까 센티넬들끼리 기 싸움하겠다고 경계할 일도 없을 테니 가서 사고만 치지 말고 조용히 있어.”</p>
+<p>“…기간은 얼마나 됩니까?”</p>
+<p>“두 달. 두 달 후에 해무도로 구조선을 보낸다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>해무도라면 부산 아래, 그리고 해적섬 위에 있는 섬이었다. 면적의 1/3이 이상이 잠겼고, WCO(World Climate Organization, 세계 기후 기구) 측에서 완전히 잠길 수 있으니 즉각 대피하라는 경고를 한 탓에 살던 주민들마저 떠나 지금은 아무도 살지 않는 섬이었다. 주인 없는 섬은 그만큼 몰래 해적섬이나 한국을 가기 위해 거쳐 가는 비밀 항구가 되었다. 따지자면 예전 한국의 만남의 광장 같은 곳이었으나, 나가고 들어오는 배에 대한 기록은 전혀 남지 않는 비밀스러운 장소이기도 했다. 일반인이 머물기에는 위험한 섬으로 분류되긴 하나, 해적섬이 아닌 장소에서 구조선을 탄다면 해무도가 가장 적합하기는 했다. 안개가 잔뜩 끼어있는 섬이라 눈에 잘 띄지도 않을 테고.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“질문 더 있나.”</p>
+<p>“없습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>진급에 대한 욕심과는 무관하게 원필의 생각에도 상부에서 적임자를 찾고자 했다면 본인일 수밖에 없을 것 같았다. 상명하복. 원필은 얌전히 제 임무를 받아들였다. 반박할 짬이 되지 않기도 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>사흘 후 부산항 2번 부두 9번 선석. 짤막하게 출발 정보를 말한 장 대위가 봉투를 던졌다. 이게 뭡니까? 돌아오는 대답은 작전 준비물이었다. 무슨 작전 준비물이 핸드폰 하나와 돈 봉투뿐인지. 작전 준비물이랍시고 제법 속물적이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“짐은 최소화해서 가져가도록. 가서 해적 관련한 정보도 알아보면 좋고. 잘 지내고.”</p>
+<p>“필승.”</p>
+<p>“필승. 가봐.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>작전관실 문이 닫혔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>대한민국 해군 작전사령부 중위 김원필은 그렇게 민간인 구출 잠입 작전 지시를 받고 해적섬으로 잠입을 하게 됐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>* * *</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>1장. 해적섬</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>D-Day.</p>
+<p class="empty">&nbsp;</p>
+<p>이른 아침부터 바쁘게 준비했던 원필은 지칠 대로 지쳐 있었다. 이 정도로 배를 옮겨탄다는 이야기는 듣지 못했는데, 원필은 생각지도 못하게 배를 4번이나 갈아타야 했다. 심지어 마지막 배로 갈아탈 땐 장 소령이 쥐여줬던 돈 봉투를 그대로 던져 줘야 했다. 돈 봉투가 왜 준비물인지 그제야 이해가 갔다. 팔짱을 낀 채 시가만 뻑뻑 피우며 한쪽 눈을 치켜뜨던 애꾸눈 선장은, 돈을 건네받고 나서야 바로 길을 터주었다. 고갯짓 한 번 까딱. 대치하듯 마주 보고 서 있던 시간이 무색하게 아주 빠른 허락이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 탄 마지막 배는, 물자 운반 어선이라는 연막을 뒤집어쓴, 사실은 물자보다 사람이 더 많은 밀항선이었다.</p>
+<p>원필의 가방 안에 넣어 가져온 간이 센티넬 탐지기가 연신 진동했다. 대체 몇 명의 센티넬들이 이 배 안에 있는 걸까. 해군에도 센티넬이 전혀 없는 건 아니었지만 —센티넬 특수부대라는 센티넬 전용 소속이 따로 있었으나 육해공에도 소수의 센티넬들을 배치해두긴 했다.— 시시때때로 볼 수 있는 존재들이 아니었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그런 센티넬들을, 배 내부로 들어서자마자 마주쳤다. 원필에겐 관심도 주지 않고 저마다 본인의 능력 자랑을 빙자한 소란을 피우고 있었다. 대충 봐도 최소 10명은 넘었다. 아예 자리를 잡고 그러고 있으니 누가 시킨 것도 아닌데 자연스럽게 센티넬 구역과 일반인 구역이 나뉘어있었다. 당연히 출구 근처 명당자리는 센티넬들 차지여서, 원필은 안쪽으로 계속해서 걸어 들어갔다. 마냥 센티넬들을 보고 감탄하고 있기엔 이미 녹초가 된 상태라 눈에 들어오지도 않았다. 죄다 외국어로 이야기하니 관심도 생기지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>한쪽 구석에 가방을 내려놓은 원필은 그대로 털썩 주저앉았다. 자리를 가릴 때가 아니었다. 무려 14시간 동안 해상 위를 떠돌고 있는 대장정을 이어가고 있었다. 해적섬까지 추가로 이동을 해야 하니, 최소 1시간은 더 배를 타야 했다. 없던 멀미도 생길 것 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>졸린 눈을 끔뻑이며 원필이 배 안을 둘러봤다. 센티넬이건 일반인이건 보이는 사람들은 전부 외국인이었다. 그마저도 전부 자발적으로 탑승했는지 원필보다도 가방을 빵빵하게 챙겨온 사람들 뿐이었다. 딱히 말을 틀만 한 사람도 없겠다 싶던 찰나, 인기척이 들리더니 누군가 털썩 원필의 옆자리에 앉았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>한국인이다.</p>
+<p class="empty">&nbsp;</p>
+<p>…한국인?</p>
+<p>원필이 옆을 흘끔거렸다. 분명 한국인이 맞다. 센티넬 탐지기가 잠잠한 걸 보아 센티넬도 아니고. 주위를 살폈다. 한국인이라고는 옆에 있는 이 남자와 원필 본인뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>순간 머릿속에 장 대위가 했던 말이 떠올랐다.</p>
+<p class="empty">&nbsp;</p>
+<p>“해경과 합동 작전이고 해경 쪽에서도 파견 나갈 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p>해경 쪽에서도 파견을 보낸다고 했다. 그… 이름이 뭐였더라? 박영수? 강영수였나? 기억이 가물가물했다. 사진이라도 보고 왔으면 확실했을 텐데, 해경 쪽 정보는 고작 장 대위가 스쳐 말한 걸 들은 게 전부였다.</p>
+<p>한 번 해경을 떠올리고 나니 진짜로 해경일 수 있겠다는 생각만 둥둥 떠다녔다. 해경도, 센티넬도 아닌 한국인이 이런 밀항선을 탈 일이 있나?</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 이제 호기심을 갖고 남자를 훑어보기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p>짙은 흑발을 한 남자의 귀에는 피어싱처럼 보이는 점이 있고, 실제 피어싱도 하고 있었다. 목에는 실버 체인 목걸이까지 하고 있었으나, 자칫 과해 보일 수 있는 액세서리도 아무렇지 않게 소화해 내고 있었다. 입고 있는 얇은 셔츠 자락은 바닷바람 따위는 고려하지 않은 듯했다. 반소매로 보이는 팔은 또 제법 두툼해 보이기까지 해서, 해경이라는 생각에 조금 더 힘을 싣게 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>위장을 하려면 저렇게 피어싱 같은 것도 해야 했나? 그에 비하면 원필은 그저 밋밋한 면티 위에 셔츠를 걸쳐 입고 해상을 유람하는 모양새였다. 해적섬에 여행이라도 가는 것처럼.</p>
+<p class="empty">&nbsp;</p>
+<p>제 옷차림을 살피던 원필이 다시 고개를 들자마자 곧장 남자와 눈이 마주쳐버렸다. …어, 안녕하세요. 어색하게 입꼬리를 올렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“한국인이십니까?”</p>
+<p class="empty">&nbsp;</p>
+<p>인사부터 한국어로 해놓고, 어이없게 한국인이냐고 묻기까지 했다. 멍청한 서순이였으나 다행히 남자는 별말 없이 순순히 고개를 끄덕였다. 원필은 속으로 안도했다.</p>
+<p class="empty">&nbsp;</p>
+<p>마찬가지로 원필을 위아래로 훑던 남자가 입을 뗐다. 기분 좋은 중저음의 목소리였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해적섬은 처음?”</p>
+<p>“예, 그렇습니다.”</p>
+<p>“그래 보이네.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필에게선 보기 힘든 여유였다. 해적섬에 여러 번 다녀오기라도 했던 걸까. 아, 그래서 복장도 이렇게. 하긴, 이런 작전에 베테랑 한 명쯤 붙어야지. 원필은 이제 완전히 남자를 파견 나온 해경 강영수 경사라고 확신하기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그… 운을 떼던 원필이 혹시 몰라 주변을 두리번거렸다. 반대편에서 센티넬 하나가 불꽃 주먹을 만들어서 손을 휘두르고 있었다. 그 주위로는 다들 신나서 휘파람을 불어대며 더 해보라 부추기고 있었다. 아무도 이쪽을 신경 쓰고 있지 않다는 걸 확인한 원필이 살짝 눈을 찡그리며 나지막이 속삭였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“강영수 씨는 몇 번이나 해적섬에 가보셨던 겁니까?”</p>
+<p>“…나?”</p>
+<p>“예.”</p>
+<p class="empty">&nbsp;</p>
+<p>허. 강영수는 이유 모를 헛웃음을 쳤다. 너무 가당치도 않은 질문을 했던 걸까. 베테랑을 안 내보냈다는 한심함에? 원필이 고개를 갸웃거리는 사이 머리 위로 바람이 휑, 불어왔다. 바람의 근원지는 센티넬 무리였다. 아까와는 다른 센티넬이 후, 하고 가볍게 입김을 불자 실내에 살랑살랑 바람이 불어댔다. 딱히 공격적이진 않았으나 그렇다고 기분이 좋은 것도 아니었다.</p>
+<p class="empty">&nbsp;</p>
+<p>14시간 동안 제대로 쉬지도 못하고 이리저리 옮겨 다녔던 원필의 머리는 짧은 길이임에도 곱슬기가 상당히 올라와 있었다. 그 상황에서 또 예고도 없이 바람을 맞아 머리가 더 붕 떴다. 원필이 머리를 꾹꾹 누르는 꼴을 가만히 지켜보던 강영수가 원필의 한쪽 머리를 슬쩍 만져줬다. ‘만졌다’가 아니라 정말로 ‘만져줬다’. 가라앉으라는 듯이.</p>
+<p class="empty">&nbsp;</p>
+<p>에? 예상에도 없던 돌발 행동에 바보 같은 소리를 냈더니 강영수는 어깨를 한 번 으쓱했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해적섬 처음 가보나 봐?”</p>
+<p>“아, 예. 저는 그렇습니다. 강영수 씨한테 신세를 많이 져야할 것 같습니다. 잘 아는 게 없어서.”</p>
+<p>“그래?”</p>
+<p class="empty">&nbsp;</p>
+<p>대화는 그게 끝이었다. 강영수가 다시 반대편으로 고개를 돌렸다. 상당히 말이 없으신 편이네. 원필이 마저 머리를 정리하며 결론 내렸다. 뭐, 작전 나가는 처지에서 말이 많다고 좋은 건 아니긴 하다. 원필도 더 강영수에게 말을 걸지 않고 자세를 고쳐 앉았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 말없이 앉아만 있으니 밀렸던 잠이 슬금슬금 몰려왔다. 장시간 긴장감 속에 배를 타고 있었던 상황에서 이제 나름 같은 편을 만났다고 좀 편해진 듯했다. 느릿느릿 눈을 끔뻑끔뻑. 그래도 옆에 동행이 있으니 안 자고 버텨보려 했으나, 강영수가 먼저 잠에 빠질 듯 말 듯 한 원필을 알아차렸다. 그냥 자지 그래? 무심한 허락이 떨어졌다. 고민 끝에 원필이 자리를 잡고 천천히 누웠다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“교대로 자도 됩니다.”</p>
+<p>“난 별로 안 졸려서.”</p>
+<p>“그래도 피곤하면 깨워주셨으면 합니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>돌아오는 대답이 없다. 진짜 안 피곤한가? 똑같이 장시간 배를 탔을 텐데…. 실눈을 떠 강영수를 살피려는데, 원필의 머리 위로 옷 하나가 사뿐히 내려앉았다. 감사합니다. 이번에는 질문 하나가 원필에게 던져졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“너 이름이 뭐지?”</p>
+<p>“아, 전해 듣지 못하셨습니까? 김원필입니다.”</p>
+<p>“아, 김원필. 그래, 자.”</p>
+<p>“혹시 정말로 자고 싶으시면….”</p>
+<p>“자라니까.”</p>
+<p>“예, 감사합니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이제 진짜 더 물어보면 안 될 것 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 다시금 눈을 감고 잠을 청했다. 어느덧 반대편에서 불어오던 바람이 멈췄다는 사실은 모른 채였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>얼마쯤 잤을까, 누군가 깨워주기 전에 원필은 스스로 잠에서 깨어났다.</p>
+<p class="empty">&nbsp;</p>
+<p>해적섬 들어가는 위치가 까다롭다더니 파도가 거세게 몰아치던 탓이었다. 거센 선체의 움직임에 그대로 바닥에 머리를 꽁, 박아서, 원필은 자다 말고 앓는 소리를 내야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>눈을 떠보니 강영수는 자리에 없었고 반대편에서 시끄럽게 굴던 센티넬들은 이제 각자의 자리에서 쉬고 있었다. 아무도 원필을 신경 쓰고 있지 않았다. 배가 이만큼이나 흔들리는데도 원필을 제외한 모두가 익숙해 보였다.</p>
+<p class="empty">&nbsp;</p>
+<p>강영수 씨는 어디 갔지? 찾기 위해 일어나던 원필은 요동치는 배를 버티지 못하고 기둥에 무릎을 세게 박아버렸다. 결국 찾는 걸 포기하고 얌전히 다시 앉았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그만 처자고 하선할 준비들이나 해!!!”</p>
+<p class="empty">&nbsp;</p>
+<p>하선할 준비를 하라는 선장의 목청 큰 알림이 이어졌다. 마지막까지 좌우로 정신없이 출렁이던 선체는 정박하고 나서야 겨우 안정됐다. 가방을 챙겨둔 원필은 아직도 후유증이 거셌다. 여전히 바다 위에 있는 것처럼 느껴졌던 탓에 겨우 안정시키고 원필은 하선했다. 대부분 이미 배에서 내린 후였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>배에서 내리자마자 마주한 해적섬의 첫인상은… 험악하다기보다는 주말의 도떼기시장 같았다. 배 정비소를 포함한 술집과 식당들이 즐비했고, 해적단마다 소유한 가게가 하나씩 있는지 지나가는 사람을 붙잡고 가게 앞에서 해적들이 호객행위를 하고 있었다. 스페인어, 영어, 일본어, 중국어 등 각종 외국어에, 어설픈 한국어도 껴있었다. —해적섬에서는 한국어를 공용어처럼 쓰고 있었다.— 최대한 무시하며 지나가려던 원필이었으나, 뜻대로 되지 않았다. 무시하고 지나가는 원필을 발견한 해적 하나가 뛰어와 자연스럽게 원필의 어깨에 팔을 올렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“처음 보는 얼굴이네. 해적 지망생?”</p>
+<p class="empty">&nbsp;</p>
+<p>소매를 걷어둔 팔에는 괴상한 해골 문신이 새겨져 있었다. 씩, 웃는 치아에는 금니까지 박혀 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“들어봐. 해적이 되려면….”</p>
+<p class="empty">&nbsp;</p>
+<p>혼자 무슨 생각을 하는 건지 원필의 귀에 속닥속닥, 해적이 되기 위한 여정들을 복잡하게 설명하기 시작했다. 몇 개는 외국어로 말한 탓에 다 알아듣지 못했으나, 결론은 그거였다.</p>
+<p class="empty">&nbsp;</p>
+<p>너처럼 아무 연줄도 없이 온 사람은 해적이 되기 어렵다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“괜찮아. 우리 해적단에 오면 바로 기관장도 가능해.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…방금 처음 본 사람한테 기관장을 맡기겠다는 건 그냥 답이 없는 해적단이란 거 아닌가?</p>
+<p class="empty">&nbsp;</p>
+<p>괜찮습니다, 하며 원필이 어깨에 있는 팔을 떨어뜨리는데 옆에서 다른 해적이 끼어들었다. 또 원필의 어깨에 다른 문신을 한 팔이 올라왔다. 이번엔 상어가 그려져 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“D급 센티넬보다는 우리가 좋아. 우린 C급.”</p>
+<p>“저긴 인원이 셋뿐이라 배도 못 타!”</p>
+<p>&lt;“너희도 고작 넷이잖아!”&gt;</p>
+<p>&lt;“우린 한 명만 더 채우면 된다고!”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p>원필을 가운데에 두고 해적 둘이 서로 자기 해적단에 들어오라며 영업인지 기 싸움인지 모를 것을 하고 있었다. 보아하니 하급 센티넬들로 이루어진 해적단들이 아무것도 모르는 사람들이 가장 많이 오가는 선착장 앞을 기웃거리며 배를 구하기 위해 해적단 인원을 채우고 있는 듯했다. 저 건너편 배를 파는 곳에서 [최소 인원 미달 해적단에게 안 팝니다.]라는 문구가 적혀있었다. 그 최소 인원이 아마도 5명이고. 5명으로도 해적단이 굴러가나 싶긴 하다만, 지금 그게 중요한 게 아니었다.</p>
+<p class="empty">&nbsp;</p>
+<p>두 해적은 이제 원필은 신경도 안 쓰고 자기들끼리 삿대질을 하고 있었다. 아무리 하급 센티넬도 센티넬은 센티넬이었다. 일반인인 원필은 더 이상 끼어있어서 좋을 게 없다는 결론을 내리고 연신 웅웅 소리를 내며 진동하는 센티넬 탐지기를 껐다. 조용히 사라져야겠다.</p>
+<p class="empty">&nbsp;</p>
+<p>물론 이번에도 실패했다. 한 발짝 내디뎠는데 바로 붙잡혔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“Wait! 어디 가게!?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…센티넬들은 오감이 일반인들에 비해 발달해있다더니 이런 것도 금방 눈치를 채는구나. 괜찮다며 그만 가보겠다, 슬쩍 자리를 피하려는데, 제법 끈질겼다. 원필이 아무 능력도 없는 일반인이라는 걸 쉽게 간파한 모양인지 자꾸만 원필의 주위를 알짱거렸다. 단순 머릿수를 채우기 위해선 일반인이 아무래도 자기들 마음대로 굴리기 좋으니 더 집착하는 듯했다. 둘 중 하나는 능력이 ‘포박’이었는지 원필의 손을 반투명한 끈으로 묶어버렸다. 센티넬 능력 제어 패치를 —비상용이라 장시간 제어는 불가했다.— 갖고 있기는 했으나 이렇게 사람이 많은 곳에선 사용할 수 없었다. 사용했다가는 나 잡아가란 꼴이 될 터였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 이러지도 저러지도 못하고 있던 찰나, 원필의 어깨에 놓인 손이 불현듯 떨어져 나갔다. 해적들을 따라 원필의 고개도 돌아갔다. 바로 뒤에서 강영수가 천천히 걸어오고 있었다. 굉장히 탐탁잖은 표정을 하고.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“거기서 뭐해?”</p>
+<p>“아, 그냥…. 어디 갔었습니까?”</p>
+<p>“뭐, 나도 그냥.”</p>
+<p class="empty">&nbsp;</p>
+<p>두루뭉술하게 답한 강영수가 원필을 끼고 있던 센티넬 둘을 번갈아 쳐다봤다. 정말 그저 쳐다봤을 뿐인데 두 해적 모두 순순히 물러났다.</p>
+<p class="empty">&nbsp;</p>
+<p>뭐지? 원필이 뭘 해도 끈질기게 달라붙던 해적들이 지나가라며 길을 비켜줬다. 어리둥절 원필이 의아하게 서 있자 강영수가 가자며 팔을 톡 쳤다. 눈치를 보던 원필이 후다닥 강영수의 뒤를 쫓았다. 해적들 모두가 이쪽을 보고 있었지만, 다행히 쫓아오지는 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해적들이 강영수 씨한테는 영업을 하지 않습니다.”</p>
+<p>“그렇게 처음 온 티 내면서 어리숙하게 있으니까 당하는 거야. 별로 질 좋은 녀석들도 아닌데.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그걸 몰라서 못 피한 게 아닌데. 졸지에 강영수에게 혼나는 분위기에 원필이 깨갱, 움츠러들었다. 지켜보던 강영수가 쯧, 혀를 찼다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“진짜 답도 없이 왔구나.”</p>
+<p>“…근데 강영수 씨, 나보다 나이가 많습니까?”</p>
+<p>“나이를 꼭 알아야 해? 너도 놔.”</p>
+<p class="empty">&nbsp;</p>
+<p>그 군인 말투 집어치우고. 덧붙이는 강영수의 말에 원필이 입을 합, 다물었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“티 많이 납니까?”</p>
+<p>“장난해?”</p>
+<p class="empty">&nbsp;</p>
+<p>…많이 나는구나.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“근데 지금 어디 가는 겁니까?”</p>
+<p>“또.”</p>
+<p class="empty">&nbsp;</p>
+<p>그 ‘다나까’부터 집어치워 봐. 원필이 잠깐 머뭇거리다 말을 골라냈다. 몇 년을 ‘다나까’를 붙이면서 지내왔더니 바로 바꾸기엔 익숙지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“지금 어디 갑니까…요?”</p>
+<p class="empty">&nbsp;</p>
+<p>강영수가 한심하게 쳐다봤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…어디 가요?”</p>
+<p class="empty">&nbsp;</p>
+<p>그제야 만족스럽다는 듯이 고갤 끄덕였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“답도 없이 해적섬에 떨어진 해군 중위 머무실 곳 찾으러.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>‘머무실 곳’이라 해놓고, 강영수는 조금 떨어진 곳에 있는 펍으로 원필을 데리고 갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>작전 1일 차 만에 벌써 술집? 실제로 해적섬에 떨어진 지는 얼마 되지도 않았다. 양심과 책임감이 원필의 발목을 붙잡았다. 잘만 걷던 원필이 입구에서 멈춰 서있으니, 강영수가 문을 연 채 빤히 쳐다봤다. 안 들어오고 뭐 해? 말은 안 했지만, 눈빛이 딱 그랬다. 안 그래도 날카로운 눈매라고 생각했는데 이렇게 보니 더 매섭게 느껴져서, 결국 이겨내지 못하고 원필이 안으로 발을 들였다. 그래도 몇 번 와봤으니 뭔가 알고 이러는 거겠지, 하며 스스로를 달랬다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>펍은 만석이었다. 센티넬 탐지기를 켜지 않아도 안에 있던 손님들이 전부 해적이자 센티넬인 것쯤은 쉽게 눈치챌 수 있었다. 시끌벅적한 해적들 사이를 지나 강영수는 자리가 비어 있는 바 앞까지 단숨에 걸어갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>인상 푸근한 중년 남자가 카운터 안에서 나와 반갑게 강영수에게 인사해 왔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언!”</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언? 원필이 강영수를 쳐다보니 강영수는 별 대수롭지 않게 내 영어 이름이라 답했다.</p>
+<p class="empty">&nbsp;</p>
+<p>영어 이름도 필요해? 한국어를 공용어로 쓰는 데도 필요할 줄은 몰랐다. 해외를 나갈 일도 없을뿐더러 나가더라도 한국 이름 그대로 사용하던 원필이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 급하게 머릿속으로 영어 이름을 고민하는 동안 강영수는 펍 주인으로 보이는 이와 외국어로 대화를 하고 있었다. 영어도 아닌데 어찌나 빠르고 유창하게 얘기하는지. 영어 이름은 생각도 안 나고 말은 못 알아듣겠고. 멍하니 두 사람을 지켜만 보고 있는데, 갑자기 홱, 펍 주인과 강영수가 동시에 원필을 쳐다봤다. 화들짝 놀란 원필이 어색하게 인사했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“어… 안녕하십니까. 아니, Hi?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>펍 주인이 푸하하 웃음을 터뜨렸다. 강영수마저 픽, 웃었다.</p>
+<p class="empty">&nbsp;</p>
+<p>…가만히 있을 걸 그랬나. 약간 후회가 들어 멋쩍게 머리를 긁적이고 있으니, 이내 펍 주인이 손을 건네 악수를 청했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“마르코다. 한국말 할 줄 알아.”</p>
+<p>“아, 예. 반갑습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 손을 맞잡자마자 마르코가 원필의 손을 번쩍 들어 올렸다. 전혀 예상치 못한 전개에 당황한 원필이 어버버 거리는 사이, 마르코가 대뜸 외쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이터널호의 새 선원이다!”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이터널호는 무엇이고 새 선원이라는 건 또 무슨 소리란 말인가.</p>
+<p>당황한 원필을 두고 펍은 금방 소란스러워졌다. 와아!! 환호 소리가 내부를 크게 울렸다. 앉아 있던 센티넬들이 —전부 이터널호 소속 해적들인 모양이었다.— 마치 짜기라도 한 듯이 맥주잔을 들어 쾅쾅 테이블에 두드려댔다.</p>
+<p>원필이 SOS를 요청하기 위해 강영수를 쳐다봤지만, 그는 그 정신없는 상황 속에서도 태연자약하게 손뼉만 짝짝 치고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“잘됐네. 잘 해봐.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>입꼬리를 올리며 웃는 표정은 여유롭기까지 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>아니, 일단 설명을 좀…. 원필이 다시금 강영수에게 말을 걸기도 전에 우르르 해적들이 원필에게 몰려왔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 이 친구는 이름이 뭐야? 센티넬은 아닌 것 같은데 일반인? 잘생겼는데 취향은 어떻게 돼?</p>
+<p class="empty">&nbsp;</p>
+<p>별의별 질문이 다 날아왔다. 보다 못한 마르코가 원필을 대신해 이제 다들 술이나 마시러 가라고 윽박지르지 않았다면, 원필은 해적들 틈에 그대로 파묻혔을지도 몰랐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“하…. 강영수 씨, 이게 무슨… 강영수 씨?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영수는 또다시 사라지고 자리에 없었다.</p>
+<p>원필만 이 혼란스러운 상황에 남겨둔 채로.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>* * *</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>2장. 해적</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>사실 원필은 잠자리에 들면서도 그냥 마르코의 허풍으로 시작된 해적들의 장난 정도이지 않을까 생각했었다. 자고 일어나면 깨어날 허황한 꿈, 그런 것 말이다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>당치도 않다. 현실이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>마르코가 따로 안내해 준 곳에서 잠을 청했던 원필은 아침이 되자마자 쾅쾅쾅 문을 두드리는 소리와 함께 갑판 청소 심부름을 받아야 했다. 여긴 어떻게 들어왔는지 묻는 원필에게 황당한 눈을 하고선 쳐다보던 그 낯선 선원의 눈이 아직도 기억에 남는다.</p>
+<p class="empty">&nbsp;</p>
+<p>“숙소 공짜로 쓰면서 주인인 척하네.”</p>
+<p class="empty">&nbsp;</p>
+<p>그제야 잠들었던 곳이 선원 숙소라는 걸 알게 됐다. 원필 말고는 아무도 안 오기에 그냥 마르코가 가지고 있는 게스트하우스인 줄 알았지, 선원 숙소일 거란 생각하지 못했다. 민망함에 헛기침을 하던 원필은 조금만 기다려 달라며 급하게 세수를 하고 뛰쳐나와야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>도구는 저기. 그럼 청소해.</p>
+<p class="empty">&nbsp;</p>
+<p>원필을 선원 숙소서부터 배까지 끌고 온 선원은 원필이 청소하는 걸 지켜보다가 어느샌가 사라지고 없었다. 하나둘 다른 선원들이 배에 출근 도장을 찍듯 오르고 있었다. 아무도 대걸레질을 하는 원필은 신경 쓰지 않고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러니까 원필은 대한민국 해군 중위가 아니라 허드렛일부터 시작하는, 이터널호 말단 선원 그 자체로 해적섬에 머물게 됐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>대체 강영수가 마르코에게 뭐라고 이야기를 했길래 이렇게 하루아침에 선원이 될 수 있었던 걸까? 황당하긴 하지만… 당장 물어볼 강영수도 없기도 하고 —대체 무슨 업무를 하는 건지 단 한 번도 강영수를 배에서 마주친 적이 없었다.— 무엇보다 생각을 조금만 바꿔 생각해 보면 썩 나쁘지 않은 상황이었다. 해적섬에서 두 달을 버티려면 어쨌든 어떠한 신분도 필요했고 숙식을 해결할 곳도 필요했는데, 이터널호 선원이라는 이유로 모든 게 한 방에 해결됐다. 비록 청소하는 데 몇 시간씩 소요되기는 했지만.</p>
+<p class="empty">&nbsp;</p>
+<p>갓 해군 입대했을 때나 하던 갑판 청소를, 원필이 땀 뻘뻘 흘리며 끝내고 나면 이터널호는 본격적인 출항 준비에 들어갔다. 지금까지 관찰한 결과로 요약하자면 딱히 주기가 있는 것은 아니었으나 특별한 일이 없다면 거의 이틀에 한 번꼴로 출항했다.</p>
+<p>말단 선원에 불과한 원필은 당연히 출항에서 제외였고, 한 번 출항하면 짧게는 몇 시간, 길게는 한나절이 꼬박 걸리는 덕에 그동안 해적섬에서 자유시간을 보낼 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 섬에 대한 파악부터 시작했다. 강영수의 말마따나 답도 없이 왔으니, 사소한 것부터 시작해야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>절벽으로 둘러싸여 있는 해적섬 지형은 큰 특색 없이 일반 섬들과 비슷했다. 애초에 해적들이 따로 만들어낸 인공 섬이 아니었으니 어쩌면 당연한 이치기는 했다. 그나마 특이점을 찾자면, 사람이 지내는 곳이라기엔 너무나도 거친 파도 한가운데에 자리 잡고 있다는 점이었다. 일반 배로는 쉽게 들어올 수 없는 자연의 경계가 해적섬 주위에 그려져 있었다. 밀항선이 들어왔던 섬의 뒤편이 그나마 파도가 잠잠한 곳인 듯했다. 한국에서 쉽게 정보를 얻기 어려울 만도 했다. 침입하려면 섬의 뒤편으로 돌아 들어와 파도를 이겨내기까지 해야 하는데, 웬만한 정보와 기술이 있는 항해사가 아니면 힘들 터였다.</p>
+<p class="empty">&nbsp;</p>
+<p>지형을 제외한 다른 특색으로는, 해적마다 영역을 나눠 가지고 있다는 점이었다. 개중 가장 선착장과 가까운 영역은 이터널호의 소유였다. 선착장에서 조금만 걸어 나와 오른쪽 길로 틀기만 하면 나오는 그 넓은 땅이 전부. 게다가 대부분 땅이 고르게 되어 있는 평지여서, 섬 안에서는 가장 노른자 땅이었다. 이름을 써 붙인 거나 선을 그어 구분 지어놓진 않았더라도 암묵적으로 정해진 영역은, 다른 해적들이 쉽게 넘보지 못했고 일부 해적들은 통행료를 내며 지나가야 했다. 그 통행료를 거둬 가는 곳이 바로 마르코의 펍이었다. 통행료로 버는 수익이 제법 짭짤해, 이터널호 선장의 재산이 이 해적섬에 있는 그 누구보다 많을 거라는 소문이 파다했고, 선원들에게 가는 봉급 역시 이 섬에 있는 해적단 중 최고 수준일 거라는 예측이 난무했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그만큼 다른 해적단이 쉽게 넘볼 수 없을 정도로 입지가 든든한 이터널호는 해적섬의 3대 해적단 중 하나…</p>
+<p>…라는 자랑을, 원필은 마르코를 통해 들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 해적섬에서 안면을 트고 지내는 사람은 딱 둘이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>하나는 강영수, 하나는 마르코.</p>
+<p>혼자 장사 준비하기 심심했는데 마침 잘 됐다며 마르코가 원필을 불러 세워서, 그냥 외면하고 지나치기에는 마르코 덕분에 이터널호에 들어왔다는 생각이 들어서 그만. 한 번 두 번 이어졌던 방문은 이제는 루틴처럼 아침엔 이터널호, 오후에는 펍에 발 도장을 찍게 됐다.</p>
+<p class="empty">&nbsp;</p>
+<p>마르코는 첫인상 그대로 말도 많고 농담도 많고 넉살도 많은 사람이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“3대 해적단이 이터널호, 이카루스호, 마리나호 이렇게 세 해적단이고 그중 가장 좋은 땅을 가지고 있는 게 우리야. 이카루스랑 마리나는 한 구역을 둘로 쪼개서 가지고 있거든.”</p>
+<p>“해적단 이름이 이카루스일 수가 있습니까? 이카루스는 추락하잖아요.”</p>
+<p>“거기 선장인 루카가 원래 좀 무식해.”</p>
+<p class="empty">&nbsp;</p>
+<p>마르코가 혼자 푸하하 웃었다. 원필은 바 자리에 앉아 그 모든 이야기를 다 들어주었다. 어디까지가 진실이고 어디까지가 거짓인지를 분간할 수 없으니 반은 믿고 반은 걸러 들어야 했다. 내용 자체도 썩 해군에 보고할 용은 아니긴 했다. 단순하게 표현하자면, 알아두면 쓸데없는 신비한 해적 사전 정도?</p>
+<p>그래도 3대 해적단 이야기는 알아둘 만한 정보이지 않을까? 게다가 이터널호가 가장 좋은 땅을 가지고 있다는 건….</p>
+<p class="empty">&nbsp;</p>
+<p>“그럼 이터널호 선장이 제일 센 해적 센티넬인가 봅니다.”</p>
+<p>“아…. 그건 아냐.”</p>
+<p class="empty">&nbsp;</p>
+<p>선장이 제일 센 센티넬이 아닌데 어떻게 이터널호가 최고 자리에 있는 거지? 원필이 더 묻기 위해 입을 뗐으나 마르코가 먼저 말을 가로챘다.</p>
+<p class="empty">&nbsp;</p>
+<p>“필. 나도 질문. 브라이언을 왜 영수라고 해?”</p>
+<p class="empty">&nbsp;</p>
+<p>강영수는 이곳에서 브라이언이라는 이름으로 많이 불리고 있었다. 강영수를 만나기 힘들기는 했지만 어쨌든 강영수를 아는 사람들은 다 강영수를 브라이언이라고 불렀다. ‘강영수’라는 이름 석 자로 부르는 사람은 오로지 원필뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그래도 그렇지, 브라이언을 왜 강영수라고 부르냐니. 이런 질문은 좀 이상하지 않나?</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언 한국 이름이 영수이지 않습니까.”</p>
+<p>“…아?”</p>
+<p>“몰랐어요?”</p>
+<p class="empty">&nbsp;</p>
+<p>모르는 것도 의외였다. 영수라는 이름은 외국인들도 발음하기 괜찮지 않나? 원필은 마르코에게 영, 수, 발음을 시키는 지경에 이르렀다. 마르코는 어째서인지 웃음을 참는 눈치였지만, 그래도 원필이 시키는 대로 잘 따라 했다. 영쑤-까지 할 때쯤 강영수가 펍의 문을 열고 들어왔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언 왔네.”</p>
+<p>“어, 강영수 씨!”</p>
+<p class="empty">&nbsp;</p>
+<p>강영수는 잔뜩 피곤한 듯 하품을 찌익, 하면서 기지개를 켜고 있었다. 같이 작전 나온 상황에서 왜 이렇게 저와는 다르게 여유가 넘쳐 보이는지 알 수가 없다. 배에서는 보기도 힘들고 어디 있는지 찾기도 힘들었다. 그래도 같이 작전 나온 사이에 만나기는 해야, 상황이라도 공유할 수 있을 텐데. 도통 원필 혼자의 힘으로는 강영수를 보기 힘들 것 같았다. 결국 펍에 세 번째 들렸을 때쯤 원필은 마르코에게 강영수가 어떤 일을 하고 어딜 가야 볼 수 있는지 물어봤었다. 선원 숙소에도 안 보이고, 그렇다고 다른 해적단에 혼자 쏙 들어갔을 거 같지는 않고. 마르코에게 물어본다는 것도 우스웠지만 마르코가 아니면 물어볼 사람도 없었다. 그래도 마르코는 강영수와 알고 지내는 사이인 듯했으니 뭐라도 정보가 있으리라.</p>
+<p>원필 나름의 고민을 하고선 마르코에게 물어본 것이었는데, 정작 마르코에게 돌아오는 답변이란.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“와우, 브라이언이 그렇게 보고 싶어?”</p>
+<p>“…그런 게 아닙니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>대체 어떻게 해석한 건지. 물론 마르코와는 다른 의미로 보고 싶기는 했다. 해적섬에 덜렁 떨어진 동료는 서로뿐인데 자주 소통도 좀 하고 해야지. 원필에게 이 섬에서 믿을 구석이라곤 강영수 하나밖에 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>잔뜩 원필을 놀리던 마르코마저 끝까지 강영수를 어디서 볼 수 있는지 말해주지 않았다. 때가 되면 보겠지, 라는 당연한 이야기만 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아니, 그럼 무슨 일 하는지라도 좀 알려줘요.”</p>
+<p>“나는 하기 싫은, 되게 귀찮은 일을 하지.”</p>
+<p class="empty">&nbsp;</p>
+<p>업무에 대해서도 그 정도로만 말하고 입을 싹 닫아버렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>마르코도 별 도움이 안 되는구나, 속으로 생각만 했는데 이틀 후 강영수가 펍에 나타났다. 마르코가 언질을 주긴 한 모양이었다. 날 찾았다며? 그래 놓고 말한다는 게. 당연한 소리 하지 말라고 했더니, 강영수는 웃었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“누가 보면 애인 기다리는 줄 알겠네.”</p>
+<p>“장난치지 말고요. 그러지 말고 아예 약속 시간을 잡았으면 합니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>일주일에 세 번은 정보 공유를 위해 펍에서 만나자는 제안에, 강영수는 귀찮다는 듯 고개를 끄덕였다. 영 시원찮기는 했지만 놀랍게도 강영수는 그 이후 꼬박 약속을 지켜왔다. 이번이 일곱 번째 만남이었다. 강영수가 여전히 무슨 일을 하는지는 모르지만.</p>
+<p class="empty">&nbsp;</p>
+<p>익숙하게 강영수가 원필의 옆자리에 앉았다. 마르코가 강영수에게 위스키를 건네고는 자리를 피했다. 럼주나 생맥주를 들이마시는 해적들 사이에서 강영수가 마시는 위스키는 굉장히 튀는 주종이었다. 원래는 원필도 맥주를 마셨는데, 강영수와 펍에서 계속해서 만나다 보니 덩달아 위스키를 마시기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“대체 어디서 일해요? 나 혼자만 갑판 청소를 며칠째 하는 중인데….”</p>
+<p class="empty">&nbsp;</p>
+<p>강영수가 잔을 입에 대기도 전에 원필이 참지 못하고 물었다. 오늘은 꼭 알아내겠다는 생각이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“김 중위님은 오늘도 갑판 청소?”</p>
+<p>“당연하죠. 아니, 배가 너무 구식이라 청소 시간이 예전에 했던 것보다 배는 됩니다.”</p>
+<p>“뭐, 거의 센티넬들이 동력이 돼서 움직이니까 신식이든 구식이든 크게 상관없는데.”</p>
+<p class="empty">&nbsp;</p>
+<p>그건 그렇겠지만요-. 거기서부터 원필이 불만을 촤르륵 쏟아냈다. 20대 때 이미 졸업한 업무들을 30대에 들어 해적섬 와서 또다시 재연하고 있으니 불만이 없을 리가 없었다. 게다가 이 해적선은 해군 군함과는 다르게 크게 개발에 신경 쓰지 않고 있어서 올드한 부분이 많았다. 군함에서는 대충 슥, 하고 끝낼 일도 꼼꼼하게 하나하나 봐줘야 끝낼 수 있었다. 배가 작기라도 하면 몰라, 크기는 또 군함만큼 커서 전보다 업무가 가중된 느낌이다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이제 눈 감고도 청소할 수 있을 것…왜 웃습니까?”</p>
+<p class="empty">&nbsp;</p>
+<p>강영수가 원필의 말을 들으며 픽픽 웃고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아니, 그냥. 갑판 청소의 신이 되셨네, 이제.”</p>
+<p>“되고 싶지 않습니다. 이제 선원들이 저를 청소부처럼 부립니다.”</p>
+<p>“어떤 놈이?”</p>
+<p>“그런 놈들이 있습니다. 아, 진짜 선장 얼굴 한번 보고 싶네.”</p>
+<p>“왜? 선장 얼굴 보면 한 대 때리려고?”</p>
+<p>“센티넬일텐데요?”</p>
+<p>“맞으려고 가만히 있을 수도 있지.”</p>
+<p>“혹시 센티넬이 뭔지 모릅니까?”</p>
+<p class="empty">&nbsp;</p>
+<p>둘의 대화는 이런 식이었다. 원필만 그날 있었던 일들과 만났던 사람들에 대해 이야기하고 강영수는 묘하게 자기 얘기는 하지 않고 피해 갔다. 근데 문제는 또 원필이 그 사실을 놓친다는 점이었다. 원필은 이야기가 다 끝나고 선원 숙소에 돌아가고 나서야 또 혼자만 얘기했다는 사실을 알아차리고는 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>오늘도 마찬가지였다. 어쩌다가 또 센티넬들에 대한 이야기를 하고 있는지. 그나마 누가 대화라도 끼면 다시 원점으로 돌릴 수 있을 텐데, 마르코는 강영수가 오고 나면 자리를 피해 둘의 대화에 끼지 않았고 다른 해적들도 원필과 강영수 주위로는 오지 않았다. 술에 거나하게 취해 시끌벅적한 소리로 채워진 펍이 어느새 만석이 되었다는 사실도 모르고 있다가, 밤 11시가 되어갈 즈음 마르코가 다시 나타나 휘익, 휘파람을 불어 정신을 차렸다. 시계 쪽으로 눈짓을 주니 그제야 원필이 아, 자리에 일어섰다.</p>
+<p class="empty">&nbsp;</p>
+<p>말단 선원에게는 통금 시간이 있었다. 더 늦게 들어간다고 해적단에 잘리거나 하는 건 아니었지만 아무래도 군 생활에 익숙하다 보니 이런 통금 시간을 안 지키기에는 몸에 가시가 돋치는 기분이라 칼 같이 지켰다. 강영수가 괜찮다 하는데도 원필은 늘 11시만 되면 자리에서 일어났다. 그래도 일단은 말단 선원인데 시간은 지켜야죠. 그럼 원필을 빤히 보던 강영수도 말없이 따라 일어나 같이 선원 숙소로 향했다. 늘 이런 식이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“일단 이터널호에는 민간인이 없다는 건 알겠습니다.”</p>
+<p>“그래?”</p>
+<p>“네. 좀 돌아다녀 보니까 한국 국적도 저밖에 없는 것 같고… 아, 강영수 씨도.”</p>
+<p>“말이 나와서 말인데.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영수가 잠깐 뜸을 들이나 싶더니 다시 입을 뗐다. 그 이름 좀 그만 부르는 거 어때? 원필은 그 말을 이해하는 데 약간의 시간이 필요했다. 그 이름이 설마 강영수를 말하는 거란 생각을 못 해서.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아, 다들 본명을 안 쓰죠. 아무래도 튀는 거 같아 보이긴 합니다. 브라이언이라고 부르는 게 좋겠습니까?”</p>
+<p>“편한 대로. 형도 괜찮고.”</p>
+<p>“형이요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>나이 얘기는 안 했던 것 같은데. 이미 강영수는 한참 전부터 말을 놓고 있었지만, 원필은 그 부분까지는 신경 쓰지 못했다. 여기서 무슨 나이가 중요하냐는 듯 강영수는 그냥 웃고만 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“네가 형일 것 같진 않은데?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>어려 보인다는 건지, 애 같다는 건지. 어차피 형이라고 부를 생각은 원필도 없었다. 형이라는 호칭은 좀 더 막 막역한 사이에 불러야 하는 호칭 같았다. 강영수를 형이라고 부르기엔… 아직 좀 그랬다.</p>
+<p class="empty">&nbsp;</p>
+<p>“그럼 브라이언은 절 어떻게 부를 겁니까?”</p>
+<p>“다른 애들은 다 필이라고 부르던데. 나도 필이라고 부르면 되는 거 아니야? 필아.”</p>
+<p class="empty">&nbsp;</p>
+<p>밤공기를 가리고 들리는 중저음에 원필은 저도 모르게 걸음을 멈췄다. 다른 해적들은 헤이, 필! 하면서 가볍게 원필을 불렀지, 이런 목소리와 말투로 원필을 부르지 않았다. 때마침 숙소 앞에 다다랐던 게 다행이라면 다행이었다. 어떤 이유에서 원필이 걸음을 멈췄는지를 조금이나마 숨길 수 있으니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필아, 말투는 아직도 해군이 섞여 있네.”</p>
+<p>“아….”</p>
+<p class="empty">&nbsp;</p>
+<p>고치려고 노력은 하고 있는데 아직 적응 단계여서 계속 말투가 이상했다. 그래도 해적 중에는 외국인이 많아 어떻게 잘 묻어갔는데, 강영수에겐 어쩔 수 없다.</p>
+<p>좀, 그렇죠? 잔뜩 머쓱해져서 원필이 눈치를 보고 있으니 강영수, 아니, 브라이언이 고개를 가로저었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“뭐, 대충 귀여워.”</p>
+<p class="empty">&nbsp;</p>
+<p>…전혀 예상하지 못한 답변이 던져졌다. 원필이 벙쪄서 입을 벌린 채 가만히 서 있으니 브라이언이 원필의 턱 끝을 올려줬다. 톡톡, 손으로 턱을 간질였다. 그래도 고쳐야 안 들키지. 노력을 좀 더 해보세요, 중위님.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그럼 내일모레 보자.”</p>
+<p>“아… 예, 예. 들어가세요.”</p>
+<p>“잘 자, 필아.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…마지막까지.</p>
+<p class="empty">&nbsp;</p>
+<p>형이라는 말보다 더 낯간지럽게 만들어놓고 브라이언은 미련 없이 손을 흔들고 떠났다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언의 뒷모습이 점이 되어 사라질 때까지 가만히 서 있던 원필이 허겁지겁 숙소 안으로 들어왔다. 빠르게 세수부터 했다. 찬물로 얼굴을 씻어낸 뒤 괜히 턱 끝을 만졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>섬에서 알고 지내는 한국인 동료에게 많이 의지하는 편이기는 했다. 이틀에 한 번 만나서 이틀 동안 있었던 일과를 계속 늘어놓았으니까. 까칠하다고 느껴졌던 첫인상과 달리 브라이언은 제법 배려가 있는 편이었다. 갑판 청소 이야기는 귀에 딱지가 앉게 들었을 텐데도 맨날 웃으며 들어주는 브라이언이었다. 그러면 또 속에서 수도꼭지라도 틀어놓은 것처럼 마음이 놓여서 더 편히 말하게 되고는 했다. 브라이언이 저를 매번 데려다주는 것까지 한 세트였다. 원필과 브라이언 세트. 원필도 의식하지 못하고 있는 사이에 브라이언과 너무 하하 호호 지내고 있었다. 그니까 이게 꼭 느낌이….</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 제 양 뺨을 찹, 쳤다. 정신 차려, 김원필. 연신 중얼거리며 샤워까지 끝마치고 잘 준비를 했으나 잠이 오지 않아 계속 뒤척여야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언은 선원 숙소에서 지내지도 않으면서 계속 저를 데려다주고 있었다는, 의식하지 못했던 행동이 떠올라버려서.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>몇 시인지도 모를 새벽에 비어 있는 숙소 침대를 찾아 들어온, 이름 모를 선원이 드르렁, 코를 고는 동시에 배를 긁적이며 자는 모습을 몇 번이나 보고 나서야 겨우 잠에 들 수 있었다. 그래봤자 몇 시간 채 되지 못해서, 원필은 잔뜩 피곤한 기색으로 이터널호에 출근해야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>이터널호는 전날부터 배에서 자고 있던 선원들을 —선실 외에도 그냥 해먹에서 자는 사람도 많았고 대충 자리 잡고 담요 비스름한 것만 덮고 자는 사람들도 많았다.— 제외하면 한산했다. 말단 선원의 비애와도 같았다. 나홀로 제일 먼저 출근.</p>
+<p class="empty">&nbsp;</p>
+<p>갑판 청소가 없는 날에는 배에 하자가 있거나 누수가 있는 곳은 없는지 체크해야 했다. 갑판 청소보다는 체력적으로 편했어도 시간이 오래 걸리고 따분하기 짝이 없어서 원필이 전부터 가장 귀찮아하는 업무 중 하나였다. 업무 범위는 또 어찌나 넓은지, 배의 끝에서부터 끝까지 돌아다녀야 했다. 그나마 긍정적으로 여길 수 있는 부분이 있다면, 돌아다니면서 마주치는 선원 중에 원필이 찾는 민간 한국인은 한 명도 없다는 것이다. 부정적으로 이야기하자면, 그래서 원필의 임무는 제대로 시작도 해보지 못했다는 점이고.</p>
+<p>브라이언은 민간인을 좀 봤으려나. 다음에 보면 브라이언한테 이런 것도 좀 물어봐야 하는데. 꼭 브라이언만 만나면 해이해지는 것 같아서….</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“네가 필이야?”</p>
+<p class="empty">&nbsp;</p>
+<p>불쑥 끼어든 목소리가 원필의 잡생각을 끊어냈다. 이곳 이터널호에서 웬만해서는 듣기 힘든 여자 목소리였다.</p>
+<p class="empty">&nbsp;</p>
+<p>금빛과 갈색빛이 섞인 웨이브의 머리와 눈 밑에 진한 두 개의 점. 원필은 뒤를 돌아보자마자 그녀가 누구인지 알아차렸다. 펍에서 한 번 본 적 있는 인물이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>이터널호의 부선장 이사벨.</p>
+<p>이사벨이 짝다리를 짚은 채 원필을 내려다보고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필, 맞아?”</p>
+<p>“아, 네. 맞습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 고개를 끄덕이니, 이사벨은 그에 응하듯 고개를 까딱. &lt;“응, 따라와.”&gt; 아직 절반 정도밖에 다 살피지 못했는데, 말단 선원 주제에 부선장의 말을 무시할 수도 없고. 한국에서나 중위지, 여기선 말단 선원인 원필은 결국 순순히 이사벨을 따라갔다. 어차피 계속하기에 지루한 업무기도 했지만, 무엇보다 이사벨의 능력이 기억 조작이라는 것까지 생각하면 안 따라갈 수가 없었다. 무슨 짓을 할 줄 알고. 게다가 이사벨이 자꾸만 저를 위아래로 훑고 있었다. 좀 흘끔거리면서 숨어 보는 것도 아니고 아주 대놓고 뚫어져라 보고 있어서 모를 수가 없었다. 원필은 조금 경직된 채 걷고 있었다. 귀동냥을 통해 들었던 이사벨은 분명 독심이 가능한 정신계 센티넬이 아니었건만 혹시 해군인 게 들켰나 싶을 정도였다. 아무렇지 않은 척 원필은 앞만 보고 걸었다. 이사벨이 그런 원필을 향해 불쑥 질문을 던졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“너 브라이언과 무슨 관계야?”</p>
+<p class="empty">&nbsp;</p>
+<p>궁금해 못 참겠다는 듯한 얼굴을 하고선. 분명 좀 전까지 브라이언 생각을 하고 있던 건 맞지만, 뜬금없이 이 상황에 브라이언 이야기가 왜 나오는 거지? 도통 알 수 없었다. 혹시 내가 아는 그 브라이언이 아닌가? 그러나 친절하게 이사벨은 브라이언 강, 이라며 확인 사살을 했다. 강영수의 성도 강 씨인데, 강 씨 성을 가진 브라이언이 강영수 말고 이터널호에 또 누가 있으려고.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언을 아십니까?”</p>
+<p>“너보다 잘 알지.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>묘하게 기분이 나쁜 거 같기도 하고. 혹시 브라이언, 해경인 걸 들킨 건가? 그래서 이사벨이 날 몰래 떠보려고 불렀나? 대답을 잘못하면 원필이 해군인 것까지 들킬 수 있겠다 싶어 원필은 나름 고심했다. 아예 모르는 사이라고 잡아떼기에는 이미 너무 늦었다. 그럴 거면 처음부터 브라이언이 누구냐고 했어야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…별 관계 아닙니다.”</p>
+<p>“친구?”</p>
+<p>“친구…죠. 그쵸.”</p>
+<p>“애인 아니고?”</p>
+<p>“예?”</p>
+<p>“둘이 사귀는 게 아니야?”</p>
+<p>“예???”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그러더니 또 대뜸. 예상치도 못한 이사벨의 폭탄 발언과도 같은 질문이 이어졌다. 원필이 확 놀라 목소리를 높였다. 해군이니, 해경이니 하는 것도 아니고 사귀냐니? 원필의 목소리가 쩌렁쩌렁 배 안을 울렸다. 건너편에서 일하고 있던 선원들이 무슨 일인가 싶어 흘끔흘끔 쳐다보기까지 했다. 정작 폭탄을 던진 당사자 이사벨은 뭐 못 물어볼 거 물어봤냐는 듯 태연자약했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“펍에서도 둘이 맨날 데이트하잖아?”</p>
+<p class="empty">&nbsp;</p>
+<p>이사벨이 손을 휘휘 내젓자 쏠렸던 시선들이 금방 떨어져 나갔다. 이사벨이 능력을 쓴 건지, 선원들이 말을 잘 듣는 건지는 알 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“맨날도 아니고 데이트도 아닙니다.”</p>
+<p>“어쨌든. 둘만 비밀 이야기하잖아.”</p>
+<p class="empty">&nbsp;</p>
+<p>비밀 이야기가 맞긴 하지. 해군과 해경이니까. 물론 원필의 하소연이 대다수이기는 해도, 분명 작전에 관한 이야기도 간간이 섞여 있었다. 일방적으로 원필만 하기는 했지만.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“둘이서만 위스키 마시고.”</p>
+<p>“그건 그냥 취향 차이죠.”</p>
+<p class="empty">&nbsp;</p>
+<p>손사래를 치는 원필을 보면서도 이사벨은 여전히 믿지 못하는 얼굴이었다. 진짜 아니에요. 원필이 또 한 번 강조하자 이번엔 이사벨이 콧방귀를 뀌었다. 그래, 그럼. 모르는 척 봐준다는 느낌이 강하게 들었다. 원필이 반박하려 했으나 이사벨이 좀 더 빨랐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“자, 여기.”</p>
+<p class="empty">&nbsp;</p>
+<p>이사벨이 오른쪽으로 손을 뻗어 가리켰다. 주방이었다. 갑자기 주방은 또 왜. 어리둥절 서 있는 원필에게 이사벨은 어깨만 한 번 으쓱거리고는 원필을 주방에 밀어 넣었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“오늘부터 주방 보조 시키라던데?”</p>
+<p>“네? 누가요?”</p>
+<p>“누구겠어.”</p>
+<p class="empty">&nbsp;</p>
+<p>그러니까 그게 누구냐고. 그러나 이사벨은 제대로 답해주지 않은 채 볼일 다 끝났다고 빠르게 휑, 사라져 버렸다. 하. 원필이 한숨을 내쉬었다.</p>
+<p class="empty">&nbsp;</p>
+<p>사실 주방 보조를 누가 시켰는지보다 더 중요한 문제가 따로 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“거기! 안 들어와!?”</p>
+<p class="empty">&nbsp;</p>
+<p>새벽같이 출근한 원필에게 주방 보조는, 연장 근무나 다름없었다. 사라진 이사벨에게 이 사실을 말할 수도 없고, 안에서는 계속 원필을 부르니 원필은 결국 주방으로 향해야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>오래가지 못하고 원필은 주방에서 쫓겨났다.</p>
+<p>이유는 간단했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“사고를 몇 번 쳤어요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>해군에서도 해본 적 없는 주방 보조였다. 원필은 요리에 소질이 없었고 주방과는 아주 아주 아주, 거리가 먼 사람이었다. 요리를 직접적으로 한 것도 아니고 그저 보조일 뿐이었는데도 그동안 해적선에서 했던 업무 중에 제일 고됐다고 자신할 수 있었다. 접시를 한두 번 깬 건 약과였다. 차라리 갑판 청소를 하는 게 백번 천번은 나았다.</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언이 동조했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“주방장이 그 정도로 소리친 건 처음 듣긴 했지.”</p>
+<p>“…그래서 다시 창고로 갔잖아요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>대체 어디서 일하기에 주방장이 소리친 것까지 들었냐고 묻고 싶었지만, 선원들 중에 오히려 모르는 사람이 없을 것 같아서 대꾸도 할 수가 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 주방 보조로 일한 건 고작 3일이었다. 3일 만에 주방은 물론이거니와 모든 이터널호의 선원들이 주방 보조를 바꿔달라 요청했단다. 새로 주방 보조가 온 이후에 배식량이 들쑥날쑥하고 군데군데 음식에서 탄내가 나며, 생선 손질이 제대로 되지 않은 것 같다 등등…. 주방에서 들을 수 있는 거의 모든 악평을 3일 만에 모조리 들을 수 있었다. 그게 그나마 주방장이 살리고 살려서 나간 음식들이란 걸 사람들은 알까.</p>
+<p class="empty">&nbsp;</p>
+<p>남들은 잘 모르겠지만 주방 보조는 원필도 원필 나름대로 스트레스이고, 고생이었다. 브라이언과도 이틀 전에 만났어야 했지만, 완전히 녹초가 된 탓에 약속을 깜빡하고 선원 숙소에서 바로 기절하듯 잠을 자버렸었다. —보통 둘의 약속 시간은 정확히 정해두지는 않았지만 늘 비슷한 시간대에 원필이 조금 더 일찍, 브라이언이 느지막이 오는 대로 만났다. 무언의 약속 같은 셈이었다. 올 거라는 믿음으로 마냥 기다리는.— 그 덕이라고 해야 할지, 원필은 어제 처음으로 배에서 브라이언을 만났다. 주방으로 가는 길목에 브라이언이 서 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“어제 왜 안 왔어?”</p>
+<p class="empty">&nbsp;</p>
+<p>그제야 약속이 떠오른 원필은 아차 싶었다. 잠들어서… 오래 기다린 건 아니죠? 브라이언의 눈치를 슬며시 살폈으나, 브라이언은 대답 대신 피곤하면 가서 쉬라는 답을 내놓았다. 선장도 아니면서.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>물론 원필이 쉬지 않고 일한 결과는 썩 자랑할 거리는 되지 못했다. 차라리 굶겠다는 선원들까지 생겨버리자 나흘 만에 이사벨이 원필을 다시 찾아왔다. 그때 이사벨의 눈빛은… 하, 정말이지, 떠올리고 싶지 않았다. 선장에게는 알아서 보고할 테니까 따라오라던 이사벨은 그대로 원필을 창고에 밀어 넣었다. 이제 원필의 업무는 창고 정리가 됐다. 그래도 갑판 청소는 시키지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그거 창피해서 선원 숙소에서 보자고 했던 거야? 누가 놀렸어?”</p>
+<p class="empty">&nbsp;</p>
+<p>원래라면 마르코의 펍에서 봤겠지만, 오늘의 약속 장소는 선원 숙소였다. 선원 숙소와 낯을 가리는 듯 보이던 브라이언은 기어코 이유를 궁금해했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그걸 안 놀릴 사람이 있겠습니까?”</p>
+<p>“난 안 놀리잖아.”</p>
+<p class="empty">&nbsp;</p>
+<p>…그건 브라이언이 특이한 겁니다. 원필이 눈을 피했다. 누가 놀렸어. 이사벨? 끈질기게 브라이언이 물고 늘어졌으나 원필은 모르쇠로 일관했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아니, 어쨌든 그거 때문에 여기서 보자고 한 건 아니에요.”</p>
+<p class="empty">&nbsp;</p>
+<p>절대 주방 보조 때문은 아니고 이사벨이 말했던 게 마음에 걸렸다. 여러 의미로.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“오해를 너무 단단히 하셔서.”</p>
+<p class="empty">&nbsp;</p>
+<p>이사벨은 아무래도 브라이언과 사귄다고 생각하는 것 같았고, 생각을 바꿀 의지도 없어 보였다. 다른 사람들도 이사벨처럼 생각할 수 있지 않나? 밖에서 만나는 게 데이트처럼 보인다고 하니, 아예 사람들이 잘 드나들지 않는 선원 숙소로 —우습게도 정말 드나드는 사람이 적었다. 배에서 자거나 바깥에 걸린 해먹에서 대충 자는 사람들이 더 많았다.— 일단 만나는 장소부터 바꾼 것이었다. 원필도 알고 브라이언도 알만한 곳 중에는 그나마 이곳이 제격이었다. 그렇다고 브라이언과 아예 안 만날 수도 없으니 어쩔 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“작전 때문에 나왔다고 하지, 왜.”</p>
+<p>“미쳤습니까? 그건 그냥 나 잡아가라는 거잖아요.”</p>
+<p>“잡아가도 금방 풀려날 것 같은데.”</p>
+<p>“이터널호 선장이 혹시 바보라도 돼요?”</p>
+<p>“모르지.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이렇게 단순히 말할 게 아닌데, 브라이언은 너무나도 여유가 있어 원필은 됐다고 손사래를 쳤다. 더 얘기해 봤자다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아, 혹시 이터널호 선장에 대해 알아요?”</p>
+<p>“선장?”</p>
+<p>“네. 선장에 대한 정보가 너무 없어서요. 갑자기 업무가 바뀐 것도 이상한데….”</p>
+<p class="empty">&nbsp;</p>
+<p>부선장인 이사벨이 일개 말단 선원까지 찾아와서 업무를 바꿔줄 정도면 선장이 원필을 안다는 방증이었다. 원필이 어느덧 이곳에서 지낸 지 한 달 정도가 되어간다는 걸 생각하면 그럴 수도 있겠지만, 한 달 정도가 되어가는데 선장의 얼굴은커녕 능력조차 알지 못한 건 그럴 수가 없지 않나? 사실 이사벨도 펍에서 다른 남자 선원의 멱살을 잡아 올리는 모습을 보지 않았으면 아마 부선장인 걸 몰랐겠지만…. 어쨌든 능력도 알 수 없을 정도면, 기억 조작이 능력인 이사벨보다는 대단한 모양인데, 마르코조차 이야기해 주지 않으니 알 도리가 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“안다면 아는 사이지.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…진짠가? 원필이 의심의 눈초리를 하고 있으니 브라이언은 어깨를 한 번 으쓱했다. 믿거나 말거나란 이야기다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“부산항과 감천항 사이에 있는 공동어시장 뒷골목 2층짜리 상가 건물에 있는 202호 식당이 이터널호 선장의 한국 아지트야.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>너무 상세한데? 원필은 썩 믿지 못하는 표정을 하고서도 혹시 모르니까 일단 수첩에 받아적었다. 한국으로 돌아가면 군에 보고하기 전에 혼자 먼저 들려볼 생각까지 했다. 다 적고 나서야 브라이언이 웃고 있다는 사실을 알아챘다.</p>
+<p class="empty">&nbsp;</p>
+<p>잘도 나를 또 놀렸구나. 원필이 브라이언을 한껏 흘겼다. 수첩 다음 장을 폈다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“됐어요. 그럼 민간인 관련해서는 뭐 알아낸 거 없습니까? 일단 이터널호에 민간인은 우리 둘뿐이란 건 확실히 알겠어요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>3주 넘는 시간 동안 이터널호에 있는 모든 방을 한 번씩은 둘러봤다. 실수인 척 문도 두드려보면서 선실 파악도 끝냈으나 민간인은커녕 죄다 센티넬밖에 없었다. 한국인도 없고. 졸지에 주방도 둘러본 꼴이 되었으니, 이제 못 가본 곳은 배의 상부에 있는 항해실과 선장실 정도뿐이었다. 그 두 곳은 말단 선원으로는 절대 가기 힘들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“애초에 해적섬에 들어오는 민간인들이 있다면 자발적으로 해적이 되기 위해 들어오는 거겠지. 그게 아니라면 중위님처럼 작전을 받고 오시거나.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그게 해경이 할 소린가. 본인도 마찬가지면서 브라이언은 영락없이 딴 사람 이야기하듯 굴었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언은 가만 보면 해적 다 됐습니다. 전혀 해경 같지 않아 보일 지경입니다.”</p>
+<p>“넌 여전히 해군이고.”</p>
+<p>“그래도 많이 티 안 나지 않아요, 이제?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>나 이제 각도 많이 사라진 것 같아 큰일인데. 원필이 허리를 곧추세우고 브라이언을 향해 경례를 해 보였다. 허. 헛웃음을 친 브라이언이 성의 없이 경례를 맞받아쳐 줬다. 각이 엉성하기 짝이 없긴 해도 그 와중에 바로, 라는 말까지 덧붙였다. ‘바로’라니, 확실히 해군은 아니네. 원필이 큭큭 웃으며 손을 내렸으나 어째 돌아오는 반응이 없다. 브라이언은 말없이 원필을 빤히 쳐다보고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“왜 그래요? 뭐 문제 있습니까?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>혹시 누가 오기라도 했나 싶어 확인했으나 인기척 하나 없었다. 원필이 묵는 선원 숙소는 4인실이었으나 원필을 제외하면 고정적으로 지내는 사람은 없었다. 하루는 미국인이 와서 자다 갔고 다른 하루는 중국인이 와서 자다 가기도 했다. 원필처럼 통금 시간까지 지켜가며 선원 숙소에 묵는 이는 그보다도 더 적었다. —원필로서는 더 편하긴 했다.— 지금도 선원 숙소 안에는 원필과 브라이언밖에 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>혹시 누가 훔쳐 듣는 이가 있나? 원필이 경계 태세를 갖춰 자리에서 일어나려 하니 브라이언이 손을 저었다. 그런 문제가 아니야. 엉거주춤 멈춘 원필을 대신해 브라이언이 자리에서 일어났다. 묘하게 시선을 피하는 기색이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…민간인들은 차라리 선착장 근처 조무래기들 쪽에 있겠지.”</p>
+<p>“아, 맞아요. 안 그래도 그 생각도 해보긴 했거든요. 그럼 이제 이터널호보다는 다른 해적선에 잠입하는 게 나을 것 같지 않아요? 제가 먼저 이터널호를 빠져나가서 저번에 그 선착장….”</p>
+<p>“말도 안 되는 소리를.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>무슨 일을 당할지도 모르는데. 브라이언이 어딘가 짜증 섞인 목소리로 원필을 꾸짖었으나, 이미 늦었다. 원필은 지금 머릿속에서 이터널호에서 나와 선착장 쪽 해적들한테 합류하는 방법을 고민하고 있었다. 그쪽으로 관심이 꽂혀버렸다는 게 여실히 드러났다. 브라이언이 한숨을 내쉬었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“됐어. 이터널호에 남아. 민간인은 내가 더 알아볼게.”</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언도 민간인이면서 어떻게 하겠단 건지.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그리고 다음에는 다시 펍에서 보는 게 낫겠어.”</p>
+<p>“예? 하지만 이사벨이 혹시라도 눈치를 채면 더 위험합니다.”</p>
+<p>“그럼 그냥 사귄다고 해, 필아.”</p>
+<p>“네?”</p>
+<p>“사귀니까 데이트 중이라고 해.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>적당한 말을 찾지 못한 원필이 입을 다물었다. 브라이언마저 말을 하지 않자 선원 숙소는 순식간에 조용해졌다. 단둘만 있는 상황에 흐르는 어색한 공기와 묘한 분위기가 여실하게 느껴졌다. 이 정적을 끊어내야 하는데, 마주친 시선은 마치 원필의 입을 접착제처럼 붙여놓게 했다. 목이 바싹 타는 느낌에 괜히 침을 삼켰다.</p>
+<p class="empty">&nbsp;</p>
+<p>울렁거리는 원필의 목젖에까지 내려가던 눈길을, 브라이언이 물려냈다. 결국 먼저 고개를 돌린 쪽은 브라이언이었다. 마른세수를 하던 브라이언이 한 걸음 물러났다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“여기는 안 위험한 것 같아?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언은 그렇게 원필을 두고 선원 숙소를 떠나버렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>* * *</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>3장. 가이드</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 뒤도 안 돌아보고 나갔던 브라이언은 다음날 원필이 출근하자마자 어떻게 알았는지 비품 창고 문을 열고 들어와 쪽지를 건넸다. 원필만 싱숭생숭, 잔뜩 낯 가리게 만들어놓고는, 브라이언은 태연해 보였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…이게 뭔데요?”</p>
+<p>“정보.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그냥 해본 말인 줄 알았는데 이렇게 빨리? 원필이 빠르게 쪽지를 펼쳤다. 쪽지에는 한국인 이름과 해적단이 적혀있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해적섬에서 소속 없는 사람은 없어. 그들이 진짜 민간인이라 해적한테 납치당한 건지, 아니면 스스로 해적이 되었는진 알기 힘들어.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 이후로도 브라이언은 약속을 지키듯 수시로 정보를 원필에게 넘겼다. 계속 브라이언에게 데면데면하게 굴던 원필도 결국 참지 못하고 브라이언에게 물어봤다. 혹시 나 모르게 만나는 정보통이 있어요? 그러면 브라이언은 또,</p>
+<p class="empty">&nbsp;</p>
+<p>“왜, 질투해?”</p>
+<p>라며 원필을 당황하게 했다. 정말 아무 일도 없었다는 듯이.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언이 넘긴 정보가 대여섯 장쯤 됐을 때, 원필은 그들과 만나야겠다는 결론을 내렸다. 브라이언에게도 이야기했다. —이상하게 브라이언은 다 알 것만 같았고, 정말로 다 알기도 했다.— 못마땅한 시선으로 시가를 입에 물기는 했지만, 브라이언은 끝내 원필에게 더 뭐라 하지 못하고 고개를 끄덕였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“시가도 피울 줄 알아요?”</p>
+<p>“어, 배웠어.”</p>
+<p class="empty">&nbsp;</p>
+<p>아무리 전보다 모든 게 많이 바뀐 편이라지만 한국에서 시가 피우는 사람은 여전히 드문 편이었다. 시가를 배웠다면 여기 해적섬에 와서 배웠다는 이야기가 된다.</p>
+<p class="empty">&nbsp;</p>
+<p>“여기 되게 오래 지낸 사람 같아요.”</p>
+<p>“너도 필래?”</p>
+<p>“아뇨. 전 담배는 별로라.”</p>
+<p class="empty">&nbsp;</p>
+<p>불을 붙이던 브라이언이 곧장 시가를 입에서 떼어냈다. 피워도 되는데. 어차피 군대에서도 담배 피우는 사람이 90%는 됐다. 원필도 한 번 입에 댄 적 있었으나 영 취향이 아니라 한 번의 경험으로 족했다. 괜찮다는 원필의 말에도 브라이언은 미련 없이 시가를 대충 재떨이에 던져버리고선, 원필에게 두건 하나를 건넸다. 원필도 익히 아는 두건이었다. 이터널호 선원들이 팔, 다리, 목 등등 여러 위치에 아무렇게나 묶어 다니는 두건이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“반대야.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 두건을 펼쳐 보이니 브라이언은 친히 손을 잡아 돌려주었다. 투박한 손과는 달리 조심스러운 손길이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이게 보여야 해.”</p>
+<p class="empty">&nbsp;</p>
+<p>나침반 중앙에 태양이 그려진 문양. 갑판 청소하면서 자주 봤었다. 이터널호 돛에도 같은 그림이 있었다. 왜 다들 그리 두건을 가지고 다니나 했더니 이터널호라는 증표였던 모양이다. 원필은 아직 가지고 있지 못했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그걸 들고 다녀. 도움이 될 테니까. 브라이언의 조언은 그게 전부였으나. 조언은 확실했다.</p>
+<p class="empty">&nbsp;</p>
+<p>해적들에게도 서열이라는 게 있었고, 그 서열 최상위에 있는 게 이터널호였다. 문양이 보이게 두건을 손목에 두르고 해적섬을 돌아다니니 지나가다 한 번씩 원필에게 시비를 걸던 센티넬들도 원필을 함부로 건들지 못했다.</p>
+<p>마르코가 괜히 자부심이 있는 게 아니구나. 뒤늦은 체감을 하며 원필은 기지개를 켜는 척 선착장 근처 해적단 쪽으로 다가갔다. 딱히 원필이 뭔가를 하지도 않았는데, 그들이 먼저 원필에게 다가와 무엇이 필요하냐 물어봤다. 원필이 아무 능력도 없는 일반인인 걸 알면서도 단지 이터널호의 선원이라는 이유에서 손 하나 까딱 대지 못하는 것이었다. 이터널호에서 나가지 않고 다른 해적단과 접촉할 수 있는 손쉬운 방법이었다. 브라이언은 이런 방법을 어떻게 생각해낸 걸까.</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 그렇게 간단히 민간인들을 만날 수 있었다. 행운이라면 행운이었으나, 딱 거기까지였다.</p>
+<p>원필의 행운은 더 따라주지 못했다. 원필이 만난 민간인들은 전부 납치당한 이들이 아니었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“전 해적이 되고 싶어서 온 건데요. 그러지 말고 저도 이터널호에 들어가게 해주세요.”</p>
+<p>“이터널호에는 어떻게 들어갔어요? 이터널호가 센티넬도 아닌 사람을 받아주다니….”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>되레 그들은 원필이 가진 두건을 보고선 본인들도 이터널호에 들어가게 해달라고 빌었다. 그들은 자국으로 돌아가는 게 아니라, 최상위 서열의 해적단 일원이 되고 싶어 했다. 원필을 따라나설 이는 아무도 없었고, 종내에는 이터널호에 들어올 방법을 알려주지 않는 원필을 향해 소박을 맞추었다. 해군이라고 정체를 밝히지 않아 다행이었다. 그랬으면 그들은 원필을 잡아 포상을 요구했을지도 몰랐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언이 가져다준 정보에 대비해 별다른 수확을 내지 못했다. 브라이언에게도 내용을 공유했지만, 브라이언은 예상했다는 듯 고개만 끄덕이는 게 전부였다. 별 기대하지 말랬잖아. 그 말이 그렇게 차가울 수가 없어서 원필이 괜스레 브라이언의 팔을 툭 쳤다. 브라이언은 가만히 맞아줬다. 차라리 피하기나 하지. 더 때리라며 팔을 다시 내밀기까지 해서, 원필이 됐다고 팔을 치워내야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“내일도 갈 생각이야?”</p>
+<p>“예. 내일은 이카루스호에 있다는 지우 씨를 만나보려고 했어요. 브라이언도 같이 갈래요?”</p>
+<p class="empty">&nbsp;</p>
+<p>얻어낸 것 하나 없이 해적섬에서 머무는 시간은 빠르게 흘러갔고, 원필 혼자 힘으로 갈만한 곳은 다 돌아다녔다. 이대로면 아무도 데려가지 못할 것 같았다. 원필도 원필이지만, 브라이언도 해경에 돌아가야 하는데. 이대로는 안 되겠다 싶어 결국 원필은 범위를 넓히기로 했다. 이카루스호가 해적섬의 3대 해적단이란 걸 알지만 선착장 근처에서는 얻어낼 수 있는 정보가 더 이상 없었다. 해적단의 규모가 큰 곳이니만큼 원필 혼자는 힘들 것 같았다. 고민하던 브라이언이 고개를 끄덕였다. 원필의 표정이 활짝 펴졌다. 합동 작전 이래로 브라이언과 함께 움직이는 게 처음이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“두건은 두고 오는 게 좋을 거야. 그쪽 구역에서는 오히려 싸움 거는 꼴이거든.”</p>
+<p>“그렇겠네요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>내일 오후 6시, 마르코 펍에서 만나서 출발.</p>
+<p class="empty">&nbsp;</p>
+<p>익숙하게 원필을 선원 숙소까지 데려다주던 브라이언과 약속 장소와 시간을 정했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“더 이른 시간은 안 되나요?”</p>
+<p>“날씨가 좋지 않아. 출항하지 않으면 다들 늦게 일어날 거라 일찍 가도 소용없어.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>음. 원필이 하늘을 올려다봤다. 평소에 잘 보이던 별들이 보이지 않았다. 비가 오려나 보다. 해적섬에 대한 일기 예보는 어디에도 방영해 주지 않아서, 예지 능력이 있는 센티넬을 활용하거나 이런 식으로 예측해야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“좋아요. 그럼 그때 보죠.”</p>
+<p>“그래, 잘 자.”</p>
+<p>“브라이언도요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>눈이 동그랗게 커졌던 브라이언이 웃으며 손을 흔들었다. 왜 웃는지 몰랐는데, 뒤늦게 원필은 본인이 평소와는 다르게 브라이언처럼 손 인사를 했다는 걸 인지했다.</p>
+<p>마르코의 펍보다는 선원 숙소에서 만나서 출발하는 동선이 더 단순하다는 것도, 씻고 나서야 알아차렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>왜 그랬지?</p>
+<p>원필이 혼자 민망해하며 내일 입을 옷을 찾아 정리했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 또한 평소에 하지 않던 행동이라는 건 알아차리지 못했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이른 아침부터 비가 내리는 날이었다.</p>
+<p>바람이 거셌고, 원래도 거칠었던 파도는 섬을 집어삼킬 듯이 몰아치고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>이런 날은 억지로 출항하지 않고 모든 해적이 배를 정박한 채로 휴일을 맞이했다. 보통 사람들이라면 비 오는 휴일에 너 나 할 것 없이 집에 처박혀 있는 걸 택하겠지만, 해적들은 이런 휴일에 가만히 있기는커녕 해방된 사람들처럼 뛰어다녔다. 술집은 호황이었고, 길거리에서는 해적들이 비를 맞으며 술에 취해 노래를 부르고 다녔다. 옷이 젖거나 말거나, 술을 빗물이 적시거나 말거나.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>누가 여기서 우산을 쓰냐며 비웃는 해적 무리 사이를 지나가는 이가 있었으니, 그게 바로 원필이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 창고에서 아무도 안 쓰는 우산을 겨우 하나 찾아낼 수 있었다. 그마저도 우산이 휘어져 있기는 했지만, 장대비를 피해야 하는 처지에선 이 정도도 감지덕지였다. 우비까지 단단히 챙겨 입은 원필은 늦지 않게 마르코의 펍에 도착했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“데이트라도 해?”</p>
+<p>“네?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>우비를 벗자마자 마르코가 대뜸 원필의 의상을 가리켰다. 해적섬에 오고 나서는 근처 가게에서 파는 옷 몇 벌을 사 해적처럼 입고 다니려고 애썼던 탓에, 오늘 입었던 옷은 그동안 한 번도 입지 않았던 옷이기는 했다. 그래도 그냥 단순히 셔츠랑 슬랙스인데.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그래서 상대는 누구?”</p>
+<p>“데이트 아니에요. 브라이언 올 거예요.”</p>
+<p>“아, 오케이. 혹시 브라이언과의 데이트가 아니면 어쩌나 했지.”</p>
+<p class="empty">&nbsp;</p>
+<p>마르코가 호탕하게 웃었다. 아니, 마르코…. 반박하려던 원필이 입을 다물었다. 때마침 펍에 들어오던 이사벨과 눈이 마주쳤다. 이사벨은 또 왜 의미심장하게 삐뚜름한 미소를 띤 채 저를 보고 있는 건지. 그 사이 마르코는 밀려 들어오는 주문을 받기 위해 자리를 떠났고, 이사벨은 빈자리를 찾아갔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>펍은 만석이었다. 마르코가 원필과 브라이언이 앉을 자리를 미리 빼두지 않았으면 —어떻게 알고 빼뒀는지 모르겠지만.— 원필도 그냥 입구에서 선 채로 기다려야 했을 터였다.</p>
+<p class="empty">&nbsp;</p>
+<p>문 열리는 소리가 들릴 때마다 원필의 고개가 홱홱 돌아갔다. 그때마다 원필이 기다리는 사람 대신 다른 해적들이 들어왔다가 나가기를 반복했다.</p>
+<p class="empty">&nbsp;</p>
+<p>시계를 쳐다봤다. 6시까지는 아직 3분 정도 남아있었다. 브라이언과 약속 시간을 정하고 만나는 건 처음이었지만, 원필이 알고 있는 브라이언이라면 6시에 맞춰 올 것 같았다. 기다리는 시간이 딱히 기분 나쁜 건 아니었지만, 기왕이면 빨리 6시가 됐으면 좋겠다는 생각이 자꾸 들었다. 이유는 모르겠지만. 원필은 괜히 마르코가 두고 간 글라스를 톡톡, 바 테이블에 두드렸다. 테이블도 덜덜, 글라스를 쥔 손도 덜덜 떨렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…응?</p>
+<p>턱을 괴고 있던 원필이 몸을 세웠다.</p>
+<p class="empty">&nbsp;</p>
+<p>손이 떨리는 게 아니라, 땅이 좀 흔들리는 것 같은데?</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그때 닫혀있던 펍의 문이 벌컥 열렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“칼리가 폭주하기 직전이야!”</p>
+<p class="empty">&nbsp;</p>
+<p>왁자지껄했던 펍이 순식간에 찬물을 끼얹은 듯 고요해졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>폭주, 라는 말은 그러니까… 대학생 때 ‘센티넬의 이해’ 강의에서 들었었다. 센티넬의 가이딩 파장이 불안정할 때 나타나는 현상. 지속되면 센티넬이 죽는 건 물론이고 주변에도 큰 피해가 있다고. 가장 큰 예시가 7년 전 해상 전쟁에서 있었던 센티넬의 폭주였다. —당시 원필은 바다에 빠지는 바람에 폭주 현장까지는 제대로 목격하지 못했지만.— 잘은 모르는 일반인 원필일지라도 이 상황에 가이드가 필요하다는 건 알았다. 센티넬들의 가이딩 파장이 불규칙해져 수치가 떨어지면 가이딩을 받아 회복해야 했다. 그 가이딩을 해줄 수 있는 존재가 가이드였다. 센티넬들만의 구원자이자 신.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그런데 이터널호에 가이드가 있던가? 이터널호 센티넬들이 제대로 가이딩 받는 모습을 본 적 없다는 사실을 깨달은 원필은 순식간에 등골이 오싹해지는 기분을 느껴야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>누가 신호라도 준 듯 펍에 있던 사람들이 동시에 모두 자리에서 일어나 우르르 밖으로 뛰쳐나갔다. 서두르라는 소리가 오갔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필!”</p>
+<p class="empty">&nbsp;</p>
+<p>마르코가 앉아 있던 원필을 잡아챘다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“무너질 수 있으니 밖에 나가야 해! 칼리는 지진 센티넬이라고!”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>마르코는 거의 원필을 질질 끌다시피 해서 빠르게 펍 밖으로 이끌었다. 여전히 밖에선 비가 오고 있었고, 땅은 점점 더 거세게 진동했다. 모든 해적이 한 곳을 보고 있었다. 진동이 느껴지는 근원지에 은발의 칼리가 바닥에 주저앉은 채로 땅을 주먹으로 쾅쾅 내리치고 있었다. 고통에 몸부림치는 칼리가 괴성을 질렀다.</p>
+<p class="empty">&nbsp;</p>
+<p>땅이 무너질 것 같은 진동이 이어졌다. 이대로면 섬이 잠기는 게 아닌가 싶을 정도였으나, 칼리에게 쉽게 다가가는 사람은 없었다. 이대로 칼리가 폭주하는 모습을 그냥 지켜만 보고 있어야 하는 걸까. 원필이 떨리는 손으로 마르코를 붙잡았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“누가 가봐야 하는 거 아니에요?”</p>
+<p>“그래, 그 누가 오고 있군.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>마르코가 턱짓했다. 저 멀리서 누군가 걸어오고 있었다. 비가 오는 탓에 시야가 흐릿했지만, 곧 원필의 눈에도 제대로 들어오기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언이었다.</p>
+<p>우산은 고사하고 우비 하나 걸치지 않고 브라이언이 걸어오고 있었다. 정확하게는 원필 쪽이 아니라 폭주 직전의 칼리 쪽을 향하고 있었다. 위험했다. 원필이 발을 동동 굴렀다. 땅이 흔들리는 게 느껴지지도 않는지 브라이언은 거침없었다. 원필만 속이 탔다. 브라이언 미친 거 아니에요? 원필이 말리기 위해 뛰쳐나가려고 했으나 마르코가 빠르게 원필을 붙잡았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“둬.”</p>
+<p>“네?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언과 칼리 사이의 거리가 빠르게 좁혀졌다. 해적들은 브라이언을 말리기는커녕 기다렸다는 듯 환호를 하며 연호하기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“전에 이터널호 선장이 제일 센 센티넬이냐고 물었었지?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>뜬금없이 그 이야기는 갑자기 왜 하는 건지. 영문 모른 채 원필이 보고 있으니 마르코의 표정이 묘해졌다. 미안해하는 것 같기도 했고, 안쓰러워하는 것 같기도 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“센티넬이 아니야.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언이 다가가자 칼리가 손을 낚아챘다. 센티넬인 칼리의 무력에도 꿈쩍하지 않은 브라이언은 양손으로 칼리의 손을 붙잡았다. 어수선한 상황에서도 침착해 보였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이터널호 선장은, 가이드야.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>한쪽 무릎을 꿇은 브라이언이 칼리의 등을 쓰다듬었다. 숨 쉬어, 칼리. 한 손은 칼리의 손에, 한 손은 칼리의 등에. 전혀 어울리지 않는 행동을, 익숙하게 수행해 내고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“센티넬들의 가이딩 파장을 마음대로 조절할 수 있는, 현존하는 가이드 중 가장 뛰어난 사람이지.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>땅 울림이 점점 멎어갔다. 천천히 칼리의 동공이 원래의 색으로 돌아오고 있었다. 가만히 지켜보고 있던 원필이 입을 뗐다. 마르코.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그 선장이…그러니까, 이터널호 선장이….”</p>
+<p>“그래.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언이야.</p>
+<p class="empty">&nbsp;</p>
+<p>마르코의 말이 끝나자마자 지진이 완전히 멈췄다.</p>
+<p>가이딩을 끝마친 브라이언이 미련 없이 칼리와 몸을 떨어뜨렸다. 칼리를 데리고 가. 브라이언의 한 마디에 해적들이 일사불란하게 움직였다. 순식간에 주변은 아무 일도 없다는 듯이 원상 복구됐다. 원필의 어깨를 두어 번 두드린 마르코도 다시 펍으로 가기 위해 등을 돌렸다. 모두 원래 있던 곳으로 돌아갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>단 한 사람, 원필을 빼고.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 발이 땅에 박힌 사람처럼 움직이지 못하고 그 자리에 서 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언이 이터널호의 선장이다.</p>
+<p>브라이언이 가이드다.</p>
+<p>브라이언이, 내가 아는 브라이언이….</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>일어서던 브라이언과 시선이 맞닿았다. 아무 말도 나오지 않았다. 브라이언이 원필을 향해 걸음을 떼자 그제야 원필도 움직였다. 앞이 아니라 뒤로.</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언을 등진 원필은 그대로 뒤도 돌아보지 않고 뛰었다. 필아, 라는 목소리가 들렸던 것도 같으나 빗소리에 묻혀 제대로 들리지는 않았다. 비에 젖은 땅이 발을 붙잡아 당기는 것 같았으나 원필은 멈추지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그러나, 그렇게 뛰어서 도착한 곳이 선원 숙소라는 점이 끝내 원필을 허무하게 만들었다. 펍에 두고 온 우비고, 우산이고 뭐고 원필은 그대로 주저앉았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>지금 제가 느끼는 혼란이 브라이언이 사실은 해경이 아니라 해적 선장이었다는 것에서 오는 배신감인지, 혹은 저 브라이언이 타인과의 접촉을 통한 가이딩을 했다는 것에서 오는 질투인지 알 수가 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>뭐가 됐든 다 브라이언 때문이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>* * *</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>4장. 선장</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언, 혹은 브라이언 강.</p>
+<p>한국 이름으로는 강영현.</p>
+<p>그리고 이터널호의 선장이자 가이드.</p>
+<p class="empty">&nbsp;</p>
+<p>그게 원필이 ‘강영수’라고 알고 있던 이의 실체였다. 해적 강영현.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 처음부터 해적이었던 건 아니었다. 한국의 어느 해군 제독 가정에서 태어난 영현은, 탄탄한 집안 배경을 가지고 있었지만 그게 전부였다. 원치 않는 임신에서부터 태어난 영현은 그다지 사랑받지 못하는 존재였고, 영현의 부모는 자식의 미래보다는 눈에 보이는 이익을 추구하는 이들이었다.</p>
+<p>당시 정년을 앞둔 영현의 아버지는 해군 기지가 있는 부산에서의 선호도를 토대로 정치의 길로 들어서고자 했다. 그러기 위해서는 발판이 필요했고, 그 발판을 만들기 위한 재료로 영현이 사용된 것도 다 그 때문이었다. 영현이 죄가 있다면 딱 하나, 부모를 잘못 만난 죄, 라고 할 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그 죄 하나 때문에 28년 전, 영현은 버려졌다. 반 해적파였던 영현의 부모는 해적들이 자리 잡기 시작하던 섬으로 아이를 팔듯이 보내버렸다. 그리고 눈물을 흘리며 연기했다.</p>
+<p class="empty">&nbsp;</p>
+<p>해적들이 우리 아이를 유괴했어요. 우리 아이를 돌려주세요.</p>
+<p class="empty">&nbsp;</p>
+<p>무고한 해적들은 모르는 일이라며 유괴한 적 없다 반박했지만 아무도 들어주지 않았다. 영현의 스마트 태그 반응이 해적섬에 다다라서 사라졌기 때문이었다. 고작 6살짜리 아이가 해적섬에 혼자 갈 리도 없으니 당연히 모두가 영현의 부모 편을 들었다. 마침 해군 제독에서 물러나기까지 했던 시기여서 해군에 있을 때부터 해적들이 노리고 있던 것 아니냐는 여론이 생기기도 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>한국 정부와 해적 간의 관계는 급격히 나빠졌다. 동정표를 얻기 시작했던 영현의 부모는 아이를 잃은 슬픔을 강조하며 반 해적파의 실세처럼 자리 잡았고, 그 물살을 타고 영현의 친부는 국방부 장관 자리를 꿰찼다. 아이의 행방에 관한 관심이 점차 사라지고, 더 이상 부모가 아이를 찾지 않고 있다는 사실마저 아무도 알아차리지 못했을 때였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 아무도 찾지 않게 된 유괴 사건의 주인공 6살 강영현은, 유괴가 아니라 유기를 당했다. 부모의 손을 통해 영문도 모른 채 낯선 배를 타고, 타고 면식도 없는 해적들만 존재하는 섬에 떨어졌다. 그마저도 선대 이터널호 선장인 사라가 영현을 발견하지 못했다면 영현은 아마 굶어 죽었을 수도 있었다. 영현은 선착장에서 조금 더 떨어진 동굴 안쪽에 홀로 버려져 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>해적들 사이에서도 영현은 엄청난 논란거리가 됐다.</p>
+<p class="empty">&nbsp;</p>
+<p>저 아이가 혹시 그 아이인 것 아니냐, 저 아이를 다시 한국에 보내야 한다, 지금 저 아이를 보내면 진짜 유괴한 꼴이 되지 않느냐.</p>
+<p class="empty">&nbsp;</p>
+<p>계속해서 논쟁이 이어졌으나, 결론부터 말하자면 영현은 다시 한국으로 돌아가지 않았다. 아니, 못했다. 영현의 부모가 영현을 더 이상 찾지 않게 되면서 그대로 해적섬에 발이 묶여버렸다. 몇몇 해적들이 제 마음대로 영현을 보내고자 한국에 연락을 넣어봤으나 부모에게까지 닿지 못한 채 끊어졌다.</p>
+<p>영현을 둘러싼 해적들은 모두 같은 생각을 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>저 어린아이가 무슨 잘못이라고.</p>
+<p class="empty">&nbsp;</p>
+<p>사라를 포함한 해적들은 십시일반 영현을 품어 키우기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“영현아, 여기 한국어를 아직 잘하지 못하는 놈들이 많아서 널 브라이언이라고 부를 거야. 알았지?”</p>
+<p>“영현이는요?”</p>
+<p>“그건…. 특별한 이름이니까 특별한 사람만 부르게 해.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 순진하게 고개를 끄덕였었다. 사라는 영현이라고 부르는 거죠? 확인하면서.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>해적들 사이에 침투한 영현은 평화의 상징이 되어갔다. 조그마한 아이 하나가 생겼을 뿐인데, 그 조그마한 아이 하나로도 분위기가 풀어질 수 있는 것이었다. 해적 센티넬들 사이에서는 아무 능력 없는 영현을 소중히 다루라는 게 암묵적인 규칙이 됐다.</p>
+<p>센티넬들끼리 으르렁거리며 싸울 기미가 보인다 싶어도 영현이 나타나면 언제 그랬냐는 듯이 하하 웃었다. 뭐, 그렇게 숨겨도 영현이 보고 자라는 모습들이 거칠기 짝이 없는 언행들인 건 어쩔 수 없지만, 어쨌든 영현은 해적들 사이에서 나름 곱게 자라났다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그런 영현이 가이드로 발현한 날은 굉장한 파장이 일었다. 센티넬도 희귀한 존재지만, 가이드는 그보다도 더 희귀한 존재였다. 근데 그 희귀한 가이드 중에서도 영현은 SSS급이었다. 손을 대지 않아도 가이딩이 가능했고, 심지어는 그 가이딩 파장을 조종해 센티넬의 목숨줄을 쉽게 쥘 수 있었다. 접촉 부위가 넓을수록 가이딩은 훨씬 강력했지만, 폭주 징조가 보이는 게 아니라면 굳이 접촉하지 않아도 충분했다. 자라면서 영현의 가이딩 범위는 점점 넓어졌다. 처음에는 손 닿을만한 거리에서만 방사 가이딩이 가능했는데, 이제는 배 한 척에 있는 센티넬들까지 쉽게 통솔할 수 있었다. 말인즉, 영현이 한자리에서 센티넬을 좌지우지할 수 있는 범위와 인원수가 늘어났다.</p>
+<p class="empty">&nbsp;</p>
+<p>우리가 고양이를 키운 줄 알았는데, 호랑이를 키웠구나.</p>
+<p class="empty">&nbsp;</p>
+<p>말은 하지 않았지만 아마 그 자리에 있던 해적들은 그렇게 생각했을 터였다. 다만 아무도 입 밖으로 꺼내지 못한 건 선대 선장이자 영현의 양어머니였던 센티넬 사라가 이터널호가 더 강해지겠다며 영현을 축하해 줬기 때문이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>사라는 웃고 있었다. 영현이 가이드로 발현한 날부터, 더 자란 영현과 마지막으로 만나던 날까지도.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>사라의 예견대로, 사라에 이어 이터널호의 선장이 된 영현은 그 누구도 건들기 쉽지 않은 존재가 되었다. 그런데도 영현에 대한 소문이 크게 퍼지지 않은 것은, 센티넬에 대한 소문만 무성한 해적섬에, 가이드 선장이라는 존재가 상상하기 힘든 일이었던 이유가 컸다. 이터널호의 입지가 해적섬에서 더욱 굳건해질수록 오히려 선장이 얼마나 센 센티넬일까, 추측하는 사람만 늘어갔다. 평화 협정 이후로는 크게 나설 일도 줄어들었으니 이터널호의 선장이 누구인지는 의도치 않게 비밀에 부쳐진 셈이 되었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 그 점을 역이용해 한 번씩 해적섬에 들어오는 밀항선에 탑승하고는 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그날도 그랬다.</p>
+<p>어김없이 물자 수송 어선이라는 그럴싸한 탈을 쓴 밀항선에 탑승해서 센티넬들이 요란 떠는 꼴을 보고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>센티넬이고 일반인이고 너 나 할 것 없이 자발적으로 해적섬에 오고자 하는 이들이 부쩍 많아졌다. 해상 전투는 해적들의 센티넬 능력치를 자랑하는 현장이나 다름없었으니 그들이 무엇에 혹했는지 가늠이 되기는 했다. 뭐, 따지자면 그리 밑지는 장사는 아니었다. 염탐하려는 놈들만 적당히 골라내고 괜찮은 능력이 있는 놈들이 있으면 스카웃하면 그만이었다. 그 정도는 쉽게 골라낼 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>오늘은 텄군.</p>
+<p class="empty">&nbsp;</p>
+<p>딱 봐도 이사벨 선에서 컷될 놈들 뿐이었다. 온갖 오두방정들은 다 떨고 있었다. 영현이 시선을 창밖으로 던졌다. 낯선 배 하나가 얼마 멀지 않은 거리에서 탐조등을 비추고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>깜빡, 깜빡, 깜빡깜빡, 깜빡.</p>
+<p>하나, 하나, 둘, 하나.</p>
+<p class="empty">&nbsp;</p>
+<p>태울 사람이 있다는 신호다. 여기서 더 태울 사람이 있나. 오늘 배에 탄 센티넬들을 보니 별 기대는 되지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>배가 또 한 번 해상에서 멈추자 모여있던 센티넬들 사이에서 아우성이 들렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“닥쳐! 여기까지만 받고 들어가 줄 테니까!”</p>
+<p class="empty">&nbsp;</p>
+<p>입이 거친 밀항선 선장의 호통이 이어졌으나 조용해지기는커녕 돈이면 껌뻑 죽는 돈벌레 선장이라며 금세 또 소란스러워졌다. 하. 손을 까딱거리며 영현이 소음을 참아냈다. 마르코의 펍에서 홀로 조용히 위스키나 한 잔 니트로 마시고 싶어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 틈에 이방인 하나가 배에 탑승했다. 마음먹고 해적섬에 들어오는 이라고 보기 힘든, 단정하기 짝이 없는 옷차림이었다. 앞머리만 조금 긴, 짧은 머리에 잔뜩 피곤한 눈을 하고서는 주변을 경계하고 있었다. 누가 봐도 이 배에 있는 사람들 사이에서 이질적이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>이질적인, 일반인. 센티넬이 아니었다.</p>
+<p>흐음. 센티넬이 아니라면 신경 안 쓰면 그만인데 배에 있는 센티넬 녀석들보다는 흥미가 갔다. 센티넬들의 장기자랑을 피해 한쪽 구석에 자리를 잡아 앉는 꼴을 지켜보던 영현이, 그대로 옆에 다가가 털썩 앉았다. 퍽 지루한 표정으로 주변을 살피더니, 영현을 볼 때는 또 조금 다른 표정이었다. 어떻게 여기에 한국인이? 뭐 대충 그런 표정.</p>
+<p>어차피 겉보기에 영현은 아무 능력 없는 평범한 한국 사람인데 어찌나 열심히 훑어보던지, 영현도 그 모습을 구경했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“한국인이십니까?”</p>
+<p class="empty">&nbsp;</p>
+<p>어색하게 입꼬리를 올려 웃는 걸 보아하니 금세 느슨해진 모양이다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해적섬은 처음?”</p>
+<p>“예, 그렇습니다.”</p>
+<p>“그래 보이네.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>딱히 가이드인 영현에게 센티넬들처럼 특수한 능력이 있는 건 아니지만, 선장 노릇 몇 번 하니 대강 견적은 냈다. 해적이 되고 싶어서 들어온 사람이 아니다. 어디서 본 거 같기도 한데, 영현에게 강영수라는 되지도 않는 이름을 붙여주는 걸 보니… 초면인가? 확신은 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그 와중에 반대편에서 바람이 불어와 자꾸 신경 쓰이는지 자꾸만 머리를 만져대기에 영현은 무의식적으로 제 손으로 머리를 정리해 줬다. 에? 바보 같은 소리를 내는 게… 정말이지, 해적섬과는 어울리지 않았다.</p>
+<p>느릿하게 눈을 깜빡이며 자지 않기 위해 버티는 모습은 또 왜 그렇게 안쓰러워 보이던지. 웬만하면 무시하려고 했는데 영현이 참지 못하고 그냥 자라고 일렀다. 잔뜩 영현에게 말을 걸며 꼼실대더니만 결국 이겨내지 못하고 영현의 옆에서 자리를 잡고 눈을 감았다.</p>
+<p class="empty">&nbsp;</p>
+<p>아직도 바람이 불어오는데 마침 또 반소매 차림인 게 좀 거슬려서, 영현은 벽에 걸려있던 누구 것인지 모를 겉옷을 던져줬다. 감사합니다. 곧장 고맙다는 인사말이 돌아왔다. 해적들 사이에서는 낯간지러운 말이다. 고맙다거나, 미안하다거나.</p>
+<p>역시 해적섬과는 전혀 어울리지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“너 이름이 뭐지?”</p>
+<p>“아, 전해 듣지 못하셨습니까? 김원필입니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현에게 경계를 다 허물었는지 순순히 제 이름을 불렀다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>김원필, 김원필….</p>
+<p class="empty">&nbsp;</p>
+<p>기억을 곱씹어 봐도 딱히 떠오르는 것도 없다. 휭, 또 한 번 바람이 불어왔다. 아까부터 자꾸 거슬리게. 영현은 결국 강제로 그들의 가이딩 파장을 만졌다. 훅 떨어지는 가이딩 수치를 느낀 센티넬들이 바로 능력을 거두고 웅성거렸다.</p>
+<p>뭐야? 무슨 일이야? 가이딩 수치가 떨어졌는데? 혼란에 빠진 센티넬들을 지나쳐, 영현은 무방비 상태로 잠이 든 원필을 두고 자리를 떴다. 이 정도로 수치를 떨어뜨렸다면 어차피 센티넬들은 더 무슨 일을 벌이지는 못할 테니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언!”</p>
+<p class="empty">&nbsp;</p>
+<p>애꾸눈의 밀항선 선장이 영현을 알아보고 씩 웃었다. 밀항선 선장은 사라의 절친이었다. 영현을 업어 키운 사람 중에 하나라고나 할까. 영현에게 브라운이라는 시답잖은 이름을 붙여주려고 했었지만, 뭐 어쨌거나.</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 가볍게 인사를 하고선 본격적으로 용건을 꺼냈다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“가장 마지막에 탄 한국인 있지? 좀 알아봐 줘.”&gt;</p>
+<p>&lt;“그거야 어렵지 않지. 브라이언이 가이딩 해줄 텐데.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p>선장은 망설임 없이 원필이 건넸던 돈다발을 쥐었다. 그는 누군가의 손길이 묻은 물건을 만지면 그 사람의 일부 기억을 스캔할 수 있는 능력이 있는 센티넬이었다. 몇몇 수상한 이들은 선장이 이런 식으로 먼저 알아내 해적섬까지 들어오지 못하게 바다에 고의로 빠뜨리기도 했다. 그렇게 급이 높은 센티넬은 아니었어도 중요한 정보원이자 문지기라고 할 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“해군 중위군. 작전을 받고 나왔어.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p>놀랍진 않았다. 그 짧은 머리부터가 그리 흔한 헤어 스타일이 아니었다. 영현도 해군과 몇 번 해상에서 마주친 적이 있으니 익히 알고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“그뿐이야? 다른 건?”&gt;</p>
+<p>&lt;“돈 자체는 해군 다른 사람한테 건네받은 거라 그쪽보단 다른 쪽 기억이 더 많아. 뭐, 그 사람 얘기도 해줄까? 별로 유쾌하진 않아. 좀 안쓰러울지도.”&gt;</p>
+<p>&lt;“됐어, 그럼.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p>얼굴도 모르는 해군까진 별로 궁금하진 않았다. 볼일이 끝나 돌아가려던 영현이 뭔가 떠오른 듯 아, 손가락을 튕기며 다시 입을 열었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“강영수는 누구야?”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“Hey, 영수!”</p>
+<p>“드디어 미쳤군.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 영현을 ‘강영수’라고 부른다는 사실을 안 마르코가 잔뜩 놀려댔다. 처음 원필을 데리고 와 해군인데 그냥 적당히 말단 선원으로 취업시키라는 말에도 비웃지 않았던 마르코였다. 오히려 흥미로워했다. 이런 장난도 칠 줄 아는 사람이었어, 브라이언? 영현은 그토록 바라던 위스키를 마시며 딱 한 마디로 정리했었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“Keep your friends close, but your enemies closer.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그것도 다 몇 주 전 이야기다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 생각보다 말단 선원으로 아주 잘 지내고 있었고 —아마도? 갑판 청소는 하기 싫어했지만.— 해적섬에도 차츰 적응해 나가는 듯했다. 옷도 해적처럼 입으려고 노력했고, 말투는… 아직도 해군이었지만. 그놈의 ‘다나까’ 좀 고치라니까 반만 고치고 반은 못 고쳤다. 밀항선 선장의 도움을 받지 않았어도 영현은 쉽게 원필이 해군인 걸 알아냈을 것 같았다. 게다가 원필은 영현을 같은 작전에 나온 해경으로 알고 있어서, 영현에겐 너무나도 투명하게 굴었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“그 해군 중위를 언제까지 끼고 있게?”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 말하는 마르코도 원필을 살뜰히 챙겨주는 편이었다. 시간도 때우기 좋고, 원필이 말을 잘 들어준다고 좋단다. 해적 놈들과는 다르게 순한 맛이라고.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“작전도 별거 없던데 끝나면 어련히 돌아가겠지.”&gt;</p>
+<p>&lt;“그것참 아량 넓은 해적 선장님이시네.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>전에 이터널호 선장을 알아내겠다고 해적섬에 들어왔던 해경 센티넬 하나는 한 시간도 채 버티지 못하고 내쫓겼다. 영현이 얼굴을 비추기도 전에 아랫선에서 알아서 처리했던 일이었다. 그 외에도 몇 자잘한 해경 센티넬들이 해적섬에 잠입을 시도했던 적이 있었으나, 모두 며칠, 아니, 단 하루도 해적섬에 발을 붙이지 못했다. 지금까지 남아있는 원필이 이례적으로 최장기간 해적섬에 체류하고 있는 셈이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“그때랑 다르지.”&gt;</p>
+<p>&lt;“해경이나 해군이나. 난 차이를 잘 모르겠네, 영수.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p>또 실실 웃는 마르코에게 영현이 가운뎃손가락을 들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“그 이름 존나 구려.”&gt;</p>
+<p>&lt;“필은 계속 영수라고 하던데?”&gt;</p>
+<p>&lt;“브라이언이라고 부르라고 했어. 그러니까 그만해.”&gt;</p>
+<p>&lt;“영-현-을 알려주지 않고? 영수랑 비슷하잖아.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이라는 이름은 서툴고 느리게 말해놓고 영수라는 이름 하나는 또박또박 빠르게도 말했다. 한국어를 할 줄 아는 해적들이 늘어났어도 어려운 발음은 어쩔 수 없었다. ‘영현’도 그중 하나였다. 해적들 사이에서 사라만이 그 이름을 불렀던 것도 발음의 이유가 컸다는 건 10대가 되어서야 눈치챘지만, 영현은 남들이 이름을 물어보면 여전히 브라이언이라고 알려줬다. 사라 혼자 불러주던 ‘영현’이라는 이름을 굳이 밝힐 필요가 있나 싶었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“전혀 비슷하지 않아.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>단호한 영현의 말에 마르코가 웃었다. 여전히 영수와 영현의 차이를 알지 못하겠지만.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“필이 너에게 의지를 하는 눈치던데.”&gt;</p>
+<p>&lt;“그렇겠지. 아는 사람이 없잖아.”&gt;</p>
+<p>&lt;“오, 남 일처럼 구네. 아무리 필이 비무장 상태라도 말이야. 해군인 건 변함없어.”&gt;</p>
+<p>&lt;“알아. 대체 어떤 미친놈들이 해적섬에 일반인 해군을 비무장 상태로….”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현 역시 해적섬에 버려졌던 때에 비무장의 일반인이었다. 나이만 달랐지, 원필도 마찬가지였다. 과거의 제 모습과 오버랩되는 것도 있고, 자꾸 아무것도 모른 채 순진하게 구는 저 해군 중위가 눈에 밟히는 것도 있었다. 그래서 잔뜩 물러지는 거겠지. 지금도 마음에 들지 않는다는 듯 얼굴을 잔뜩 구기고 있으면서 영현은 단순히 생각했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“해군 중위에게 별걱정을 다하는군. 필은 나름 이것저것 챙겨온 모양이던데. 게다가 필에게는 네 능력도 통하지 않아. 센티넬들처럼 다룰 수 없다고.”&gt;</p>
+<p>&lt;“다 안다니까.”&gt;</p>
+<p>&lt;“근데 굳이 뭘 그렇게 챙겨줘? 그렇게 걱정이 되면 빠르게 한국으로 보내든가.”&gt;</p>
+<p>&lt;“그게 더 마음에 걸려.”&gt;</p>
+<p>&lt;“마음에 걸릴 게 뭐가 있어? 해적섬에 있는 건 안 걸리고?”&gt;</p>
+<p>&lt;“여기는 내 눈이랑 귀로 다 보이고 들리잖아.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p>그러니까 그걸 왜 그렇게 챙겨주냐는 건데. 돌고 돌아 도돌이표였다. 심지어 영현은 혼자 무슨 생각을 골똘히 하기까지 했다. 보나 마나 또 원필에 관한 것일 거다. 원필이 이 해적섬에 떨어진 이후 영현은 펍에 올 때마다 원필 이야기밖에 하지 않았다. 본인은 전혀 의식하고 있지 못하는 것 같았지만, 그 이야기를 들어주는 마르코는 지금 몇 주째 영현에게 원필의 이야기를 듣고 있었다. 다 별 시답잖은 이야기여서, 마르코가 그냥 원필을 한국으로 돌려보내라는 식으로 대꾸하면 영현이 손을 내젓는 식이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“그럼 해적들 사이에서 대충 방관이라도 해. 필은 네가 가이드인 것도 모르고 이터널호 선장인 것도 모르잖아.”&gt;</p>
+<p>&lt;“모르니까 야만적인 해적 놈들 사이에서 주의가 필요한 거야. 이사벨!”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p>그럼 넌 야만적이지 않고? 너가 그 야만적인 해적 놈들의 우두머리야. 마르코가 코웃음을 쳤으나 영현은 흘려들었다. 막 펍을 나가려던 이사벨을 불러 세웠다. 이사벨은 오늘도 다른 선원들과의 술 대결에서 승리해 공짜 술을 마신 상태였다. 한창 기분 좋은 이사벨의 옆에는 술에 취해 해롱거리는 선원 하나가 대롱대롱 매달려 있었다. 애초에 능력이 기억 조작인 이사벨에게 술 대결이 먹힐 줄 아는 건지, 참.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“왜?”&gt;</p>
+<p>&lt;“선원 하나 업무 재배치를 했으면 하는데.”&gt;</p>
+<p>&lt;“누구?”&gt;</p>
+<p>&lt;“필.”&gt;</p>
+<p>&lt;“필? 그게 누군데? 그런 놈이 있어?”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p>이사벨이 선원을 그대로 내팽개치고 영현에게 걸어왔다. 알지도 못하는 선원 이름이 영현의 입에서 나오니 흥미가 생기는 모양이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“있어. 지금 갑판 청소하고 있는데, 시킬만한 다른 업무 있어?”&gt;</p>
+<p>&lt;“글쎄. 보통 말단이면 뭐 보조 업무를 많이 하니까. 지금 주방 보조가 비어 있긴 해.”&gt;</p>
+<p>&lt;“그럼 그걸로.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>말을 끝마친 영현이 유유자적 위스키를 마셨다. 이사벨이 팔짱을 낀 채 그 꼴을 훑어봤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“그래서 필이 누군데?”&gt;</p>
+<p>&lt;“있다니까.”&gt;</p>
+<p>&lt;“왜 말을 안 하지? 수상하네. 선원들 업무에 그렇게 관심이 많았어?”&gt;</p>
+<p>&lt;“네가 봐도 그렇지?”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>마르코가 대화에 끼어들었다. 둘이서 작당 모의라도 할 것처럼 의미심장한 눈들을 하기에, 영현은 한숨을 내쉬며 이사벨을 내쫓았다. 이사벨은 대체 필이 누구이고, 그 필이라는 녀석과는 무슨 관계인지 끈질기게 물어왔다. 시종일관 무시하던 영현이 참다 못해 이사벨의 가이딩 파장을 건드리자, 이사벨도 더 놀리지 못하고 도망가듯 튀었다. 그럼 필에게 직접 물어보겠다면서, 끝까지 포기하지는 않았다.</p>
+<p>이사벨이 사라지니 다음은 마르코였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“Keep your enemies closer, but your lover even closer.”</p>
+<p>“Shut up.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>대놓고 괴롭히는 이사벨과 다르게 마르코는 은은하게 영현을 놀릴 줄 아는 이였다. 지금처럼, 영현의 말을 인용해서는.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“차라리 솔직하게 마음이 있어서 옆에 두고 싶다고 해. 그럼 나도 더 이상 내쫓으란 말을 하지 않겠어. 응원이나 해줄게.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 대꾸도 하지 않고 그대로 술잔을 입에 털어 넣었다. 계산이나 해. 잘만 능글맞게 굴다가도 꼭 이런 데서는 영 서툴기 짝이 없는 모습이 보이니 마르코가 놀리기 좋았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“오늘도 필이 마신 것까지 하는 거지?”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 마르코의 펍이 선장이든 부선장이든 너 나 할 것 없이 칼과 같이 돈을 걷는다는 사실을 여전히 모른다. 전부 영현이 계산하고 있었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“필이 이런 모습을 아는 편이 좋지 않겠어? 점수라도 따야지.”&gt;</p>
+<p>&lt;“점수는 무슨 점수야. 오히려 말단 선원이 돈이 어딨는지 물을걸?”&gt;</p>
+<p>&lt;“끝까지 해경 노릇 하시게? 끼고 돌다가 한국으로 보낼 거면 끝까지 들키지 말고, 그게 아니라면 차라리 빨리 털어놓도록 해.”&gt;</p>
+<p>&lt;“쓸데없는 참견이야.”&gt;</p>
+<p>&lt;“참고로 가진 게 많을수록 비밀은 오래갈 수 없는 법이야, 브라이언. 내가 봤을 땐 필도 마음이 있어 보이던데….”&gt;</p>
+<p>“마르코.”</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언이 눈을 부릅뜨자 마르코는 그제야 영현이 내민 지폐를 받아들고 쏙 주머니에 집어넣었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“조언 값으로 치자고. I'll keep the change for me.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p>끝까지 마르코는 굴하지 않고 영현에게 경고했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그리고 지금.</p>
+<p>왜 마르코가 했던 말이 지금 그렇게 머릿속을 채우고 있는 건지.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 선원 숙소 앞에 서서 하염없이 문만 바라보고 서 있었다.</p>
+<p>어이가 없었다. 본인이 선장인데 선장이 못 들어가는 선원 숙소가 있다는 게. 근데 어쩔 수가 없다. 상대는 본인이 마음대로 조절할 수 있는 센티넬이 아니었다. 그래서 더 어려웠다. 센티넬들은 속이 답답하다며 영현에게 가이딩을 해달라고 난린데, 제 답답한 속은 가이딩 해 줄 사람이 없다. 굳이 찾자면 지금 이 문 안에서 꼭꼭 숨어있는 사람이 숨통을 트이게 해 줄 것 같았다. 본인이 가이드이고, 이 사람은 일반인인데도.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필아.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>뭐라고 첫 마디를 떼야 할지 고민하면서 입을 뗐다 붙였다를 반복하다가 고작 나온 말이 이름 하나였다. 영현은 조심스럽게 원필을 불렀다. 해적들 사이에서 이렇게 작은 소리를 낸 적이 있던가. 손에 힘을 풀고 얌전히 문을 똑똑 두드렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필아.”</p>
+<p class="empty">&nbsp;</p>
+<p>열리지 않는 문을 계속해서 똑똑 두드렸다. 거나하게 취해 숙소로 오던 몇몇 선원들이 영현에게 인사를 건네며 자기들이 문을 열어주겠다며 농담을 툭툭 던져댔으나, 영현의 기분이 좋아 보이지 않은 걸 눈치채고는 금세 꼬리를 내렸다. 괜히 가이드 선장의 기분을 잡치게 했다가는 그들이 폭주 직전에 바다에 버려질 수도 있다는 사실을 잘 알았다. 그럼 시체고 뭐고 그대로 심해 저 깊이 묻혀 저승길로 가야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 계속해서 원필의 이름을 부르며 문을 두드렸다. 왜 이러고 있는지 본인도 알기 힘들었다. 차라리 마르코의 말대로 다 이야기할 걸 그랬나. 그렇지만 꼭 사실대로 말하지 않아도 원필과 지내는 데에 하등 무리가 없어서 굳이 하지 않았을 뿐이었다. 원필이 알고 지내기에도 영현이 해적이라는 것보다는 ‘해경 강영수’로 남아있는 게 편할 테니까. 그리고 사실대로 알아도 뭐, 원필이 뭐 할 수 있는 게 있기나 한가? 그런 생각이었다. 이곳은 해적섬이고 원필은 영현의 해적단 영역 안에서 지내는 사람이었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p>그런데 오늘 마주쳤던 원필의 눈은…. 그간 영현이 본 적 없는 형태의 것이었다. 상처받은 눈. 믿기 힘들다는 눈. 영현은 센티넬이 아니라 오감 능력이 뛰어난 편이 아닌데도, 내리는 빗줄기 사이에서 그 눈이 그렇게 또렷하게 보일 수가 없었다. 동시에 영현의 마음에 산사태를 일으켰다. 칼리의 지진이 멈췄는데, 전혀 다른 차원의 자연재해가 일어났다. 가이딩 수치가 떨어진 센티넬처럼 아무것도 하지 못하고 서 있던 영현은 본능적으로 뛰기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>지금 따라가야 한다.</p>
+<p class="empty">&nbsp;</p>
+<p>그 생각 하나가 머릿속을 지배했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 와중에 우습게도 원필이 온 곳이 선원 숙소라서 속으로 안심을 하기도 했다. 자신의 범주에서 벗어나지 않은 것 같아서. 그래봤자 얼굴도 못 보고 이러고 있는데 말이다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 한 번 더 원필의 이름을 불렀다. 거세게 내리던 비가 천천히 멎어들 즘에 천천히 문이 열렸다. 잔뜩 먹구름이 낀 상태로 빼꼼 고개를 내밀었던 원필의 두 눈이 금세 휘둥그레졌다. 왜 아직도 안 가고 여기서…. 아무래도 밖에서 계속 부르는 이름을 환청처럼 듣기라도 한 모양이었다.</p>
+<p>일단 들어와요. 뒤늦게 원필이 영현을 잡아당겼다. 그렇게 쉽게 남들이 잡아당긴다고 끌려 들어갈 사람도 아니면서, 영현은 원필이 당기는 대로 숙소에 발을 딛었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“비 오는데 왜 거기서 계속 맞고 있어요.”</p>
+<p class="empty">&nbsp;</p>
+<p>소강상태에 접어들긴 했어도 여전히 비가 오고 있었고, 영현은 비를 맞은 채 원필이 나오길 기다리고 있었다. 애초에 우산, 우비 그런 거 챙기고 다니지를 않았으니 당연했다. 근데 그게 뭐 어떻다고. 그냥 비가 오는구나, 하면 되는데 원필은 새 수건을 꺼내 와 영현에게 건넸다. 한숨을 푹 내쉬면서.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“센티넬도 아니잖아요. 뭐해요, 받아요.”</p>
+<p class="empty">&nbsp;</p>
+<p>센티넬이 인간 병기 수준으로 체력과 회복력이 발달해있다면, 가이드는 일반인과 다를 게 없었다. 센티넬들은 걸리지 않을, 고작 감기 따위에 쉽게 골골대는 존재였다. 내리는 비를 맞으며 추워하고 내려가는 체온에 쉽게 재채기를 하는 존재. 그렇다고 해도 이 해적섬에서 가이드를 챙겨주는 사람이 있을 리 만무했다. 하물며 사라마저 영현이 말하지 않으면 영현의 몸 상태를 알지 못했다. 대부분이 센티넬인 해적들이 가이드를 이해할 수 있을 리가 만무했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러니 영현이 일반인이나 다름없다고 챙김을 받는 건, 퍽 오랜만이었다.</p>
+<p>비가 와서 기온이 내려간 바깥에 비해 선원 숙소는 따뜻했고, 건네받은 수건은 그보다 더한 온기가 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 수건으로 머리를 말리는 모습을 가만히 지켜보던 원필이 먼저 입을 열었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…날 어떻게 할 거예요?”</p>
+<p class="empty">&nbsp;</p>
+<p>날카로운 질문이었다. 영현의 마음 한 구석을 베어가는 질문. 원필은 더 이상 ‘해경 강영수’로 영현을 보지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“어떻게 할 거였으면 진즉에 했어.”</p>
+<p>“여기 온 해경은….”</p>
+<p>“강영수는커녕 해경은 한 달 넘게 이 섬에 코빼기도 비춘 적 없어.”</p>
+<p class="empty">&nbsp;</p>
+<p>진짜였다. 원필이 오기 전후로 해경을 봤다는 이는 없었다. 영현이 해경인 척하고 있었으니 그동안 말해 줄 일이 없기는 했지만, 이제는 그래도 말해줄 수 있으니까.</p>
+<p>물론 완전히 믿는 눈치는 아니었다. 양치기 소년의 결말이군. 영현은 겸허히 받아들였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“거짓말 탐지 센티넬이라도 불러와 줄까.”</p>
+<p>“됐어요. 그럼 내가 아는 것 중에 진짜는 해경이 온 적 없다는 것뿐인 거죠? 브라이언인 건 맞아요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강영수. 해경. 선원. 일반인. 이건 다 아닌 거잖아. 원필이 손가락을 하나하나 접으며 중얼거렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…필아.”</p>
+<p>“그렇게 부르지 마요. 난 이제 뭐라고 불러야 할지도 모르겠어요.”</p>
+<p>“미안.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>해적이 돼서 남에게 사과해본 적이 있던가. 기억이 나질 않았다. 그 누구라도 영현의 가이딩을 받는 입장이 되면 누구나 영현에게 뭐라 할 군번이 되지 못했을뿐더러 낯간지러운 사과 따위는 그냥 술 한잔하면서 털어버리면 그만이었다. 해적에게 사과는 사치였다.</p>
+<p>원필에게도 사실 마음만 먹으면 배 째라는 식으로 해도 된다는 걸 안다. 해적이니까. 원필은 민간인 구출이라는 작전을 받고 이 섬에 들어온 해군이고.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“미안해.”</p>
+<p class="empty">&nbsp;</p>
+<p>알면서도 하지 않는 건 지금 그런 해적과 해군이란 신분이 영현에게 중요하지 않아서. 단지 그뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해적. 이터널호 선장. 가이드. 브라이언은 맞아. 진짜 쓰는 이름이야.”</p>
+<p>“그거참 다행이네요.”</p>
+<p>“더 얘기해줄까.”</p>
+<p>“더 얘기할 게 있긴 해요?”</p>
+<p>“28년 전에 해적섬에 유괴됐다던 아이, 강영현.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>뜬금없이 그 얘기가 여기서 왜 나오는지. 원필이 영현과 눈을 마주쳤다. 영현은 마치 본인의 일이 아니라는 듯 말을 이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그것도 나야.”</p>
+<p>“…예?”</p>
+<p>“부모가 버리고 갔어. 선대 이터널호 선장인 사라가 날 키웠고.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 눈을 빠르게 깜빡였다. 무슨 소리를 들은 건가 싶었다. 방금 들은 얘기가 이렇게 스치듯 가볍게 이야기할… 그런 건가?</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“부모가 버리고 갔다는 게,”</p>
+<p>“말 그대로. 여론을 흔들려고 날 버렸지.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 몇 번 입술을 달싹이고 있으니 영현이 단호하게 끊어냈다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“차라리 빨리 버려줘서 고맙게 생각해. 어차피 사랑도 받지 못하고 컸을 거라.”</p>
+<p class="empty">&nbsp;</p>
+<p>미련 하나 남아 보이지 않았다. 그런 영현의 앞에서 당황하는 쪽은 이제 원필이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…그럼 날 왜 살려뒀어요?”</p>
+<p class="empty">&nbsp;</p>
+<p>충격적인 말을 듣고 나니 이제 그런 생각이 드는 거다. 그럼 해군인 나를 싫어할 만도 하지 않나? 이제까지 왜 살려둔 거지? 아무리 평화 협정이라고 해도 그건 해상에서나 이야기지, 해적섬에 제 발로 기어들어 온 해군을 살려둘 이유는 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“글쎄…. 그건 나도 잘 모르겠어.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 원필을 빤히 쳐다봤다. 이상하긴 했다. 해군인 걸 알면서도 살려주고, 물심양면 도와주고, 원필이 이터널호 밖에서 위험한 짓을 안 했으면 좋겠다 싶고, 한 번씩 저가 해적인 게 후회가 되기도 하고. 그래서 해적인 걸 더 숨겨왔을지도 몰랐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…마르코 말대로 내가 마음이 있나.”</p>
+<p class="empty">&nbsp;</p>
+<p>저도 모르게 혼잣말을 중얼거렸다. 또 한 번 원필의 눈이 동그랗게 커졌다. 작게 흔들리는 동공을 보면서도 영현은 아무 일도 없었던 척 물었다. 또 물어볼 건? 한참을 이리저리 눈을 굴리던 원필이 우물쭈물, 뜸을 들였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“…진짜 이 섬에서 가장 뛰어난 가이드에요?”</p>
+<p class="empty">&nbsp;</p>
+<p>퍽 순해진 목소리였다. 누가 봐도 꼬리를 내린 모양새였다. 영현도 눈치를 채고선 속으로 안도했다. 아예 날 안 보지는 않겠구나.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그렇게들 얘기하던데 보여줄 수가 없네. 네가 센티넬이었다면 좋았을 텐데.”</p>
+<p>“폭주시키려고요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 픽, 웃었다. 방금까지 젖은 수건을 잡고 있던 축축하고 뜨거운 손이 원필의 마른 손을 잡았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이렇게 손을 잡아도 넌 느끼는 게 없잖아.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 화들짝 놀라 손을 떼려 했으나 영현이 다시 고쳐잡았다. 도망가지 말라는 듯 맞잡은 손이 금세 뜨거워지는 것 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“또 다른 질문은?”</p>
+<p>“없어요, 이 손 좀….”</p>
+<p>“그럼 나 용서해줄 수 있어?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 지금 손을 놔줄 생각이 없었다. 눈만 봐도 알 수 있었다. 그리고 또 하나, 원필은 영현이 내뱉었던 혼잣말이 진실이라는 사실을 알아차렸다. 이런, 절절한 눈을 하고서 잔뜩 조급해져서는 죄인처럼 구는 해적이 어디 있다고. 원필은 속으로 한숨을 뱉었다. 이런 해적을 쉽게 미워하지 못하는 사람도 문제가 있는 건데.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…용서해 줄 테니까 부탁 하나 들어줘요.”</p>
+<p>“뭔데?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>여전히 원필의 손을 잡고 있긴 했어도 용서해준다는 말에 영현은 순순히 손에 힘을 풀었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이제 며칠 안 남았거든요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 쉽게 손을 빼냈다. 영현의 눈썹이 꿈틀거렸다. 해군인 원필이 말하는 기한이, 작전 기한임을 영현이 못 알아차릴 리가 없었다. 원필은 못 본 척 시선을 떨어뜨렸다. 제 손이 떠나간 자리에 여전히 남은 영현의 손이 보였다. 원필이 숨을 골랐다.</p>
+<p class="empty">&nbsp;</p>
+<p>투명하게 보이는 당신의 마음을 내가 받아줄 수나 있을까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그때까지만 계속 비밀로 해줘요. 이터널호에 문제 가지 않게 할게요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 여전히 이 섬의 이방인이자 불청객이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>알고 보니 주인이 눈감아주고 사랑해 주고 있는, 나 홀로 불청객.</p>
+<p>머지않아 떠나야 하는 이방인.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>* * *</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>5장. 뉴스</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>불편할 테니 이터널호에서 잘라도 된다고, 앞으로 가지 않겠다고 했으나 영현이 완강하게 고개를 내저었다. 그럴 필요 없어. 갑자기 나타나지 않는 게 더 이상하다며 영현은 있을 만큼 있다가 가라는 말만 남기고서는 떠났다.</p>
+<p>이대로 떠나라든지, 앞으로 조용히 숨어 지내라든지 그런 말도 없이.</p>
+<p class="empty">&nbsp;</p>
+<p>하릴없이 원필은 전처럼 이터널호에 출근해서 창고 정리를 마치고 출항 전에 하선했다. 그러나 원필은 이제 하선 이후 자유시간을 더 이상 활용하지 않았다. 얌전히 선원 숙소에 처박혀 있었다. 펍에도 가지 않았다. 원필의 이동 반경에 포함된 장소는 이제 이터널호와 선원 숙소뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>머지않아 한국으로 돌아가야 했다. 이대로 돌아가면 또 진급이 밀릴 테고 이제는 전역을 권할지도 모르지만, 거기까지 생각하기에는 해적섬에서의 마무리가 우선이었다. 잘 마무리 해야, 그래야 모두가 별 탈 없을 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 생각하면서도 왜인지 모르게 자꾸만 밖을 내다보는 습관이 생겼다. 누가 오진 않을까 기다리는 것처럼.</p>
+<p class="empty">&nbsp;</p>
+<p>본인도 알고 있었다. 그래서 자꾸만 머리를 터는 습관도 같이 생겼다. 마주치지 않는 편이 좋다, 마주칠 일 없다. 자기 최면을 걸면서.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>오래 가지는 못했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“항해 보조요?”</p>
+<p>“그래.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이사벨이 또 한 번 창고를 찾아왔다. 업무가 재배치되었다는 이유에서였다. 영현의 지시인 듯했다. 직접 와서 이야기해 줘도 될 텐데 왜 또 이사벨을…. 속에 생긴 아쉬움을 모른 척하며 원필이 이사벨의 눈치를 봤다. 정작 이사벨은 영현이 부려 먹는다는 사실보다는 브라이언의 사생활이 궁금한 모양이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“업무가 갑자기 격상하네. 대체 브라이언을 어떻게 꼬드긴 거야?”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>해군 용어가 아니면 영어는 젬병인데. 이사벨이 쉴 새 없이 영어를 쏟아내고 있었다. 원필이 알아듣지 못하는 티가 나자 뒤늦게 이사벨이 머리에 있는 한국어를 쥐어 짜냈다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“유혹. 어떻게 했어?”</p>
+<p>“…그런 거 아니에요.”</p>
+<p>“그런 게 아닌데 브라이언이 두 번이나?”</p>
+<p class="empty">&nbsp;</p>
+<p>…주방 보조로 보냈던 것도 브라이언이었구나. 그건 용서해주지 말아야지.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“둘, 아직 만나잖아.”</p>
+<p>“안 본 지 좀 됐는데….”</p>
+<p>“뭐야, 사랑싸움?”</p>
+<p class="empty">&nbsp;</p>
+<p>몇 번을 말해도 똑같았다. 이사벨은 원필의 부정을 곧이곧대로 듣지 않더니만, 브라이언이 연애는 젬병이라며 뒷담을 하기까지 했다. 브라이언이랑 연애해 봤어요? 가만히 듣고 있던 원필이 참지 못하고 물어보자 이사벨은 토하는 시늉을 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“너, 평화 협정을 행운으로 알아.”</p>
+<p class="empty">&nbsp;</p>
+<p>…정말 어마어마한 경고였다. 그 후로 원필은 이사벨에게 어떤 질문도 하지 않고 항해실까지 조용히 오는 편을 택했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>도착한 항해실은 선장실과 이어져 있었다. 문 하나만 넘으면 바로 선장실이었다. 선장실 바로 앞 명패에 성의 없이 [Brian]이라고 휘갈긴 필기체가 보였다. 상부만 와볼 수 있었다면 영현이 선장이라는 사실을 바로 알아차릴 수 있었다는 뜻이다.</p>
+<p>기분이 묘했다. 실망을 안 했냐면 그건 아니었지만, 영현이 선장이라 덕을 본 게 있다는 사실을 부정할 수 없었다. 게다가 영현은 굳이 해경처럼 보이려고 노력도 안 했다. 좋은 사람이라기엔 나쁘고, 나쁜 사람이라기엔 좋은 사람. 그래서 미워할 수가 없다. 차라리 미워하기나 했으면 좋았을지도 모른다. 그러면 이렇게 싱숭생숭하지도 않았을 텐데.</p>
+<p>원필이 괜히 명패를 톡 건드렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필! 오랜만이군!”</p>
+<p>“아, 크로우.”</p>
+<p class="empty">&nbsp;</p>
+<p>느지막이 나타난 항해사 크로우가 원필에게 반갑게 인사를 해왔다. 마르코의 단골 중 하나인 크로우는 항상 출항이 끝나면 펍에 들러 술 한 짝을 통째로 들이마시는 해적이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>크게 뭐 할 건 없으니 간단히 몇 개만 도와달라는 크로우의 부탁들은, 해군에 있을 적에도 해왔던 것이라 수월하게 처리해 낼 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“주방에 있을 땐 난리더니 항해 체질이군!”</p>
+<p class="empty">&nbsp;</p>
+<p>…크로우의 칭찬인지 욕인지 모를 말을 들으며 출항 준비를 마쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>얼마 지나지 않아 배는 금방 출항했다. 밀항선을 타고 들어왔던 때와는 다르게 평화롭게 물살에 휩쓸려 나아갔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“근처에 암초가 많지 않나요? 지름길이 있는 건지….”</p>
+<p>“오, 암초가 많단 것도 알아?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>아. 원필이 입을 다물었다. 말단 선원 주제에 너무 아는 척을 했나 싶었다. 정작 크로우는 별로 신경 쓰지 않고 항해실 한쪽에 놓인 지도를 가리켰다. 잘 봐. 크로우의 말이 끝나자마자 지도가 사라졌다. 진짜로. 갑자기 증발해 버렸다. 원필이 지도를 찾기 위해 여기저기 기웃댔지만 보이지 않았다. 딱, 소리와 함께 크로우가 손가락을 튕기자 다시 지도가 나타났다. 어? 원필이 크로우를 곧장 돌아봤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“놀랄 거 없어. 대부분 항해사는 다 이 정도로 항해에 특화된 능력 하나씩 있거든. 그래야 출항하기 쉬우니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>…그거야 해적들 이야기고. 군내 항해사는 해당 사항이 없다. 애초에 해군 항해사는 센티넬이 아니라 그냥 일반인들이었다. 이런 능력이 있을 리 만무했다.</p>
+<p>해적들은 큰 힘을 들이지 않아도 이렇게 수월하게 항해할 수 있다니. 어딘가 불합리했다. 그렇게 군함을 발달시켜봤자 센티넬의 능력치를 따라잡을 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“우린 선장이 브라이언이기까지 해서 다들 한계 없는 수준으로 능력을 쓸 수 있다고. 남들이 다 부러워하지.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>바닷속 암초를 한 무더기 없애도 크로우의 가이딩 수치는 문제가 없었다. 그게 남들보다 빠르게 이터널호가 바다를 유영하며 세력을 키워갈 수 있는 이유였다. 다 선장인 영현 덕분이다. 이터널호에 있는 센티넬 모두가 선장인 영현에 대해 자부심을 갖고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언이 어떤 센티넬하고 만나게 될진 몰라도 확실한 건 이터널호 전체가 뒤집어질 거야.”</p>
+<p>“인기가 많나 보죠?”</p>
+<p>“브라이언? 꼭 인기 때문이라고 할 수는 없지만, SSS급 가이드가 인기가 없을 수 있나? 다들 눈독 들이고 있지만, 티를 못 내는 거야.”</p>
+<p>“…그렇겠네요.”</p>
+<p>“문제는 브라이언이 영 관심이 없다는 거지. 폭주 직전이 아니면 접촉 가이딩은 하지도 않아. 접촉 가이딩도 뭐 손잡아주는 게 전부고.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>항해실 창 너머로 보이는 갑판 위에 영현이 보였다. 이사벨과 같이 있는 모습을 보긴 처음이었다. 이사벨도 엄청난 센티넬인데. 급이 높은 센티넬과 가이드끼리 만나면 가이딩 파장 안정화도 잘 된다고 그랬던 것 같은데. 왜인지 모를 생각들이 자꾸만 불쑥불쑥 들었다. 이사벨이 토악질을 할 걸 알지만….</p>
+<p class="empty">&nbsp;</p>
+<p>이사벨과 얘기하던 영현이 불쑥, 항해실을 올려다봤다. 이 안까지 보일 리가 없다는 걸 알면서도 꼭 영현과 눈이 마주친 기분이 들어서, 원필이 황급히 상체를 숙였다. 뭐해? 크로우가 빤히 쳐다보고 있는 줄은 몰랐다. 원필이 멋쩍게 웃으며 자세를 고쳐 잡았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>출항하고 평화롭게 물결을 가르고 나아가던 배는 오래지 않아 해상에서 멈춰 섰다. 어디 정박한 것도 아니고 바다 한가운데 이유도 없이 멈췄으나, 크로우는 콧노래만 부를 뿐이었다.</p>
+<p>답은 어렵지 않게 알아낼 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>이터널호 가까이 민간 어선들이 하나둘 붙더니, 하나같이 배에 물건을 실어 올리기 시작했다. 아무렇지 않게 이터널호에 물건을 싣는 사람들과 아무렇지 않게 물건을 받는 해적들의 그림이 이어졌다.</p>
+<p>이걸 불법이라고 해야 할지, 아니라고 해야 할지. 어차피 여기서 원필이 나서는 건 월권이었다. 적진 한가운데서 나 잡아가라고 소리 지르는 미친 짓이기도 했다. 원필은 입 다물고 속으로 셈을 했다. 이런 행위가 정확히 다섯 번 더 이어졌다. 한 번 멈출 때마다 여러 대의 어선들이 붙어 물건을 실었다.</p>
+<p class="empty">&nbsp;</p>
+<p>마지막 어선까지 떠나고 나자 영현이 항해실로 올라왔다. 창 너머로 봤을 땐 잘 몰랐는데, 영현은 전보다 조금 인상이 날카로워진 듯했다. 그 사이 살이 좀 내려앉은 것도 같고.</p>
+<p>원필이 이런 걱정을 하는 줄도 모르고, 영현은 원필이 구박이라도 할 줄 알았는지 먼저 민망한 듯 웃으며 고해성사를 해왔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“알아서 그냥 갖다 바치는 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>뭘 나무라거나 지적할 생각도 없었는데, 괜히. 원필도 계속 보다 보니 대충 상황 파악은 끝냈다. 특히 이 해적섬 가까이에서 어업을 이어 나가는 어선들은, 국가의 도움을 쉽게 받을 수 없으니 바다에서 편하게 돌아다니기 위해 어쩔 수 없이 해적들에게 상납해야 했다. 해적들에게 봐달라는 뇌물이자, 우리를 지켜달라는 요청이나 다름없었다. 이 부근에서는 해적의 영향력이 크니까. 개중에서도 이터널호가 가장 유명하니 자연스럽게 이터널호에게 상납하는 양도 많아지는 것이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“진짜야. 협박한 적 없어.”</p>
+<p>“네, 알겠어요. 뭐라고 안 했어요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>가만히 뒤에서 대화를 듣고 있던 크로우가 허허 웃었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언이 아주 그냥 안절부절못하네. 이거 혹시 사랑싸움?”</p>
+<p class="empty">&nbsp;</p>
+<p>브라이언이 센티넬이 아니라 일반인이 취향인 줄 몰랐는데. 크로우가 영현과 원필을 번갈아 쳐다봤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“잘 어울리긴 하네.”</p>
+<p>“그런 거 아니에요.”</p>
+<p>“아니긴! 브라이언이 어쩔 줄 몰라 하는데. 웬만하면 봐줘. 해적들 사이에서 커서 표현이 약해.”</p>
+<p>“크로우.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>어이쿠. 영현의 목소리가 낮아지자 크로우가 슬그머니 시선을 피했다. 잠시 크로우를 바라보던 영현이 다시 원필에게로 눈을 돌렸다. …너그럽게 봐주긴 해. 우물쭈물하며 그 말 하나 덧붙였다. 내가 봐주고 말고 할 게 뭐 있다고.</p>
+<p class="empty">&nbsp;</p>
+<p>그러나 원필이 뭐라 더 답하기도 전에 대화는 끊겼다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언, 군함이다.”</p>
+<p class="empty">&nbsp;</p>
+<p>밖을 살피던 크로우가 브라이언을 급하게 불렀다.</p>
+<p class="empty">&nbsp;</p>
+<p>해상에서 해적선과 군함이 마주치는 건 흔한 일이었다. 오히려 마주치지 않는 게 어려웠다. 휴전선 같은 게 그려질 수가 없는 바다 위에서 아슬아슬 줄타기처럼 대적하는 사이였다. 평화 협정을 맺었어도 늘 불안과 긴장이 존재하는 이유였다. 바다 위에서는 무력함이 배가 될 수밖에 없으니까. 어디까지나 해군으로서는 그랬다. 해적들은 어떨지 몰라도,</p>
+<p class="empty">&nbsp;</p>
+<p>그런데 지금은 조금, 경우가 달랐다. 해군이 먼저 자진해서 이터널호의 뒤를 쫓고 있었다. 이터널호는 이미 볼 일을 다 끝내고 해적섬을 목적지로 설정해 돌아가고 있었다. 누가 봐도 이터널호 쪽의 공격 의사가 없건만, 해군 쪽 움직임이 심상치 않았다. 무언가를 노리고 쫓아오고 있었다. 확실한 목적이 있는 움직임에 영현이 선내 방송으로 지시했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“다들 준비해.”</p>
+<p class="empty">&nbsp;</p>
+<p>이터널호는 영현의 지휘 아래 빠르게 전투태세를 갖추기 시작했다. 크로우도 배의 속도를 높이기 시작했고, 영현은 항해실에서 상황을 지켜보고 있었다. 갑판 위에 있던 선원들이 모두 공격이 가능한 센티넬들로 바뀌어 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…브라이언.”</p>
+<p>“알아. 믿어.”</p>
+<p class="empty">&nbsp;</p>
+<p>이름만 불렀을 뿐인데 영현은 원필이 뭘 말하려는지 아는 듯했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“공격하려고 쫓아오는 거 같진 않아. 걱정 마.”</p>
+<p class="empty">&nbsp;</p>
+<p>이유 모를 경고 사격 몇 번 빼면 실제로 해군은 유의미한 공격을 하고 있지 않았다. 배에 기스 하나 나지 않은 채 의미 없는 추격전이었다. 긴장감이 점점 없어질 때쯤 해군이 나가떨어졌다. 서서히 군함이 점이 되어갔다. 영현은 크로우가 건드리기 전까지 팔짱을 낀 채 요지부동 자리를 지키고 서 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이제 가이딩 파장을 풀어도 될 것 같아, 브라이언.”</p>
+<p class="empty">&nbsp;</p>
+<p>배 전체에 광역으로 방사 가이딩을 하고 있던 모양이다. 센티넬인 크로우야 쉽게 알아차렸겠지만, 일반인인 원필로서는 알 방법이 없었다. 어쩐지 잔뜩 굳어있어 보이더라니, 가이딩 할 땐 늘 이런 자세와 표정으로 있는 모양이었다. 칼리에게 가이딩 해줄 때와는 또 다른 것 같았다. 그때는 좀 부드러워 보였는데. 낯선 영현의 모습을 신기하게 구경하고 있던 원필은, 자세를 고친 영현과 피하지 못하고 눈이 마주쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p>“왜?”</p>
+<p>“아뇨, 그냥… 좀 신기해서요.”</p>
+<p class="empty">&nbsp;</p>
+<p>그럼 영현은 또, 제법 해적 선장 같지? 하며 푸스스 웃을 뿐이었다. 놀라진 않았는지 원필을 한 번 더 확인한 영현은 좀 둘러보고 오겠다며 항해실을 나섰다. 언제 오는지 말도 해주지 않고 나간 탓에 원필이 자꾸만 문 쪽을 흘끔거렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>“필, 브라이언은 시간이 좀 걸릴 것 같으니 그만 기다리고 나를 좀 돕지 그래?”</p>
+<p class="empty">&nbsp;</p>
+<p>뒤늦게 원필이 민망해하며 시선을 돌렸다. 이거 정리하면 될까요? 괜히 크로우가 시키지 않은 짓까지 혼자 찔려서 빠릿빠릿 움직여댔다. 그러면서도 한 번씩 영현이 오는지 살피긴 했지만.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>배가 정박하고 나자 바쁘게 움직이던 항해실도 숨통이 트였다. 크로우가 기지개를 쭉 켰다. 영현은 그때까지도 돌아오지 않았다.</p>
+<p>무슨 일이 있는지 알아보러 간 걸까. 그렇다면 배에서 내리자마자 해군 쪽에 연락을 취해봐야 하나 고민하던 원필이었으나, 고민이 무색하게도 원필은 크로우에게 붙잡혔다. 원래 이런 고된 출항 후에는 술이 따라야지! 원필에게 어깨동무를 한 크로우가 원필을 펍으로 질질 끌고 갔다. 괜찮다며 원필은 극구 사양했으나, 크로우를 이겨낼 재간이 없었다. —원래도 덩치가 큰 편인데 센티넬이기까지 한 크로우였다.— 영현이 없으니 원필의 편이 없다. 그래, 나 말단 선원이지. 포기하고 받아들여야 했다. 원필을 포함한 모든 이터널호 선원들이 원래 하나의 루트라도 되는 것처럼 다 같이 마르코의 펍으로 향하고 있었다. 영현은 그 속에서도 보이지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>오랜만에 오는 펍은 여전히 발 디딜 틈 없이 해적들로 꽉 차있었다. 크로우는 그 속에서 익숙하게 빈 자리를 찾아갔고, 원필은 마르코에게 인사했다. 약속이 파투 난 탓에 펍도 오질 않아, 마르코도 실로 오랜만에 보는 것이었다. 어찌나 환하게 웃어주는지, 원필은 좀 미안하기까지 할 정도였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필! 브라이언과는 화해한 거야? 브라이언이 무릎 꿇고 사과했어?”</p>
+<p class="empty">&nbsp;</p>
+<p>…사랑싸움 같은 거 아니라는 데도 여기 해적들은 왜 다. 마르코는 한 편의 치정극을 보던 시청자처럼 리액션을 해댔다. 브라이언에게 내가 사실대로 말하라고 그렇게 얘기를 했다며 가슴을 치는 마르코를 잠자코 보고 있던 원필이 고개를 갸웃거렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그럼 마르코도 다 알고 있었던 거죠?”</p>
+<p>“응? 뭘?”</p>
+<p>“브라이언이 이터널호의 가이드 선장인 걸 알고 있었잖아요. 조언도 했다는 걸 보면 제가 원래는….”</p>
+<p>“거기! 말도 안 하고 TV 채널을 왜 자꾸 돌리는 거야!?”</p>
+<p class="empty">&nbsp;</p>
+<p>…진짜, 다 알고 있었구나. 딱히 마르코에게도 악감정이 들거나 한 건 아니었다. 이러나저러나 마르코가 원필을 많이 챙겨주기는 했으니.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>대답을 회피한 마르코는 원필을 지나쳐 구석의 한 테이블을 향해 걸어갔다. 투명화 능력을 갖춘 센티넬인 듯했다. 리모컨은 마르코 손에 있는데 TV 채널이 마구잡이로 돌아가고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>“채널 좀 그만 돌리라니까, 투명 손 안 치워!?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>술에 거나하게 취한 센티넬이 말을 들어 먹지 않아서 꽤나 고생 중인 마르코의 뒤로, 영현이 펍으로 들어오는 게 보였다. 시끄러운 펍 안에서 혼자 앉아있던 원필은 저도 모르게 손을 흔들었다. 곧장 알아차리고 원필에게로 걸어오는 영현의 얼굴이 썩 좋지 못했다. 항해실을 나갈 때보다도 더 심각해 보였다. 필아. 부르는 목소리는 다정하고 조급해 보였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“무슨 일 있어요?”</p>
+<p class="empty">&nbsp;</p>
+<p>원필의 물음과 동시에 TV 볼륨이 커졌다. 투명 손은 이제 채널 버튼 대신 볼륨 버튼을 누르고 있었다. 펍을 쩌렁쩌렁 울리는 TV 소리에 술을 마시던 해적들 몇이 짜증을 내며 불평했다. 하필 멈춰놓은 채널이 평소 해적들의 관심 대상에 끼지도 못하는 뉴스 채널인 것도 한몫했다. 결국 투명화 센티넬과의 대결에서 포기 선언을 한 마르코가 TV 선을 뽑겠다며 걸음을 옮기는 사이 뉴스 화면에서는 속보가 나오기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>『 대한민국 해군 장교, 해적에게 납치…』</p>
+<p class="empty">&nbsp;</p>
+<p>화면 속 헤드라인을 보자마자 영현과 원필의 눈이 마주쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p>이거구나.</p>
+<p>무슨 일은 영현에게 있는 게 아니었다.</p>
+<p class="empty">&nbsp;</p>
+<p>자료 화면으로는 익숙한 해적선의 모습이 지나가고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>[금일 오후 해군 측에서 해적과 직접 접촉을 시도하였으나 어떠한 대답도 들을 수 없었으며…]</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>관심도 없이 술을 마시고 있던 해적들마저 하나둘 뉴스로 시선이 쏠리기 시작했다. 저거 우리 해적선 아니야? 시끌벅적 술주정들은 이제 어수선한 웅성거림으로 바뀌었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>[“군 당국은 현재 대한민국 해군 작전사령부 소속 김원필 중위가 해적에게 납치당한 사건에 대하여 유감을 표하며, 김 중위가 본국에 돌아올 수 있도록 최선을 다할 것입니다.”]</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>국방부 대변인의 모습 아래 화면 우측에 작게 ‘해군 김원필 중위’의 증명사진이 나오고 있었다. 그들이 말한 김 중위가, 거기에 있었다. 그리고 여기 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>TV가 꺼졌다.</p>
+<p>마르코가 TV선을 손에 든 채 허망하게 서 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>모두의 시선이 원필에게 쏠렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>‘해군 김원필 중위’가, 그들의 ‘필’이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>* * *</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>6장. 해무도</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>펍은 찬물을 끼얹은 듯 조용해졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>폭주 직전의 칼리 소식이 닿았던 때와는 다른 정적이었다. 불편한 정적이자, 불길한 정적이었다. 좋지 않았다. 그냥 해군도 아니고 해적에게 납치됐다고 발표가 된 해군이라니. 그걸 믿을 해적은 아무도 없었다. 당연히 원필이 본인들을 속이고 이 속에 섞여 들어와 연기하고 있는 것으로 생각할 게 분명했다. 원필에게 붙은 시선들이 떨어질 생각을 안 했다. 당장 원필과 오늘 항해실에서 함께 근무했던 크로우도 마찬가지였다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필 역시 혼란스러웠다. 분명 잠입 작전을 받아 나왔건만 머지않아 한국으로 돌아가야 할 시점에 해적에게 납치를 당했다고 뉴스에 나오고 있었다. 원필도 억울한 상황이긴 마찬가지였으나, 원필을 이해할 사람은 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>단 한 명을 제외하고는.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“가자.”</p>
+<p class="empty">&nbsp;</p>
+<p>정적을 깨고 영현이 자리에서 일어나 원필을 이끌었다. 끈질기게 달라붙는 수많은 시선을 뒤로 한 채 빠르게 펍을 빠져나왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 먼저 데리고 나오지 않았으면 그 자리에서 어떻게 됐을지도 모른다고, 원필은 그렇게 생각했다. 뒤통수에 구멍이 뚫릴 수도 있다는 말을 태어나서 처음으로 체감했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“혹시 알았어요?”</p>
+<p>“막 알았던 참이야.”</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 그렇게. 펍으로 들어오던 영현의 얼굴이 또렷하게 기억났다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…잠깐만요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>선원 숙소로 향하는 영현을 붙잡았다. 한 가지만 더 확인하고요. 이미 볼 장 다 봤다 싶긴 하지만, 혹시 확인 못 한 지시가 있을 수 있으니까. 바보 같은 짓인 걸 알면서도 원필은 선원 숙소에 다다르기 직전 모퉁이에 있는 나무 앞에 쪼그려 앉았다. 다행히 지나가는 다른 해적들은 없었다. 그럴만한 곳에 원필이 숨겨놨으니 어쩌면 당연했다. 나뭇잎을 손으로 치워내고 그 아래 흙을 파내자 원필이 묻어두었던 검은 봉투가 나왔다. 해적섬에 오기 직전 장 대위가 건넸던 핸드폰이 그 안에 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 꺼둔 핸드폰을 켜는 동안 영현은 떠나지 않고 뒤에서 팔짱을 끼고 지켜보고 있었다. 손을 까딱거리던 영현은 주머니에 있는 시가를 꺼내 입에 물었다. 불은 붙이지 않은 채였다. 처음엔 답도 없이 온 줄 알았는데, 답을 저 아래 꼭꼭 숨겨둔 줄은 또 몰랐다. 물론 저게 답이 될 수 없다는 걸 영현은 알고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>짧다면 짧고 길다면 긴 로딩 끝에 켜진 핸드폰은, 서비스 제한 구역이라는 메시지 외에 아무것도 뜨지 않았다. 아무것도 오지 않았고, 아무것도 보내지지 않았다. 섬에 처음 도착했을 때 분명 신호가 갔던 걸 기억한다.</p>
+<p>원필의 손이 작게 부들부들 떨리고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필아.”</p>
+<p>“…해무도에 가봐야겠어요.”</p>
+<p>“해무도?”</p>
+<p>“구조선이 오기로 했어요.”</p>
+<p class="empty">&nbsp;</p>
+<p>어쩌면 위험할 수도 있다는 걸 알지만 더 이상 원필이 해적섬에 남아 할 수 있는 일은 없었다. 차라리 해무도에서 해군을 기다려 보는 편이 나았다. 확인할 수 있다면 확인하고 싶었다. 어디서부터 어디까지 배신할 생각이었던 건지. 어디까지 그들은 원필을 버려두려는 것인지. 그러려면 약속한 날짜에 해무도로 구조선이 오는지 알아야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 입에 문 시가를 까딱거렸다. 불도 붙이지 않았건만 영현의 속이 타들어 가는 게 보이지 않는데도 보였다. 차라리 피우라고 권하고 싶을 정도였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그래.”</p>
+<p class="empty">&nbsp;</p>
+<p>한참을 복잡미묘한 표정을 짓더니, 생각보다 쉽게 허락이 떨어졌다. 원필에게는 아무것도 묻지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“같이 가지.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>단, 조건이 붙었다.</p>
+<p class="empty">&nbsp;</p>
+<p>누군가와 동행할 생각은 추호도 없던 원필이 당황해 손사래를 쳤다. 괜찮아요. 혼자 갈 수 있어요. 그러나 영현은 단호했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“거긴 민간인도 민간인이지만 해적들도 마구 드나드는 곳이야.”</p>
+<p class="empty">&nbsp;</p>
+<p>혼자 가는 거면 내가 못 보내. 센티넬들이 판을 치는데 맨몸으로 며칠을 거기서 혼자 지내겠다고?</p>
+<p class="empty">&nbsp;</p>
+<p>눈도 깜빡이지 않고 위험 요소들을 줄줄이 나열했다. 구구절절 맞는 말이라 반박할 수도 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>본디 해무도는 이름 그대로 바다 안개가 자욱한 곳이었고, 그만큼 무법지대였다. 만남의 광장이라는 거대한 틀이 있긴 하지만, 농담처럼 당일에 오지 못하면 다음 날부터는 눈에 보이지 않는다고 하는 곳이기도 했다. 그러니 원필처럼 센티넬이 아닌 일반인들에게는 특히 주의가 필요했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그래도 어디 며칠 묵기만 하면 괜찮지 않을까 싶은 생각이었는데, 그런 원필의 속을 읽었는지 영현이 또 한 번 세차게 고개를 저었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“절대 안 돼.”</p>
+<p class="empty">&nbsp;</p>
+<p>결국 원필은 하릴없이 영현의 동행을 허락해야 했다. 허락하고 자시고를 저가 택한다는 것도 사실 웃긴 이야기였지만.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“근데 선장이 자리를 그렇게 오래 비워도 돼요?”</p>
+<p class="empty">&nbsp;</p>
+<p>나름 예리한 질문을 던졌으나, 영현은 무던하게 답했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이럴 때 쓰라고 부선장이 있는 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…이럴 때 쓰라고 있는 건 아닐 텐데. 원필은 이사벨의 성격을 잘 알고 있었다. 그 활화산 같은 이사벨이, 갑작스러운 선장의 부재를 기꺼이 받아들일 것 같지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그럼 이틀 후에 가요. 내일모레. 이사벨한테도 잘 얘기 하고요.”</p>
+<p class="empty">&nbsp;</p>
+<p>딱히 원필이 준비하고 출발할 건 없었으나 그래도 영현이 선장인데, 이사벨에게 인수인계할 시간도 필요하고 선원들도 준비가 필요할 테니까 고려해서 제안한 시간이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 이틀 사이 소문은 빠르게 퍼져나갔다.</p>
+<p>평소처럼 이터널호에 출근했던 원필은 바로 심상찮은 기운을 알아차렸다. 원필이 조금만 돌아다녀도 사방에 있는 해적들이 원필을 경계했다. 매서운 눈초리가 여기저기 꽂혔다. 항해실 문턱도 넘지 못했다. 해적선 항해실에 해군을 들일 수 없다는 크로우의 전언이 있었다. 예상했던 일이라 기분이 나쁘거나 하진 않았다. 크로우 같은 반응이 일반적인 걸 테니까.</p>
+<p class="empty">&nbsp;</p>
+<p>하릴없이 항해실 문 앞에서 대기하던 원필의 앞으로 나타난 건 영현이었다. 이터널호의 선장의 자격으로.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“숙소로 가 있어.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 지시는 그게 전부였고, 원필은 그렇게 업무에서 배제됐다. 사실상 대기발령이었다만, 원필도 이번만큼은 받아들여야 했다. 원필의 신분이 해군인 이상, 그들은 영원히 원필을 믿지 못할 게 분명했다.</p>
+<p class="empty">&nbsp;</p>
+<p>하루를 그렇게 버리고, 남은 하루는 완전히 숙소에서만 박혀있어야 했다. 그 사이에도 틈틈이 해군 측에 연락해보았으나, 여전히 신호는 가지 않았다. 장 대위가 준 핸드폰은 사실상 쓸모없는 고철 기계였다. 원필은 쓰레기통에 핸드폰을 버리고 필요한 짐을 챙겼다. 짐이라고 해봤자 처음 해적섬 올 때 들고 왔던 것들 그대로였다. 해적섬에서 가지고 나가는 건 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 꼬박 하루 반나절 정도 만에 선원 숙소 문을 열고 밖으로 나왔다. 영현이 문 앞에서 손을 흔들고 있었다. 원필이 알아서 나올 때까지 재촉하지도 않고 기다렸던 모양이다. 숙소 밖에 시가 꽁초가 수북했다. 진짜로 태운 꽁초들이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“부르지 그랬어요.”</p>
+<p>“나올 건데, 굳이.”</p>
+<p>“다음부터는 그냥 불러요. 챙겨가는 건 없어요?”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 위아래로 영현을 훑었다. 어쨌거나 영현으로서도 당분간 섬을 떠나는 거나 마찬가지인데, 어째 영현의 양손이 가벼웠다. 뭐 하나 든 게 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“난 너만 챙기면 끝나.”</p>
+<p class="empty">&nbsp;</p>
+<p>쿨럭. 원필이 헛기침을 했다. 한 번씩 영현은 이런 식으로 치고 들어왔다. 되게 낯간지러운 말을 아무렇지도 않게. 물 줄까, 묻는 영현에게 도리질을 치며 급하게 화제를 바꿨다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이사벨한테는 잘 말하고 온 거죠?”</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 대답하지 않았다. 가자, 하며 앞장서 갈 뿐이었다. 허? 원필이 뒤쫓아가며 영현을 불렀다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언, 잘 말한 거 맞죠?”</p>
+<p>“내 걱정을 하는 거야, 이사벨 걱정을 하는 거야?”</p>
+<p>“그거야….”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 입을 다물자 영현이 원필을 붙잡아 끌었다. 말 안 해도 다 안다는 듯이. 그래, 내 걱정만 해. 표정 하나 감추지 못한 채 선착장에 도착할 때까지 영현은 콧노래를 흥얼거렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>노른자 땅에 있는 만큼 선착장은 선원 숙소에서 크게 멀지 않았다. 금세 도착한 선착장에서 영현과 원필을 기다리고 있는 건 작은 배 한 척과 이사벨이었다. 다른 사람도 없이 이사벨만.</p>
+<p>설마.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…이사벨이 직접 데려다주는 거예요?”</p>
+<p>“응. 조타수 출신이니까 실력은 믿어도 돼.”</p>
+<p class="empty">&nbsp;</p>
+<p>해무도까지는 순간이동 센티넬을 이용하지 않고 순수하게 배를 직접 타고 나가기로 했다. 이미 자신을 향한 시선들이 곱지 않은 차에, 해적 센티넬들을 이리저리 이용해버리면 영원히 그들과 화해하기 힘들 것 같았다. 능력을 사용하고 나면 영현이 가이딩을 해 주어야 하는 것도 있고. 어차피 그리 먼 거리가 아니기도 했다.</p>
+<p>배를 타기로 정한 이상 필요한 건 두 가지였다. 배와 조타수. 배는 돈만 내면 어떻게 해결 가능할 것 같은데, 배를 운전할 조타수는 조금 다른 문제였다.</p>
+<p class="empty">&nbsp;</p>
+<p>“조타수는 어떻게 할까요?”</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 고심해서 물었건만, 영현은 그때도 역시 태연했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“내가 선장인데 아는 조타수 하나 없을까.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 조타수가 이사벨일 줄이야.</p>
+<p class="empty">&nbsp;</p>
+<p>“혹시 강제로 끌고 온 건 아니죠?”</p>
+<p>“이사벨을? 전혀. 본인이 오겠다고 한 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p>우려와는 달리 이사벨한테 잘 말하고 오긴 했나 보다. 원필이 속으로 안심한 사이 영현이 먼저 배에 탑승했다. 이사벨이 영현의 뒤통수를 향해 가운뎃손가락을 치켜드는 꼴을 보다가 눈이 마주쳤다. 꾸벅, 원필이 허리를 숙이며 이사벨에게 감사의 인사를 전했다. 속으로는 어떻게 생각하고 있을지 몰라도 당장 이사벨은 원필에게 큰 경계를 보이지 않고 있을뿐더러 도와주기 위해 이 자리에 있었다.</p>
+<p>과한 감사 인사를 받은 이사벨은 되레 징그럽다는 듯 손사래를 쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필요 없어. 브라이언에게 두 배로 돌려받을 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p>이사벨은 정말 한다면 할 것 같아서 원필이 어색하게 웃었다. 차마 영현을 봐달라고까지는 말하지 못하고 그러고 있으니, 가만히 보고 있던 이사벨이 문득 생각난 듯 입을 열었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“근데 해군. 혹시 사랑에 빠진 보스는 어떻게 해야 하는지 알아?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 대답할 수 있을 리가 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>과거와는 달리 현재 해무도는, 사는 사람은 없어도 오가는 사람은 이유 불문 국적 불문 많은 섬이었다. 해적섬으로 가는 사람들도 있었고, 한국으로 밀항하려는 외국인들도 섞여 있었으며, 밀거래를 위해 일부러 해무도에 오는 한국인이나 해적들도 있었다. 그러다 보니 자연스럽게 무허가 장사를 하는 사람들도 생기고, 배를 놓친 이들 중 몇몇은 아무 빈 집이나 허가 없이 들어가 저의 집인 양 굴기도 했다. 물론 그들 대부분 센티넬들이었고 그게 아니라면 드물게 사설 센티넬 경호원을 끼고 오는, 돈 많은 일반인이었다.</p>
+<p>말인즉, 일반인만으로는 그냥도 지내기 힘든 곳이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그러니 일반인인 원필과 일반인처럼 보이는 영현은, 그들에겐 좋은 먹잇감처럼 보일 수밖에 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>배에서 내리자마자 섬 초입부터 시비가 걸렸다. 덩치만 컸달 뿐이지 등급 자체는 C급쯤 되어 보이는 센티넬이었다. 잔뜩 어깨에 힘을 준 채 거들먹거리며 영현을 붙잡고는 돈을 내놓으라 협박했다. 영현이 이터널호 선장이라는 걸 알면 저렇게 까불기도 힘들 텐데, 아무래도 해적섬 출신은 아닌 모양이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“무시하고 갈까, 아니면 치워줄까?”</p>
+<p class="empty">&nbsp;</p>
+<p>붙잡힌 쪽은 영현인데, 영현은 원필에게 참 다정하게도 물어왔다. 누가 봐도 깔보는 느낌이 낙낙한 질문에 상대 쪽에서 난리가 났다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이 새끼들이 근데.”</p>
+<p class="empty">&nbsp;</p>
+<p>양 주먹으로 원필과 영현의 멱살을 붙잡았다. 원필의 대답을 생략하고 영현은 곧 ‘치워준다.’ 쪽으로 행동했다. 아니, 딱히 어떤 행동을 했다기보다는, 그냥 센티넬을 쳐다보는 수준이었다. 표정 변화도 없었고 눈 하나 깜빡거리지도 않았다. 몇 분, 아니 몇 초도 지나지 않아 여기저기서 흡, 숨을 들이켜는 소리가 들렸다. 하나같이 센티넬들이었다. 그들은 모두 목을 붙잡은 채 부들부들 몸을 떨고 있었다. 센티넬 경호원을 끌고 온 일반인들이 왜 그러냐며 당황하는 모습이 보였다. 일반인들 눈에는 그저 갑작스러운 발작처럼밖에 보이지 않을 테니까.</p>
+<p>평온하기 그지없는 표정으로 영현은 손 하나 까딱하지 않고도 그 자리에 있던 모든 센티넬들의 목숨줄을 쥐고 흔들었다. 영현과 원필을 협박했던 센티넬이 바르르 손을 떨며 싹싹 빌어댔다. 말도 나오지 않는지 입에서 침이 줄줄 흐르고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“됐어요, 이제. 가요, 그냥 가요.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 영현을 붙잡았다. 그제야 영현이 가이딩 억제를 풀었는지 센티넬들이 숨을 몰아쉬기 시작했다. 캑캑거리는 소리가 들렸지만, 원필은 애써 무시한 채 뒤도 돌아보지 않고 걸었다. 보지 않아도 모두의 시선이 이쪽을 향해 있을 게 뻔했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“좀 과하지 않았어요?”</p>
+<p>“이 정도는 해야 뭘 해도 안 건드리지.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 은근슬쩍 원필의 손에 깍지를 끼려 하기에 원필이 손을 떼어냈다. 아쉬운지 입맛을 다시는 걸 모른 척하며 원필이 걸음을 서둘렀다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>며칠간 해무도에 머물기 위해 적당히 지낼만한 곳을 찾아야 했다. 비교적 관리가 잘 되어있는 목 좋은 곳들은 어쩔 수 없이 선착순으로 사람들이 들어차 있었다. 무력으로 뺏으라면 뺏을 수도 있겠지만….</p>
+<p>영현을 돌아본 원필이 작게 고개를 내저었다. 굳이 소란을 만들지 말자. 원필은 조금 더 외곽으로 빠지는 쪽을 택했다. 문제는 외곽으로 가면 갈수록 사람들이 잘 오가지 않은 탓에 집마다 하자가 존재했다. 담벼락이 무너져 있다거나 창이 깨져있는 건 부지기수였다. 어떤 집은 외관은 멀쩡한데 방바닥이 내려앉아있어서, 기껏 안으로 들어갔다가 되돌아 나오기도 해야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“차라리 산 쪽으로 가는 게 나아.”</p>
+<p class="empty">&nbsp;</p>
+<p>다섯 번째 집까지 허탕을 치니 영현이 나섰다. 가야 할 곳을 정해놓은 사람처럼 영현은 거침없이 걸어갔다. 산자락에 작은 집 몇 채가 몰려있었고, 영현은 그중 한 집을 골라 들어갔다. 보고 왔던 집들보다 상태가 좋았다. 조금 먼지가 있고 조금 삭은 티가 나긴 했지만, 영 못 지낼 곳도 아니었다. 원필이 여기저기 둘러보는 사이, 영현은 익숙하게 낡은 평상 위에 드러누웠다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“배는 내일모레 온다고?”</p>
+<p>“네.”</p>
+<p class="empty">&nbsp;</p>
+<p>방 하나, 거실 겸 부엌 하나, 화장실 하나. 음….</p>
+<p>대략적인 집 구조를 파악하고 나온 원필이 우물쭈물 영현을 쳐다봤다. 평상에 드러누운 영현은 이 이상 다른 곳을 찾아다닐 의지가 있어 보이지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“왜. 뭐 문제 있어?”</p>
+<p class="empty">&nbsp;</p>
+<p>먼저 눈치챈 영현이 고개만 돌려 원필을 쳐다봤다. 아, 그게….</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“방이 하나밖에 없어요.”</p>
+<p>“근데?”</p>
+<p>“제가 거실에서 잘게요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 상체를 일으켰다. 필아. 다정한 목소리로 운을 뗀 영현의 목소리엔 웃음기가 묻어있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“남자끼리 지지고 볶으면서 지내는 해군이면서. 무슨 생각해?</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>너나 나나 일반인이나 다름없는데 얼어 죽을 생각 말고 방에서 자.</p>
+<p class="empty">&nbsp;</p>
+<p>다정하면서도 단호했다. 영현의 말을 증명이라도 하듯 저녁이 되자 바닷바람과 섞인 산바람이 매섭게 불어오기 시작했다. 전기도 잘 들어오지 않아 제대로 눈에 보이는 것도 없었다. 밖에 산짐승이 돌아다닌다는 협박인지 경고인지 모를 말까지 영현에게 듣고 나서야, —실제로 짐승 울음소리도 났다.— 결국 원필도 포기했다. 이 섬에 대해서는 영현이 원필보다 월등하게 많았다. 농담인지 진담인지 확실하게 알기 힘들긴 했어도, 눈에 보이는 암흑은 부정할 수 없었다.</p>
+<p>원필은 금세 어둠이 내려앉은 바깥을 등진 채 영현과 한 방에 지내기를 택했다. 영현의 말마따나 일반인인 주제에 고집부릴 일이 아니었다. 폭신한 이불을 덮자마자 느낀 감각이 따듯하다, 인 걸 보면 오히려 더 빨리 고집을 꺾었어야 했을지도 모른다. 영현이 살풋 웃는 소리가 들려왔지만, 그 이상 영현도 원필을 놀리거나 하진 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>시간이 지날수록 바깥에서 바람 부는 소리가 거세졌다. 타닥타닥, 창을 때리는 소리가 시끄러웠다. 무섭다기보다는 잠이 오지 않았다. 해적섬 선원 숙소 2층 침대에 적응이 됐다 싶으니 이제는 해무도 빈집의 찬 바닥이었다. 이런 집에 누워본 건 처음이지만 해무도 땅에 누워본 적은 있긴 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“7년 전에 한 번 와봤었는데….”</p>
+<p>“응?”</p>
+<p>“이 섬이요. 7년 전에 와봤었어요.”</p>
+<p class="empty">&nbsp;</p>
+<p>7년 전 해상 전투에서 원필은 정신을 잃었었다. 바다에 빠져있던 센티넬을 구해주려다가 덩달아 자신도 빠지는 바람에. 잠깐 정신을 차렸던 게 이 섬 위에서였고, 오래지 않아 다시 정신을 잃었었다. 수군거리는 목소리들이 들렸던 것도 같은데, 원필이 다시 눈을 떴을 땐 한국에 있는 국군 병원 안이었다. 곧장 전투 중 이탈에 대해 소명이 필요하다면서 조사까지 진행됐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“구해준 사람이 누군지 얼굴이나 봤으면 좋겠는데….”</p>
+<p class="empty">&nbsp;</p>
+<p>그러다 보니 당시 본인을 구해준 사람이 누군지 아직도 알지 못했다. 찾으라면 군내 기록을 찾아봐야겠지만, 원필에게 전투 중 이탈로 징계까지 내렸던 군에서 자료를 쉽게 공개할 리 없었다. 바다로 나가는 임무에는 거의 배제까지 당했으니 말할 것도 없다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“보면 뭐, 키스라도 해 주게?”</p>
+<p>“무슨 키스를 해줘요. 얼굴도 모르는데.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 원필을 흘끔거리다 시선을 거뒀다. 어차피 그 사람 지금 없어. 낮게 들리는 목소리에 원필이 영현을 돌아봤다. 이것도 농담일까. 구분하기 어려웠다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“누군지 아는 사람처럼 말하네요.”</p>
+<p>“잘 알지. 내 양어머니니까.”</p>
+<p>“…네?”</p>
+<p>“내 양어머니이자 이터널호의 선대 선장, 사라. 바다에 빠졌던 사람도, 널 구해준 사람도 사라야. ”</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 무던한 목소리로, 무미건조하게 말을 이어 나갔다. 짙은 어둠이 깔린 방 안에 천장을 본다고 없던 빛이 들어오는 것도 아니건만, 영현은 여전히 천장을 보고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>폭주 전조 현상이 시작돼서 일부러 바다에 빠졌다더라고. 내가 방사 가이딩 때문에 이 섬에서 한 발짝도 나가지 못하고 있어서 보고도 못 받았는데. 근데 갑자기 사라가 웬 바다에 빠진 해군 하나를 직접 데리고 내 앞에 나타났어.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…그게 나구나. 원필은 아무 말도 하지 못했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>당시 영현은 지쳐 있었다. 영현의 손에 달린 센티넬들 수가 너무 많았고, 그 아무리 영현이 SSS급 가이드라 하더라도 며칠을 계속 광역 범위로 방사 가이딩을 하면 지칠 수밖에 없었다. 센티넬들은 가이드가 가이딩 해주면 살아난다지만, 가이드는 회복시켜 줄 사람도 없었다. 오로지 휴식만이 답이었으나, 쉬엄쉬엄하라며 내준 숙소에서도 영현은 방사 가이딩을 하고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 쉬지도 못하고 가이딩하던 영현의 방사 가이딩이 딱 한 번, 사라가 나타난 순간 사라졌다. 해무도에 있던 모든 센티넬들이 알아차렸다. 모두의 시선이 한 곳에 쏠렸다. 폭주를 코앞에 둔 사라가 그곳에 있었다. 사라에게만 가이딩을 해주기 위해 방사 가이딩을 멈춘 영현을, 사라라고 모를 리 없었다. 사라 역시 센티넬이었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p>영현아, 이제 네가 이터널호 선장이야.</p>
+<p class="empty">&nbsp;</p>
+<p>사라는 그 말만 남긴 채 어떤 가이딩도 받지 않고 다시 바다로 사라졌다. 폭주 직전인 상황에도 입꼬리를 올려 웃어보이면서 말이다.</p>
+<p class="empty">&nbsp;</p>
+<p>사라가 떠난 자리엔, 사라가 두고 간 해군만 남아있었다. 죽었는지 살았는지, 영현보다 다른 해적들이 먼저 해군의 상태를 살폈다.</p>
+<p class="empty">&nbsp;</p>
+<p>“살아있는데?”</p>
+<p>“죽여도 되지 않아? 해군이잖아.”</p>
+<p class="empty">&nbsp;</p>
+<p>우리가 죽일 테니 우릴 가이딩을 해줘. 해적들이 영현에게 대놓고 요구했다. 영현은 숨이 붙어있는 해군을 바라봤다.</p>
+<p>「김원필」</p>
+<p>해군 전투복에 박혀있는 이름을 곱씹었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“누굴 죽여. 살리기나 해.”</p>
+<p class="empty">&nbsp;</p>
+<p>사라가 살려둔 이름이자 사라가 남기고 간 이름이었다. 사라를 대신해서.</p>
+<p class="empty">&nbsp;</p>
+<p>사라는 돌아오지 못했다. ‘못했다’는 표현이 맞을지, ‘않았다’는 표현이 맞을지는 모르겠다. 어떻게든 전투를 멈추게 하려면 마지막까지 물회오리를 만들고 사라졌다 하니, 정말 사라다운 마지막이었다. 그 물회오리가 군함을 덮쳤다고는 하지만, 그것까진 사라가 의도한 바는 아닐 터였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“사라는 좋은 사람이었네요.”</p>
+<p>“그러니까 날 양아들로 삼았지. 사라는 모태 솔론데.”</p>
+<p class="empty">&nbsp;</p>
+<p>큭큭 웃던 영현이 모로 누웠다. 어두워서 잘은 보이지 않았지만 마주 보고 있음은 알 수 있었다. 차라리 불이 꺼져있어서 다행일지도 모른다. 영현의 무심한 말투와는 달리 왠지 슬픈 표정을 짓고 있을 것 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…내일 사라한테 인사하러 갈래요?”</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 원필은, 조심스럽게 영현에게 제안했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“시체를 못 찾아서 무덤도 없는데.”</p>
+<p>“바다에 인사하면 사라도 들어주겠죠.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>음, 영현이 작게 동조했다. 딱히 인사를 한 적은 없는데 네가 원한다면야. 어차피 네가 말한 구조선이 올 때까지 할 것도 없으니.</p>
+<p>구구절절 길게도 덧붙였다. 원필이 픽 웃었다. 좋으면 좋다고 말해도 되는데, 이런 쪽으로는 꼭 빙빙 돌려 말한다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“근데 필아.”</p>
+<p>“네.”</p>
+<p>“내 얼굴은 알잖아. 살려 보낸 건 나니까 키스해 줘도 될 것 같지 않아?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…이런 거나 말하지 말지.</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 더 이상 말하지 않고 몸을 돌렸다. 뒤로 영현의 웃음소리가 어둠을 뚫고 들렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“오늘 날씨가 좋아.”</p>
+<p class="empty">&nbsp;</p>
+<p>아닌 것처럼 굴어도 좀 설렌 모양이다.</p>
+<p>다음날 먼저 일어나서 준비한 쪽은 영현이었다. 느지막이 일어나 부스스한 머리로 눈을 비비고 나온 원필에게 굿모닝, 인사를 해줬더랬다. 붕 뜬 원필의 곱슬머리를 쓰다듬어주는 손이 기분 좋아 보였다.</p>
+<p>밥 먹을 때도 순식간에 먹어 해치우더니 자꾸만 마당 쪽을 서성이길래 원필도 서둘렀다. 그 와중에 영현은 단 한 번도 원필을 재촉하지 않았다. 빨리 가고 싶을 텐데도.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>센티넬놈들 득실거리는 바닷가 근처보다는 하늘과 가까이 가는 게 좋겠어. 나름 어디가 좋을지도 생각해 놓은 모양이었다. 영현의 의견에 원필은 군말 없이 고갤 끄덕였다. 산으로 올라갈수록 지나가는 사람 하나 없이 조용했다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현과 원필은 사방이 트여있는 능선 끝자락에 자리를 잡았다. 챙겨온 거라고는 고작해야 영현이 아침부터 선착장에 나가 사 왔다는 술 정도였다. 안주도 없이.</p>
+<p class="empty">&nbsp;</p>
+<p>“사라는 원래 안주 없이 마시니까 괜찮아.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 그 말 한마디를 하며 술을 바다 쪽으로 뿌렸다. 허술하기는 해도 어디서 본 건 있었다. 남은 술은 영현이 술병째로 들이마셨다. 원필은 옆에서 사라한테 인사를 했다. 사라가 살려줬던 해군이란 말을 듣고 옆에서 영현이 죽일 뻔했던, 이라며 덧붙이는 바람에 원필이 황급히 영현의 팔을 쳐야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“술 그만 마시고 브라이언도 인사해요.”</p>
+<p>“난 딱히 할 얘기 없는데.”</p>
+<p class="empty">&nbsp;</p>
+<p>말은 그렇게 하면서 영현은 얌전히 술병을 내려놓고선 옷매무새를 정리했다. 큼큼, 목까지 가다듬었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“사라, 잘 지내죠?”</p>
+<p class="empty">&nbsp;</p>
+<p>보기 드문 영현의 존댓말이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“방금 인사한 사람 알죠? 사라가 나한테 소개해줬잖아.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 원필을 한 번 슥, 보더니 또 덤덤히 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“잘 봐줘요. 내가 계속 살려둘 거니까.”</p>
+<p class="empty">&nbsp;</p>
+<p>뭐, 알아서 잘하겠지만. 나중에 또 정식으로 소개해 줄게요.</p>
+<p>영현의 인사는 간단하게 끝이 났다. 말이 인사지, 사실상 원필에 대한 소개와 이야기밖에 없어서 원필은 혼자 민망함을 감춰야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그렇게 아침부터 설레하더니 막상 올라와서 크게 뭘 한 건 없었다. 말없이 바다만 쳐다보다가, 하늘을 올려다보다가.</p>
+<p class="empty">&nbsp;</p>
+<p>다 마신 술병을 영현이 흔들어 보였다. 사라, 술 취향이 별로네요. 다음엔 다른 술 마실래요. 영현의 말에 대답이라도 하듯 시원한 바람이 불었다. 영현의 머리칼이 흩날리는 걸 보던 원필은 그대로 영현과 눈이 마주쳐버렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“사라가 이제 그만 가라는데?”</p>
+<p class="empty">&nbsp;</p>
+<p>보기 드물게 영현이 눈을 접어 웃었다. …가요. 원필이 황급히 시선을 피하고 자리에서 일어났다. 필아, 같이 가지? 뒤에서 영현이 부르는 소리가 들렸으나 원필은 멈추지 않았다. 쉬지 않고 빠르게 내려가던 원필의 속도가 점차 느려졌다. 집 앞에 낯익은 인영 하나가 서 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“술 마시자고 왔더니 벌써 어디서 마셨나 보군.”</p>
+<p class="empty">&nbsp;</p>
+<p>어떻게 알고 왔는지 양손 가득 술을 든 마르코가 원필과 영현을 향해 눈을 찡긋해 보였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“얼마나 마셨길래 얼굴이 빨개?”</p>
+<p class="empty">&nbsp;</p>
+<p>술은 영현만 마셨는데. 원필이 곧장 제 뺨에 손을 대보았다. 얼마나 빨간지는 알 수 없었지만 좀 뜨거운 것 같기도 했다.</p>
+<p>뒤따라 내려오던 영현이 인상을 찌푸렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“마르코가 뭐라고 했어?”</p>
+<p>“아니에요. 마르코, 오늘 장사 안 해요?”</p>
+<p>“선장이 없으니 출항을 못 해. 출항을 못 하니 해적 손님들이 오지 않지.”</p>
+<p class="empty">&nbsp;</p>
+<p>마르코가 노골적으로 선장 자리를 비우고 있는 영현을 저격했으나 영현은 아랑곳하지 않고 집으로 먼저 들어가 버렸다. 마르코는 전혀 당황하지 않고 도리어 원필에게 저런 선장 만나지 말라는 농담을 던지며 따라 들어갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>마르코는 곧장 평상 위로 가져온 술을 늘어놓았다. 위스키에 럼주에, 맥주까지. 종류도 다양했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이사벨이랑 마시지, 왜.”</p>
+<p>“이사벨은 지금 건들면 안 되겠던데? 그쪽이 더 심각해.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>먼저 물어봐 놓고 영현은 이번에도 무시했다. 이사벨이 심각하다는 건 다 영현 때문일 테니까. 하지만 그 영현은 또 본인 때문이니 원필도 입을 다물어야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p>마르코는 정말로 술을 마시기 위해 여기까지 온 모양인지 평상에 앉자마자 술병을 땄다. —혹시나 영현을 데리러 온 건가 싶었는데 그건 아닌 모양이었다.— 영현에게도 한 잔, 원필에게도 한 잔씩 건넸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“자, 해군이라도 술은 거절하면 안 되지.”</p>
+<p class="empty">&nbsp;</p>
+<p>원필에게는 이름 대신 해군이라 불렀으나, 딱히 큰 적대감이 보이지는 않았다. 그 해군 놈들은 브라이언 때도 그랬다는 취중진담을 들어보니, 오히려 몇 없는 원필의 편인 듯했다.</p>
+<p class="empty">&nbsp;</p>
+<p>“보나 마나 또 정치 싸움이겠지. 이봐, 해군. 어차피 구조선 그런 건 안 올 테니까 기대하지 말라고. 그놈들은 잃어버린 사람에 대해서는 관심을 두지 않아.”</p>
+<p>“마르코.”</p>
+<p>“왜, 브라이언도 같은 생각이잖아.”</p>
+<p class="empty">&nbsp;</p>
+<p>평화 협정 개 같은 거. 마르코가 그대로 럼주를 들이마셨다. 펍도 닫고 왔다더니 혼자 폭주하듯 해군과 정부 욕을 하며 진탕 마셨다. 맞은편에 앉은 영현과 원필이 얼마나 마시는지는 크게 신경 쓰지 않는 듯했다. 마르코가 마신 양에 비하면 영현과 원필은 간에 기별도 안 갈 정도 수준이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>잔뜩 취한 마르코가 술 냄새를 풍기며 평상 위에 드러누워 콧노래를 흥얼거리기 시작했다. 영현이 쯧, 혀를 차다가 마르코를 툭 쳤다. 마음만 먹으면 마르코를 평상 아래로 그대로 굴러 떨어뜨릴 기세였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이제 꺼져. 잠은 집에 가서 자.”</p>
+<p>&lt;“엄청 매정하네.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>취한 마르코는 한국어 대신 불어를 쏟아냈다. 비틀대며 일어나던 마르코가 원필에게 팔을 벌렸다. 불어인 탓에 알아들을 수는 없었지만 대충 마지막이니 인사라도 하자는 뜻이지 않을까. 물론 마르코에게 안기기도 전에 영현에게 제지당해서 물어볼 틈은 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>&lt;“얼른 가기나 해. 주정뱅이 주제에 어디다 손을 대려고.”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 마르코를 일으켜 세웠다. 술 때문에 비틀거리는 거구가 쉽게 영현의 손에 이끌려 문까지 질질 끌려갔다. 덩치는 마르코가 훨씬 큰데도.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“지금 근데 배가 있어요? 자고 가는 게 낫지 않아요?”</p>
+<p>&lt;“오, 자고 가라는데?”&gt;</p>
+<p>&lt;“잘 거면 집 밖에서 자.”&gt;</p>
+<p>&lt;“안에서 둘이 무슨 짓을 하려고?”&gt;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>끝까지 불어를 쓰던 마르코는, 데려다주겠다는 명목 아래 영현의 손에 거의 떠밀리듯 문밖으로 쫓겨났다.</p>
+<p>잘 가요, 마르코. 원필이 인사하자 마르코가 손을 흔들어주고 떠났다. 긴 인사말이었는데 원필이 개중 알아들은 건 딱 한 단어뿐이었다.</p>
+<p>Adieu.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 마르코를 데리고 나가자 순식간에 고요해졌다. 원필은 그대로 평상 위에 드러누웠다. 속 편한 밤하늘에 별이 왕창 떠 있었다. 저게 사라일까. 원필이 하늘에 손을 흔들어봤다. 돌아오는 답은 당연히 없다. 바람만 좀 살랑살랑 불어댔을 뿐. 기분 좋은 취기를 느끼며 원필이 슬며시 눈을 감았다.</p>
+<p class="empty">&nbsp;</p>
+<p>구조선은 내일 도착할 예정이었다. 두 달 전엔 그랬다. 아니, 두 달 전에도 그랬던 건 맞을까? 시간이 흐를수록 원필의 속에 남아있던 일말의 믿음은 점점 사라져갔다. 틈틈이 섬 곳곳 라디오나 TV를 통해 귀동냥하듯 훔쳐 들었던 한국발 뉴스 속에서는 원필의 잘못으로 납치된 것처럼 보도되고 있었다.</p>
+<p>마르코의 말마따나 구조선이 오지 않을 확률이 더 높았다. 원필은 구조선이 오지 않는 가정하에 앞으로 어떻게 해야 할지 방향을 정리해 나갔다. 어느 정도 틀은 정해두긴 했다. 단 하나, 마음에 걸리는 게 있긴 하지만….</p>
+<p class="empty">&nbsp;</p>
+<p>다시 문이 열리는 소리가 들렸다. 원필이 눈을 떠 상체를 일으켰다. 가장 큰 문제가 걸어들어오고 있었다. 원필의 뜻대로 해주고 싶진 않지만 해 줄 것 같은 사람.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그건 뭐예요?”</p>
+<p class="empty">&nbsp;</p>
+<p>마르코를 보내고 돌아온 영현의 손에 봉투가 들려있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“약.”</p>
+<p>“약이요?”</p>
+<p>“멀미약.”</p>
+<p>“…지금 시간에?”</p>
+<p>“응. 팔던데?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 눈을 가늘게 떴다. 다른 건 몰라도 웬만한 장사치들은 다 섬을 떠났을 시간이었다. 해무도 같은 섬에 24시간 편의점이나 약국 따위가 있는 것도 아니었다. 약은 고사하고 지금 시간에 뭘 사려고 해도 살 수 없을 텐데.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필요하다며.”</p>
+<p class="empty">&nbsp;</p>
+<p>처음 해적섬을 가면서의 울렁거렸던 배를 떠올리다가 오늘 술까지 마셨으니 멀미약 같은 게 있으면 좋겠다는 말을 하긴 했었다. 근데 그걸 지금 어떻게 구해왔다는 건지. 영현은 역시나 말해주지 않고 원필에게 봉투를 건넬 뿐이었다. 멀미약에 숙취해소제까지 있었다. 봉투 안을 살펴보던 원필이 한숨을 작게 내쉬었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 말하지 않는 이상 아무 능력 없는 원필이 알아낼 방법은 없었다. 그래도 한 가지는 확실하게 알 수 있었다. 정말이지….</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…브라이언은 정말 절 좋아하는 거 같아요.”</p>
+<p>“몰랐어?”</p>
+<p class="empty">&nbsp;</p>
+<p>몰랐을 리가. 원필이 다시 평상 위에 드러누웠다. 괜히 지금 영현의 얼굴을 보기에는 어딘가 낯부끄러운 면이 있었고, 속이 간질거리는 기분이었다.</p>
+<p>난 해군인데, 왜 좋아하지? 원필이 들릴 듯 말 듯한 목소리로 중얼거렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그런 걸 따져본 적 없어서 모르겠는데.”</p>
+<p class="empty">&nbsp;</p>
+<p>어느새 영현이 평상에 걸터앉았다. 원필의 바로 옆이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…원래도 남자 좋아해요?”</p>
+<p>“혐오해. 같은 놈들 거시기만 보면 쳐서 터뜨리고 싶어 해.”</p>
+<p class="empty">&nbsp;</p>
+<p>진짜 말을 막 하네. 큭큭 웃은 원필이 영현의 손을 건드렸다. 충분히 터뜨리겠네. 그렇게 위협적인 손은 아니었어도 굳은살이 제법 박혀있고 투박했다. 원필이 계속해서 영현의 굳은살을 만지며 간질이자 영현이 손가락을 얽어 쥐었다. 열이 많은 건지 공기가 찬 건지, 영현의 손은 유독 따뜻했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이렇게 손잡는 건 더 싫어해.”</p>
+<p>“…그치만,”</p>
+<p>“응?”</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 우물쭈물거리자 영현이 잘 듣기 위해 상체를 숙였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“가이딩 하려면 손도 잡고 키스도 해야 하잖아요.”</p>
+<p class="empty">&nbsp;</p>
+<p>중얼거리 듯 내뱉은 말에 영현이 웃었다. 영현의 얼굴이 원필의 눈앞에 순식간에 다가왔다. 깜빡이는 눈에 영현의 눈이 담겼다가, 웃고 있는 입술이 담겼다가.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필아, 하나 알려줄까.”</p>
+<p class="empty">&nbsp;</p>
+<p>난 그 정도까지 안 해도 충분히 가이딩이 돼. 해 줄 생각도 없고.</p>
+<p>조용히 다가온 입술이 짧게 닿았다가 떨어졌다. 입술이 떨어지는 소리가 더 큰지, 쿵쿵 어딘가에서 울리는 소리가 더 큰지 알 수 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>눈을 감았다 뜬 원필의 눈에 영현이 가득 찼다. 여전히 영현은 가까이에 있었다. 쿵쿵. 아직도 들리는 걸 보니 아무래도 후자가 더 큰 것 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“가이드가 그래도 돼요?”</p>
+<p>“지들이 어쩔 거야. 근데 필아.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>우리 그냥 키스하면 안 돼?</p>
+<p class="empty">&nbsp;</p>
+<p>안달 난 허락을 구해왔다. 조심스럽게 원필의 옷깃을 말아쥐며 애처로운 눈빛을 보내는데, 원필은 하마터면 웃음을 터뜨릴 뻔했다. 답지 않게 귀여운 구석이 있다는 생각이 드니, 참. 원필도 이제 답 없다는 생각이 들었다.</p>
+<p class="empty">&nbsp;</p>
+<p>아주 작은 고갯짓이 이어졌다. 계속 원필을 보고 있었으니 영현은 그 미세한 움직임 하나 놓치지 않았다. 다시금 입술이 맞닿았다. 가시지 않은 술 냄새가 입술을 타고, 혀를 타고 전해졌다. 다시 시작한 입맞춤은 전과 달리 끊임없이 깊어졌다. 타고 나오는 뜨거운 숨이 취기에 의한 것인지, 키스에 의한 것인지 알 수가 없다. 분명 찬 바람이 불고 있는데 몸이 뜨거웠다. 원필이 영현의 목에 팔을 감아오니 영현이 원필을 들어 올렸다. 춥지. 와중에 영현은 그렇게 물었다. 쪽쪽, 쉴 새 없이 입 맞추면서.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>방에 들어오자마자 원필을 이불 위에 눕힌 영현은, 물어뜯듯 입술부터 턱 끝과 목울대까지 하나하나 입술을 내려갔다. 원필의 고개가 절로 올라가고 몸이 빳빳하게 굳어갔다. 옷을 끌어 올리던 손이 불쑥 동작을 멈췄다. 거친 숨소리가 오갔다. 불 하나 켜지 않은 방 안에서 영현과 원필은 서로 마주 보고 있었다. 영현은 원필의 위에서, 원필은 영현의 아래에서.</p>
+<p class="empty">&nbsp;</p>
+<p>그 어둠 속에서도 영현이 고민하는 티가 났다. 확신이 서지 않는 걸까, 아니면 하지 않아도 될 걱정을 하고 있는 걸까. 옷매무새를 정리해 주려는 영현을 잡아당겼다. 무방비 상태의 영현이 금세 끌려왔다. 원필이 먼저 입을 맞출 줄은 몰랐는지, 영현이 숨을 참는 게 느껴졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“하고 싶어요.”</p>
+<p class="empty">&nbsp;</p>
+<p>먼저 이런 말을 할 줄도 몰랐겠지.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필아.”</p>
+<p>“해요, 지금.”</p>
+<p class="empty">&nbsp;</p>
+<p>나 당신이랑 하고 싶어. 원필이 영현의 옷자락을 더듬거리며 단추를 찾아내 풀기 시작했다. 그 서툰 손짓이 도화선이라도 되었는지, 짧은 갈등을 끝낸 영현이 다시 원필의 입술을 머금었다. 갈급하게 원필의 혀를 찾아 밀고 들어왔다. 혀가 섞이며 질척거리는 소리가 어둠을 갈랐다. 멀끔했던 옷이 정신없이 구겨져 어딘가로 내팽개쳐지고, 영현의 입술과 손이 원필의 몸 여기저기를 배회했다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 원필의 사이에, 원필의 안에 자리를 잡아가는 동안 단 한 번의 거절 없이 원필은 기꺼이 그 품에 안겨 온몸으로 받아들였다.</p>
+<p>내일이 없는 사람처럼.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>* * *</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>7장. 한국</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이른 아침부터 원필이 부산스럽게 움직였다. 영현이 잔뜩 늘어져서는, 더 자자고 원필을 유혹해 왔지만, 원필은 쉽게 넘어가지 않았다. 필아, 원필아. 더 자자. 피곤하잖아. 영현이 끊임없이 이름을 불러댔으나, 원필은 굴하지 않고 옷까지 갈아입고 나타났다. 해군 정복이었다. 영현의 앞에 그렇게 입고 나온 게 본인도 머쓱했는지, 혹시 몰라서, 라는 말까지 덧붙였다. 응, 너무 잘 어울려. 그 정도의 감상문만 남긴 영현이 원필의 허리를 끌어당겼다. 지난밤의 후유증 때문에 원필의 잇새로 얕은 신음이 새어 나왔다. 뭐 좋다고 영현은 실실 웃으며 원필의 턱 끝에 입술을 갖다 댔다. 원필이 이리저리 영현을 피했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“안 돼요. 선착장 가야 해요. 브라이언도 일어나요, 이제.”</p>
+<p class="empty">&nbsp;</p>
+<p>영현을 밀어내며 탁탁, 구겨진 옷자락을 펴내는 손이 매정했다. 이럴 때는 아직 각 잡힌 해군이었다. 하릴없이 영현이 게으름을 접고 자리에서 일어났다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>슬슬 첫 배가 들어올 시간이었다. 선착장 근처에 하나둘 사람이 돌아다니기 시작했다. 이른 아침부터 장사 준비를 끝마친 포장마차 한쪽에 원필과 영현이 자리 잡았다. 이미 우동을 두 그릇 해치운 영현에 비해 원필은 우동 국물 하나 입에 대지도 않았다. 그저 턱을 괸 채 하염없이 바다만 쳐다봤다.</p>
+<p class="empty">&nbsp;</p>
+<p>“잠이라도 좀 자는 거 어때.”</p>
+<p class="empty">&nbsp;</p>
+<p>잠도 못 자게 붙잡고 있던 사람이 누군데….</p>
+<p>원필이 살짝 영현을 흘기다 고개를 저었다. 결국 보다 못한 영현이 손수 한 숟갈씩 떠 원필의 입에 넣어준 것까지가, 기다림의 모습들이었다. 마지막 배가 들어오고 포장마차 주인이 장사 끝났으니 이제 그만 죽치고 나가달라 내쫓을 때까지.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>구조선은 끝내 오지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>그다지 충격적이지는 않았다. 원필도 영현도 입 밖으로 꺼내지는 않았지만 예상하던 결과였다. 이 자리는 어쩌면 확인 사살을 당하기 위해 나온 자리였다. 원필은 덤덤하게 자리에서 일어났고, 영현은 선착장 근처 공중전화에 들렀다. 통화의 대상은 이사벨이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“오늘 못 가.”</p>
+<p class="empty">&nbsp;</p>
+<p>일방적인 통보였다.</p>
+<p class="empty">&nbsp;</p>
+<p>-“그러지 말고 그냥 데리고 오라니까!?”</p>
+<p>이사벨의 고함이 공중 전화부스 밖에 있는 원필에게까지 들렸지만, 원필은 못 들은 척 등을 지고 노을이 지는 바닷가만 바라봤다.</p>
+<p class="empty">&nbsp;</p>
+<p>공중전화를 이용하는 손님이 없어 주위가 한적했다. 지나가는 몇몇 행인들이 영현과 원필을 흘끔거리긴 했지만, 극히 소수였고 하나같이 센티넬이었다. 영현이 해무도에 오자마자 센티넬들의 목숨줄을 쥐었던 게 소문이 났는지 길게 쳐다보지 않고 빠르게 도망가듯 피해갔다. 원필은 그저 일반인인데. 이런 걸 보면 영현은 참 대단한 사람이었다. 그 대단한 사람이 돌아가지도 못하고 해무도에 발 묶인 채 통화를 하고 있었다. 원필이 작게 한숨을 쉬었다.</p>
+<p>이젠 확실히 마무리할 시간이었다. 영현에게도, 본인에게도.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>결론이 썩 좋게 끝나진 않은 모양인지 영현이 부스에서 나오자마자 시가를 입에 물었다. —불은 붙이지 않지만, 그냥 신경 쓰이는 일이 생기면 습관처럼 시가를 꺼내는 듯했다.— 아무래도 당장 해적섬으로 돌아가야 하는 상황인 모양이었다. 차라리 잘 된 걸지도 모른다. 같이 해적섬으로 돌아가자 말하는 영현에게, 원필이 고개를 가로저었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아뇨, 전 한국으로 갈게요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 해적섬에 발 묶여 한국으로 돌아오지 못하는 게 그들이 원하는 답이라면, 원필은 마냥 순순히 해적섬에 발붙이고만 있을 생각은 없었다.</p>
+<p>그게 원필이 내린 결론이었다. 내일 없이 굴던 어제의 행동들은, 구조선과 상관없이 거짓 아닌 진실이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>시가를 입에 문 영현은 답이 없다. 그저 까딱이는 시가만이 영현이 흘려듣지 않고 있음을 알리고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“브라이언은 이만 돌아가요.”</p>
+<p class="empty">&nbsp;</p>
+<p>하. 끝내 영현이 한숨을 뱉으며 시가를 내던졌다. 영현이 할 수 있는 최대한의 반항처럼 보였다. 그거 하나 던진다고 바뀔 게 없다는 걸 알면서.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“한국으로 들어가는 것만 도와줄 수 있어요? 아무리 생각해도 혼자서는 어려울 것 같아서. 미안해요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>배를 타고 국경을 다시 넘기에는 위험했다. 어떻게 한국으로 들어갈지 계속 고민해봤지만, 이쪽으로는 어쩔 수 없이 영현의 도움을 받아야 했다. 정확하게는 영현의 수하에 있는 센티넬의 능력이 필요했다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 길게 숨을 내쉬었다. 시가를 피우고 있었다면 아마 길게 담배 연기가 뿜어져 나왔을 터였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“내일 가면 안 돼?”</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 아무 말 없이 웃었다. 무언의 거절이었다. 이런 면에서는 영현도 어떻게 할 수 없을 만큼 고집쟁이였다. 차라리 센티넬이었으면 좋았을 텐데, 정말 어려웠다. 이길 수가 없다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“주오야.”</p>
+<p>“응, 캡틴.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>깜짝이야. 원필이 흠칫 어깨를 떨었다. 영현이 이름 하나 불렀을 뿐인데 순식간에 원필과 영현의 앞에 사람이 나타났다. 이터널호 소속 순간이동 센티넬 중 하나였다. 등급이 제법 높았던 것 같긴 한데… 그렇다고 해도 이름 하나 불렀다고 해적섬에서 해무도까지 올 수 있나?</p>
+<p>원필이 묻기도 전에 영현이 먼저 찔려서 해명했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“혹시 몰라서 대기시켜 뒀던 거야.”</p>
+<p>“혹시 몰라서 대기시켜 둔 사람이 더 있지는 않죠?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 대답 대신 눈을 회피했다.</p>
+<p class="empty">&nbsp;</p>
+<p>더 있구나. 생각해 보니 산자락에 홀로 멀끔하게 정리된 집도 그렇고, 새것 같던 이불이나 식기도 그렇고, 갑자기 약을 구해온 것도 그렇고. 수상한 게 한둘이 아니었다. 마냥 빈손으로 왔다고 생각했는데, 미리 해무도에 준비를 다 해두었다면….</p>
+<p>원필은 더 묻지 않기로 했다. 영현은 주오를 돌아봤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“필이 데리고 한국 좀 다녀와.”</p>
+<p class="empty">&nbsp;</p>
+<p>한국에 존재하는 순간이동 센티넬들은 대륙에서 대륙으로의 이동까진 불가했다. 제주도 가는 것조차 폭주의 위험을 무릅쓰고 가는 거라며 진저리를 치는 판에, 해적섬의 센티넬은 국경을 넘나들 수 있었다. —7년 전 해상 전투가 해적들이 많이 봐줘서 평화 협정이라도 할 수 있었다는 우스갯소리는, 가볍게 웃어넘길 말이 아닌 셈이었다.— 원필이 영현에게 도움을 받고자 한 것도 이 때문이었다. 해군이나 해경에게 걸리지 않고 가장 손쉽게 한국으로 들어가기 위해서는 배가 아니라, 순간이동을 활용해야 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>주오가 원필을 불편한 시선을 하고선 훑어봤다. 원필에 대해 썩 좋은 감정이 있어 보이지 않았다. 안 그래도 원필이 본인들을 속여 해적들 이미지도 흉흉하게 만들어놨는데, 본인들의 선장마저 해군한테 발목 잡혀 오지 않고 있다고 생각할 테니 그럴 수밖에 없었다.</p>
+<p>이런 오해를 해소하기 위해서라도 원필은 한국에 가야 했다. 여기서 영현과 함께 해적섬으로 돌아가면 영현마저 해적들에게 어떤 소리를 들을지 몰랐다. 아무리 그가 그들을 휘어잡을 수 있는 가이드여도.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“캡틴은 안 가고 이 사람만 데려다주면 되는 거야?”</p>
+<p>“그래.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>혹시 부탁할 거 있으면 주오한테 해. 영현이 원필에게 당부했다. 딱히 부탁할 게 있을지는 모르겠지만 원필도 우선 고개를 끄덕였다. 주오가 한 박자 늦게 원필에게 손을 내밀었다. 손을 잡아야 순간이동이 가능한 건가? 원필도 손을 뻗었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아, 잠깐만.”</p>
+<p class="empty">&nbsp;</p>
+<p>주오의 손을 잡기도 전에, 영현이 원필의 손을 잡아챘다. 냅다 꽉 붙잡아버리는 탓에, 원필은 왜 그러는지 물어야 했다. 못 가게 막으려는 의도는 아닌데, 영현은 좀 뭔가 마음에 안 드는 구석이 있어 보였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“제대로 잡은 적 없잖아.”</p>
+<p>“…손이요?”</p>
+<p>“그래.”</p>
+<p>“…어제 잡았던 건요?”</p>
+<p>“손 빼고 다 잡았지.”</p>
+<p class="empty">&nbsp;</p>
+<p>점점 가까이 붙어오길래 원필이 슬쩍 피했다. 바로 옆에 주오가 서 있었다. 알아차린 영현이 주오를 쏘아봤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“뭘 봐?”</p>
+<p class="empty">&nbsp;</p>
+<p>주오가 말없이 뒤를 돌았다. 눈으로는 잔뜩 욕을 하는 것 같았지만, 영현은 개의치 않고 원필의 몸 이곳저곳을 만져대기 시작했다. 허리도 만지고 팔도 만지고 어깨도 만지고 목도 만지고. 종내에는 간지럽다고 원필이 영현을 밀어냈다. 그래도 영현은 원필의 뺨을 붙잡고 놓지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“남들이 만져도 내 생각 하라고.”</p>
+<p class="empty">&nbsp;</p>
+<p>그 ‘남들’ 중 한 명인 주오가 혀를 차는 소리가 들렸다만. 주오의 눈치를 보던 원필도 조심스레 영현의 손 위에 제 손을 얹었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“왜?”</p>
+<p>“가이딩하면서도 제 생각하라고요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>과감해진 인사는 기어코 영현이 원필의 입술 위에 제 입술을 얹고 나서야 끝이 났다. 기다리다 못한 주오가 시가 한 대를 다 태웠을 즘이었다. 영현은 그 와중에 주오에게 원필의 앞에서 시가를 피우지 말라며 면박까지 줬다. 민망하게.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“다녀올게요, 브라이언.”</p>
+<p>“그래.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>갔다 오면 영현이라고 불러, 어제처럼. 당부의 인사처럼 건네는 요청에 원필이 웃었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“순간이동 하면 어디로 떨어져요?”</p>
+<p>“가고 싶은 장소 떠올리고 있으면 거기로 갈 거야. 눈 감아. 멀미 날 거야.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 조언이 이어졌다. 주오의 손을 잡은 원필이 눈을 감았다. 어떤 기척이라도 나고 순간이동이 될 줄 알았는데, 전혀 아니었다. 순식간에 몸이 뽑혀 나갈 거 같은 느낌이 들었다. 바람이 몰아치듯 온몸을 때려오는 시끄러운 소리가 들리다가 금세 조용해졌다. 체감 몇 분, 아니 몇십 초도 흐르지 않았다. 이제 눈을 떠도 되는 걸까.</p>
+<p class="empty">&nbsp;</p>
+<p>한쪽 눈을 천천히 뜨던 원필이 이내 두 눈을 깜빡였다. 익숙한 풍경이 시야에 들어왔다. 두 달 전에 급하게 짐을 챙기느라 어질러뒀던 옷가지들과 채 정리하지 못한 이부자리가 눈에 들어왔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>비로소 돌아온 집이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>* * *</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><strong>마지막.</strong></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>해군이 해적에게 납치됐다.</p>
+<p class="empty">&nbsp;</p>
+<p>이 한 문장의 파급력은 상상 이상이었다. 최초 뉴스가 나간 지 시간이 제법 흘렀는데도, 뉴스 하나로 며칠간 온 나라가 떠들썩거렸다. 잊혔던 28년 전의 유괴 사건도 한 번씩 입방아에 오르내릴 정도였다. 그만큼 여러 의견이 오갔다. 해군은 뭐 하고 있냐는 여론과, 해적들이 먼저 평화 협상을 무너뜨린 거 아니냐는 여론이 수면 위로 부상했다. 대치하는 여론들 사이에서 대다수의 국민들은 해적들이 본성을 숨기지 못한다는 부정적인 시선을 갖고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>해적에게 납치된 ‘김 중위’와 같은 부대에 근무하던 장 대위는 직속상관과 함께 또 한 번의 인터뷰를 위해 방송국에 와 있었다. 해군 정복을 그 며칠 사이에 몇 번을 입고 있는 건지 모를 정도였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“김 중위 원래 복귀 일자가 언제라고 했지?”</p>
+<p>“2주 전이었습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>음. 상관이 마음에 든다는 듯 미소 지었다. 원필이 해적섬에 있든 해무도에 있든 그건 이제 중요하지 않았다. 이 정도 가짜 뉴스라면 원필이 해적들 사이에서 튀어나오긴 힘들 거란 예측이었다. 어쩌면 목숨이 위험할지도 모르고.</p>
+<p class="empty">&nbsp;</p>
+<p>혹시 몰라 원필의 동태를 파악하기 위해 해적섬과 해무도에 각각 잠복 센티넬들을 보내봤던 해군이었다. 절반의 성공이었다. 해적섬으로 보낸 인원은 잠복에 실패했고, —밀항선 탑승부터 실패했다. 밀항선 선장이 돈을 건네받자마자 당장 꺼지라며 소리를 질러댔다.— 해무도에 보냈던 인원들만 잠복에 성공했다. 그들은 무사히 다시 돌아와 해무도에서 김 중위를 보지 못했다고 전달했다. 원필의 사진까지 보여주며 확인해 봤으나 모두 고개를 가로저었다고 했다. 좀 찝찝한 면은 있었다. 그들이 당초 예상했던 일자보다 빠르게 돌아왔다는 것과, 그들이 마주쳤다는 이들 중 제대로 기억하는 사람이 마지막에 만났다던 머리를 금빛과 갈색빛으로 염색한 여자뿐이라는 것.</p>
+<p class="empty">&nbsp;</p>
+<p>그러나 더 시간을 미룰 수 없었다. 이제 곧 선거철이었다. 상부에는 원필이 해적섬에 나오지 못하고 묶여있는 것으로 보고가 끝났다. 그때부터 가짜 뉴스는 좀 더 구체적인 내용의 살이 붙어 돌기 시작했다. 모두 선거를 위한 발판이었다. 선거철이 지난 이후에 원필이 돌아오는 것도 상관없었다. 그때쯤이면 어차피 관심도 꺼질 게 분명했다. 이 모든 게 오로지 선거를 위해, 여론 조성을 위해서였다.</p>
+<p class="empty">&nbsp;</p>
+<p>오늘은 김 중위 납치 사건에 대한 후속 보도가 있는 날로, 짜깁기한 영상을 자료화면으로 제출하고 평소에 해적이 은연중에 해군에게 어떤 행동을 해왔는지 준비된 대로만 잘 말하기만 하면 됐다. 김 중위는 미끼일 뿐이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“또 뵙네요. 저녁은 드셨어요?”</p>
+<p>“아직입니다. 끝나고 같이 드시죠.”</p>
+<p class="empty">&nbsp;</p>
+<p>아무것도 모른 채 시청률 고공행진을 찍고 있다는 사실 하나만으로 방송국 스태프들도 분위기가 좋았다. 최초 납치 뉴스를 보도했던 방송사는, 최고 시청률을 기록하며 포상 이야기도 나오고 있으니까 그럴 수밖에. 그들도 참 속물적인 인간들이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“두 달 전에 김 중위 위치 기록이 해적섬에서 잡혔고 이후 갑자기 통신이 끊겼습니다. 연락이 되지 않아 해군에서는 김 중위가 해적에게 납치되었다는 가설에 무게를 두고 조사를 시작했습니다. 평화 협정 이후 경계가 강화되어 해적섬에 쉽게 들어갈 수 없었지만….”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>여느 때와 같이 인터뷰는 수월하게 흘러가고 있었다. 인터뷰 중간 스튜디오 밖에서 스태프들이 갑자기 어수선하게 움직이기 전까지는 그랬다.</p>
+<p class="empty">&nbsp;</p>
+<p>마주 보고 앉아있던 뉴스 앵커가 인이어에 손을 올려 스태프의 지시 사항을 전해 듣기 시작했다. 질문이 이상했던 것도 아니고 답변에 오류가 있는 것도 아니었다. 완벽히 외운 대본으로 한 글자도 틀림없이 발언을 끝냈으나, 여전히 분위기는 묘했다. 인이어에 손을 뗀 앵커는 카메라 정면으로 몸을 돌렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“시청자 여러분 저희 뉴스, 스포츠 소식 먼저 이어드리고 잠시 후에 다시 돌아오겠습니다. 많은 양해 바랍니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>짜놓았던 대본이 올라가던 프롬프트도 멈추고, 장 대위와 상관을 찍던 카메라들에도 빨간 불이 사라졌다. 생방송 화면은 이제 스포츠 뉴스로 넘어가 있었다. 이유 모를 적막이 내려앉은 스튜디오에 메인 PD가 헐레벌떡 들어왔다. 상관이 무슨 일인지 묻기도 전에 사색이 된 PD가 먼저 자리에서 내쫓듯 일으켜 세웠다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이거 지금 못 나가요. 빨리 가세요.”</p>
+<p>“아니, 무슨 일인지 얘기는 해줘야 할 것 아닙니까. 저희 군에서 지금….”</p>
+<p>“저희 군이고 뭐고 지금 그 군에서 납치당했다던 중위가 경쟁사 뉴스에 나오고 있으니까, 빨리 가시라고요!”</p>
+<p class="empty">&nbsp;</p>
+<p>등골이 서늘해졌다. 일반적으로 해적섬에서 한국으로 돌아오기 위해선 해무도를 거쳐야 했다. 원필은 뉴스가 나간 이후 해무도에 들어오지 않았다고 했다. 해적섬에서 헤엄을 쳐서 한국으로 돌아왔을 리도 없는데.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“어떻게….”</p>
+<p>“어떻게는 저희도 모르겠고. 방송사고에요. 더 못 나가요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>저희도 어떻게 수습할지 대책 마련부터 해야 하니까 일단 나가세요. PD에 등 떠밀려 스튜디오에서 쫓겨난 장 대위와 상관을 맞이해주는 사람은 아무도 없었다. 대기실 복도가 불안하리만치 고요했다. 급하게 대기실에 들어서자마자 리모컨을 들었다. 지금 동 시간대에 뉴스를 하는 방송사는 한 곳뿐이었다. Y 방송사. 채널을 돌리자마자 화면 한가득 원필이 나타났다.</p>
+<p class="empty">&nbsp;</p>
+<p>…망했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해적섬에 묶여있을 거라지 않았나!? 장은철 대위, 이게 어떻게 된 일이지?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그간의 여론전이 한순간에 무너져 내리는 순간이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>Y 방송사 뉴스는 한참 진행 중이었다. 사전 예고도 없이 시작된 특집 인터뷰였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“살아 돌아오신 게 아니라고 말씀을 하셨는데요.”</p>
+<p>“그렇습니다. 저는 상관에게 명령을 받아 작전 수행을 위해 두 달 전 해적섬에 직접 들어갔습니다. 장소와 방법은 모두 해군에게 제공받았습니다.”</p>
+<p>“군에서 발표한 내용과는 사실이 다른데요. 어떤 명령을 받으신 건지 알 수 있을까요?”</p>
+<p>“군 내부 명령에 따른 작전이라 정확한 내용은 언급할 수 없습니다. 다만 저는 해당 명령에 따라 해적섬에 들어갔으며, 해당 작전이 끝나면 군에서 구조선을 보내주기로 되어있었습니다. 약속된 기한에 구조선은 오지 않았습니다.”</p>
+<p>“해적섬 내부에서 군과 따로 연락해보지 않으셨던 걸까요?”</p>
+<p>“처음 해적섬에 도착해 도착 보고를 했었습니다. 당시 해적들에게 들킬 위험이 있으니 보고는 생략하고 연락을 자제하라는 답장을 받았습니다. 납치 뉴스가 나간 이후 처음 전화를 시도해보려 했으나 통신이 끊겨있었습니다.”</p>
+<p>“해적들에게 잡혀있던 적도 없으신 거고요.”</p>
+<p>“그렇습니다.”</p>
+<p>“군에서 일방적으로 회피했다고 해석이 되는데요. 군에서는 납치 뉴스 이후에 지속해서 김 중위가 연락 두절 상태라는 인터뷰를 해왔습니다. 저희가 보기에는 해적에 대한 부정적인 여론을 확산시키고자 한 것으로 해석되는데요. 중위님 생각은 어떠실까요.”</p>
+<p>“제가 아직은 해군 신분이기 때문에 그 부분에 대해 언급하기 조심스럽습니다.”</p>
+<p>“그렇군요. 그럼 이후 해군 생활을 계속하시는 겁니까?”</p>
+<p>“제 의견과는 상관없이 해군에서 저를 받아들여 주시지 않을 것으로 생각되긴 합니다만, 저 역시 전역 지원서를 보내둔 상태입니다. 빠른 행정 처리가 이루어지길 바랍니다.”</p>
+<p>“그러면 이후에 한국에서 어떻게 지내실 예정일까요.”</p>
+<p>“언급할 수 없을 것 같습니다. 죄송합니다.”</p>
+<p>“아, 아무래도 그러시겠죠. 충분히 이해합니다. 그럼 마지막으로 하실 말씀 있으실까요.”</p>
+<p>“우선 급하게 시간을 빼서 인터뷰 자리를 만들어주셔서 감사합니다. 항간에서는 이번 납치 뉴스와 함께 28년 전에 유괴 사건을 함께 이야기하고 계신 걸로 압니다. 지금도 그때도 정확한 진상 조사 없이 해적을 범인으로 확정 짓고 있습니다.”</p>
+<p>“유괴 사건과 이번 납치 뉴스들이 연관 있다는 말씀일까요?”</p>
+<p>“제 소견은 그렇습니다.”</p>
+<p>“그렇게 생각하신 이유가 있을까요?”</p>
+<p>“왜냐하면….”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>해군 정복을 입고 인터뷰를 이어가던 원필이 잠깐 뜸을 들였다. 이번에도 언급하기 어려운가 보군. PD가 넘기라며 제스처를 취했다. 굳이 이유까지 언급하지 않아도 이 정도면 충분히 화두로 떠오를 게 분명했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“말씀하시기 곤란하시면….”</p>
+<p>“유괴가 아니라 그렇습니다.”</p>
+<p>“예?”</p>
+<p>“제가 그때 유괴되었다던 강 군과 해적섬에서 같이 지냈습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>생방송으로 진행된 만큼 뉴스 인터뷰는 곧장 온 국민을 들끓게 했다. TV, 라디오뿐만 아니라 인터넷으로도 생중계됐던 터라 모든 국민들이 어디서든 볼 수 있었다. 해군의 편으로 기울어져 있던 여론이 순식간에 뒤집혔다. 대국민 사기극이라느니, 국방부 나오라느니, 해명하라느니. 한 번 불붙은 분노는 쉽게 사그라지지 않고 국민 청원으로까지 이어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>그런 상황 속에서 강석태 대통령 후보가 국방부 청사를 급하게 방문했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“후보님, 이렇게 막 찾아오시면….”</p>
+<p>“지금 가만히 있게 생겼어!?”</p>
+<p class="empty">&nbsp;</p>
+<p>막무가내로 밀고 들어온 강석태를 막을 수 있는 사람이 없었다. 전 국방부 장관이라는 이유와 과거 해군 제독이었다는 이유에서였다. 아이가 해적에 유괴된 사건 하나로 28년 전 중장년층의 동정표를 받으며 커온 정치 세력이자 반 해적파의 대표적인 정치인. 그게 바로 강석태였다. 군 내부에서는 모두가 존경하는 인물 중 하나였고, 외부에서는 해적들에게 받은 아픔을 국민을 위해 털어내는 인물이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>오늘 원필의 뉴스가 방송을 타기 전까지는 그랬다.</p>
+<p class="empty">&nbsp;</p>
+<p>국방부도, 군도 모두 술렁이고 있었다. 조작된 납치 사건의 진실을 알고 있던 건 국방부 장관을 포함한 소수의 군 고위 간부들 정도뿐이었다. 다들 진짜로 원필이 납치된 줄로만 알았다. 그런데 웬걸, 살아 숨 쉬는 김원필 중위가 사실은 다 거짓이었다고 인터뷰를 했다. 바로 오늘, 떡하니 동 시간대 다른 뉴스를 통해서.</p>
+<p class="empty">&nbsp;</p>
+<p>국방부 장관이 다들 입 조심하라는 경고를 남기고 급하게 문을 닫았다. 이대로 강석태 후보가 안 가고 배 째라 버티고 있으면 오히려 밖에 세워두는 게 더 독이었다.</p>
+<p>국방부는 반 해적파가 우세해야 권력이 더 세진다는 이유에서 물밑에서 강석태와 손을 잡고 움직이고 있었다. 국방부 장관은 연임을 위해 강석태를 지지하며 힘을 실어주고 있었다. 한배를 타고 대선까지 무난히 흘러가리라 예상했는데, 역공을 당한 배는 침몰할 위기였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해군 기지에서는 연락 왔어?”</p>
+<p>“아직 안 왔습니다.”</p>
+<p class="empty">&nbsp;</p>
+<p>강석태가 한심하다는 듯 헛웃음을 쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“해적섬에서 나오지 못했다 거짓으로 보고를 해놓고?”</p>
+<p>“장 대위는 따로 징계 처분을….”</p>
+<p>“이미 일을 다 망쳤잖아! 차라리 진짜로 죽여놓든 했어야지!”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>국방부 장관이 입을 떡 벌렸다. 장관도 물론 이렇게 상황이 악화될 줄은 몰랐지만, 누굴 죽여서 해결한다는 건 상상도 하지 못했다.</p>
+<p>그럼 28년 전 유괴 사건도 만약 잘못 흘러갔다면 아기를 죽이려고 했던 걸까. 장관이 슬금슬금 뒷걸음질 쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“후보님 아무리 그래도….”</p>
+<p>“아무리 그래도는 무슨!”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강석태가 책상을 내리쳤다. 쾅, 하고 울리는 소리가 컸다. 분을 못 이기겠는지 씩씩거리며 허리춤에 손을 얹은 채 어슬렁거렸다. 갖은 욕지거리를 중얼거리더니 누군가와 통화를 이어갔다.</p>
+<p>일단 전면 부인해. 아들놈에 대한 자료 있으면 지금이라도 다 없애.</p>
+<p>강석태는 국방부 장관의 존재는 잊었는지 거침없이 지시했다. 국방부 장관은 머리를 빠르게 굴렸다. 다 가라앉아가는 배 위에 있더라도 살길 하나 정도는 만들어둬야 했다. 마침 사무실 책상 위에 녹음기능이 있는 볼펜이 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>강석태는 몇 분간의 통화가 끝난 이후에야 다시 고개를 치켜들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그래서 이, 이, 김원필이라는 놈은 지금 어딨어!?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>─────</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>강석태가 애타게 찾는 김원필은 서울에 없다.</p>
+<p class="empty">&nbsp;</p>
+<p>애초부터 원필의 뉴스 인터뷰는 서울에서 진행되지 않았다. 대전에 있는 지역국 스튜디오에서 화면을 받아 서울 방송국에서 전국 단위로 송출했을 뿐이었다. 방송 직후에 있을 후폭풍을 예상해 계획했던 일이었다. 원필이 지방에서 인터뷰를 하게 되었으니, 메인뉴스 앵커와 PD 모두 졸지에 지방 출장을 오게 됐다.</p>
+<p>그런데도 PD는 귀찮은 내색은커녕 기차역까지 원필을 태워다 주고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“안 데려다주셔도 되는데….”</p>
+<p>“에이, 이 정도는. 어차피 서울 올라가는 길이기도 한데요. 핸드폰도 없으시잖아요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 한국으로 돌아오고 나서 방송사와 연락이 닿았던 그때부터 준비했던 인터뷰였고, 준비했던 만큼의 효과가 톡톡히 보이자 PD도 상당히 기분이 좋아 보였다. —이런 고발 뉴스는 드라마에서나 보는 줄 알았다며 벅차올랐던 그 표정을 원필은 아직도 기억한다.— 오실 때도 모셔올 걸 그랬다는 말에 원필이 손사래를 쳤다. 지금 데려다주는 것만으로도 충분히 고마웠다.</p>
+<p>PD의 말마따나 원필은 지금 핸드폰도 없었고, 현금만 가지고 움직이고 있었다. 어떤 일이 일어날지 모르니까. 그래서 지금도 동선을 여러 방식으로 쪼개놨다. 기차를 타고 다른 지역으로 이동해 그곳 항구에서 심야 여객선을 탈 예정이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“본사 앞에 기자들 벌써 쫙 깔렸대요. 근데 거기 군인들도 왔나 보더라고요.”</p>
+<p class="empty">&nbsp;</p>
+<p>다들 중위님 찾느라고 난리도 아니네요. 잘 숨어 계셔야겠어요.</p>
+<p>PD가 농담처럼 한 말에 원필이 어색하게 웃었다. PD는 어떨지 몰라도, 원필은 군에서도 본인을 찾기 위해 나설 것까지 예측했다. 원필이 굳이 전국 지방국 중에서 대전을 택한 것도 그 때문이었다. 대전에는 해군 기지가 없었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>CCTV도 열람할지 모른다는 생각에 뒷자리에서 옷을 갈아입었다. 남의 차 안에서 민망한 짓이란 걸 알지만 어쩔 수 없었다. PD가 협조적이라 다행이었다. 그는 원필에게 마스크를 건네기까지 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이 해군 옷은 버려드릴까요?”</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 고민하다가 고개를 끄덕였다. 더는 정복을 입을 일이 없을 거란 걸 누구보다 잘 알았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“조심히 가시고요. 혹시 또 제보하실 거 있으시면 명함 드린 쪽으로 연락하세요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이제 한국에서 더 연락할 일이 있을지는 모르겠지만, 원필은 감사의 인사를 전하고 PD와 헤어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p>퇴근 시간이 다 지난 평일 저녁의 기차역은 사람이 크게 많지 않았다. 그 짧은 시간에 큰 화제가 되긴 한 모양인지, 대합실에 비치된 모든 TV에 원필의 인터뷰가 나오고 있었다. 원필이 걸음을 서둘렀다. 모여서 TV를 보는 몇몇 직장인 무리가 있긴 했지만, 다행히 원필을 알아차리지는 못했다. 원필은 기차에 탑승하고 나서야 겨우 한시름 덜 수 있었다.</p>
+<p>도착역까지 기차로 23분, 이후 10분 남짓을 걸어 항구에 도착해 다시 배를 타고 6시간 동안 이동해야 했다. 마치 빙빙 돌아서 해적섬에 도착했던 때 같았다. 물론 그때가 더 고역이긴 했다. 이 정도면 멀미도 없고 괜찮은 편이었다. 영현이 챙겨줬던 멀미약을 가져오긴 했지만, 배를 탈 때까지 주머니에 그대로 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>심야의 배는 이용객이 별로 없었고, 다들 각자 할 일 하기 바빴다. 표를 발권해주던 직원 역시 원필의 얼굴은 쳐다보지도 않은 채 거스름돈을 건넸었다. 마지막으로 배로 갈아탄 원필이 자리를 찾아 앉았다. 보조 조명만 약하게 켜진 배가 천천히 출항했다. 주위를 둘러보던 원필이 슬쩍 후드를 내렸다. 꽁꽁 싸매고 여기까지 왔더니, 바람 한 점 불 리 없는 배 안 공기가 시원하게 느껴질 정도였다. 고요한 정적이 가라앉은 배 안에서 서서히 경계를 푼 원필이 창밖으로 시선을 돌렸다. 밤하늘과 밤바다가 가득 찼다.</p>
+<p class="empty">&nbsp;</p>
+<p>이제 이 짧다면 짧은 긴 하루를 마무리해야 했다.</p>
+<p>방송국과 접촉하는 데에 시간이 좀 걸리면서 지체되긴 했지만, 어쨌든 원필이 할 수 있는 선에서 정리할 수 있는 건 이제 다 끝냈다. 영현과는 한국에 오고 나서 한 번도 연락하지 않았다. 굳이 이 상황에 영현과 연락했다가는 나중에 불똥이 튈 수 있었다. 원필이 해적섬에 간 걸로도 조작하는 판국에, 영현과 연락이라도 했다가는 어떤 트집이 잡힐지 몰랐다. 영현에게 미리 언질을 주지 못하고 인터뷰 중에 유괴 사건을 언급한 건 좀 마음에 걸리지만….</p>
+<p>혹시 만나면 화를 내려나. 상상이 가질 않았다. 이제 영현은 원필이 뭘 해도 화를 낼 것 같진 않았다. 조용히 시가를 입에 물면 모를까.</p>
+<p class="empty">&nbsp;</p>
+<p>피식 웃으며 원필이 등받이에 머리를 기댔다. 며칠 제대로 잠을 못 잤더니 조금만 눈을 붙일 생각이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…그런 생각으로 그냥 눈 한 번 깜빡인 것 같은데.</p>
+<p>정신을 차리니 어느새 내릴 항구가 가까워지고 있었다. 내릴 준비를 하는 사람들 틈에서 원필도 서둘러 후드를 다시 뒤집어썼다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>새벽 5시가 넘은 부산항 여객터미널.</p>
+<p>캐리어를 끌고 내리는 사람도 있었고, 출장으로 온 건지 서류 가방을 멘 사람도 있었다. 원필처럼 큰 짐 없이 내리는 사람은 흔치 않았다. 그래서일까, 하선하면서 사람들이 한 번씩 훑어보는 느낌에 원필은 제 옷차림을 다시 점검해야 했다. 여기서 들키면 말짱 도루묵이었다. 정차된 택시에 빠르게 올라탔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“공동어시장이요.”</p>
+<p>“거긴 가까워서 안 가요.”</p>
+<p>“더블로 드릴게요.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>쯧. 혀를 차던 택시 기사가 결국 시동을 걸었다. 감사합니다. 원필의 감사 인사에는 대꾸도 하지 않았으나, 원필은 그걸로도 충분했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>택시 안에서는 라디오가 흘러나오고 있었다. 잔잔한 팝송이 흘러나오고, 새벽 라디오 특유의 평론가 토크 코너가 이어졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><em>- 소위 ‘김 중위 납치 사건’이 28년 전 유괴 사건과 맞닿아 있다는 의혹에 무게를 싣고 두 사건 모두 전면 재조사에 착수할 것으로 보이는데요.</em></p>
+<p><em>- 어제저녁 김원필 중위가 직접 나왔던 생방송 인터뷰가 파급력이 컸죠.</em></p>
+<p><em>- 그럴 수밖에 없죠. 누가 28년 전 사건과 엮여 있다는 말에 관심을 안 두겠습니까? 그 유괴 사건 모르는 사람이 없죠.</em></p>
+<p><em>-  두 사건에 공통으로 연루되어 있다고 볼 수 있는 인물이 한 명으로 추려져 있으니까요.</em></p>
+<p><em>- 예, 강석태 후보죠. 현재 강 후보 측은 명백한 오해라며 논란에 대해 전면 부인했고, 소속 정당인 늘바른나라당에서는 투명한 검증을 위해 공개 청문회를 개최하겠다고 발표한 상황입니다.</em></p>
+<p><em>- 아직까지 강석태 후보를 믿고 있는 걸까요?</em></p>
+<p><em>- 선거가 얼마 남지 않은 상황에서 후보를 교체할 수 없으니까 눈 가리고 아웅 하는 식이죠. 강석태 후보 지지율이 좀 높았습니까?</em></p>
+<p><em>- 그렇죠. 반 해적파 세력의 지지율은 다 강석태 후보 쪽에서 흡수했으니까요.</em></p>
+<p><em>- 인터뷰가 나간 직후 방송국 앞에서 기자들이 군을 마주쳤다는 목격담도 퍼지기 시작해서 좋은 결과는 기대하기 힘들 것 같긴 합니다. </em></p>
+<p><em>- 김원필 중위를 잡기 위해서 군이 직접 나선 걸까요?</em></p>
+<p><em>- 그게 아니라면 사실 군에서 나설 일이 없죠. 그럼 이제 이 군대를 누가 움직였느냐, 하는 책임론에서 국방부 역시 논란을 피해 가긴 어려워 보이고요. 이한수 국방부 장관이 제일 먼저 소환될 것으로 보이는데</em><em>…</em><em>.</em></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>라디오를 듣던 원필이 괜히 마스크를 더 끌어 올렸다. 혹시나 택시 기사가 이대로 해군 기지로 가는 건 아닐까 하는 걱정도 있었지만, 정작 택시 기사는 차를 세우자마자 원필을 룸미러로 쳐다보며 5만 원을 부를 뿐이었다. 더블도 아니고 더더블 정도는 되는 요금이었지만, 크게 중요하지 않아서 원필은 빠르게 5만원권 한 장을 내밀고 택시에서 내렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>택시는 빠르게 다음 손님을 찾기 위해 떠나갔고, 왁자지껄 시끄러운 소리가 곧 원필의 귓가에 꽂혔다.</p>
+<p class="empty">&nbsp;</p>
+<p>한창 경매 준비 중인 공동어시장에는 사람들이 바글바글했다. 누가 알아보기라도 할까 긴장한 원필이 무색하게 신경 쓰는 사람 하나 없었다. 원필과 어깨를 부딪혀도 잘 좀 보고 다니라는 말만 하고 지나갔다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 생선 비린내가 진동하는 위판장과 경매장을 지나 홀로 뒤편으로 향했다.</p>
+<p>영현이 흘리듯 말했던 ‘이터널호 선장의 한국 아지트’. 그곳이 원필이 가는 곳이었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“부산항과 감천항 사이에 있는 공동어시장 뒷골목 2층짜리 상가 건물에 있는 202호 식당이 이터널호 선장의 한국 아지트야.”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>받아적었던 수첩 종이는 부산까지 오면서 꽉 쥐고 있던 탓에 너덜너덜해져 있었다. 혹시 영현이 거짓으로 알려준 정보였다면 어쩌지 싶었는데, 원필은 얼마 지나지 않아 걸음을 멈췄다. 빛바랜 낡은 회색 상가 건물 입구에 보일 듯 말 듯 희미하게 분필로 그림이 그려져 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>전문가의 솜씨는 아닌 듯 어설프게 그려진 십자 모양 —아마도 나침반일— 사이에는 태양이 있었다. 부산까지 오는 동안 나름 침착했다고 생각했는데 순식간에 가슴이 요동치기 시작했다. 한 걸음 한 걸음, 그러나 빠르게 걸음을 옮겼다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>상가는 전체적으로 조용했다. 식당들이 모여있는 2층이라고 크게 다르진 않았다. 몇몇 이른 아침을 해결하려는 사람들을 제외하면 건물 내에 사람 자체가 그렇게 많지 않았다.</p>
+<p>원필은 그 속에서 어렵지 않게 202호 식당을 찾을 수 있었다. 떡하니 간판부터 ‘202호 식당’이었다. 귀찮았는지 무성의하게 지어둔 식당 이름이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>「아침 식사 됩니다.」</p>
+<p>입구에 붙어있는 안내문이 무색하게 식당 안은 한산했다. 경매 시간이니 응당 그렇겠지만, 문제는 사람이 없어도 너무 없어 보인다는 점이었다. 영현처럼 보이는 사람은 고사하고 가게 안에는 고작해야 가게 주인처럼 보이는 직원 한 명 있는 정도였다. 원필이 해적섬에서 봐왔던 얼굴도 아니었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>…여기가 진짜 아지트라고? 잘못 찾아온 게 아니라?</p>
+<p>원필이 입구 앞을 기웃대며 간판을 한 번, 가게 안을 한 번 번갈아 쳐다봤으나 아무리 둘러봐도 이곳이 아니면 다른 곳이 202호 식당일 리 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p>역시 영현이 장난을 쳤던 걸까. 어떡하지. 지금이라도 해적섬에 갈 밀항선을 수소문해보는 게….</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 갈팡질팡하는 사이 딸랑, 소리를 내며 가게 문이 열렸다. 파리만 날리는 식당 한가운데 앞치마를 두른 채 앉아있던 직원이었다. 직원은 문을 열어둔 채 원필에게 들어오라는 듯 길을 터주었다. 아무 말 없이 원필을 빤히 쳐다보면서.</p>
+<p>식당 앞까지 와서 먼저 서성이고 있었으면서, 직원이 친히 문까지 열어주고 기다리는데 무시할 수도 없고. 너무 대책 없이 왔다는 생각에 일 보 후퇴하려던 원필은 후퇴가 아니라 그대로 직진하게 됐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>밖에서 보던 대로 손님 하나 없었다. 아지트라기에는 식당이었고, 식당이라기엔 망하기 일보 직전 같았다. 가게 안을 둘러보던 원필에게 직원이 메뉴판을 툭, 건네고 갔다. 주문이나 빨리하라는 재촉 같아서, 원필은 우선 직원이 건넨 메뉴판을 펼쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>알밥, 알탕, 해물탕, 해물라면….</p>
+<p class="empty">&nbsp;</p>
+<p>메뉴는 다양했는데, 딱히 먹고 싶은 메뉴는 보이지 않았다. 아무거나 시키고 대충 먹고 빨리 나가자. 가장 빨리 나올만한 메뉴를 찾기 위해 성의 없이 메뉴판을 훑어보던 중에 옆자리에 사람이 앉는 인기척이 들렸다. 그래도 손님이 오긴 하나 보네. 원필이 슬쩍 옆자리를 살폈다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“뭐 먹고 싶은 거 있어?”</p>
+<p class="empty">&nbsp;</p>
+<p>쿵.</p>
+<p>심장이 내려앉았다. 숨 쉬는 법을 까먹은 사람처럼 그대로 얼어붙어 버렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“여긴 그냥 아무 직원 꽂아둔 데라 맛은 보장 못 해.”</p>
+<p class="empty">&nbsp;</p>
+<p>기분 좋은 중저음의 목소리.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“우리 섬에 맛있게 하는 곳이 있는데….”</p>
+<p class="empty">&nbsp;</p>
+<p>퍽 애정이 가득한 눈을 하고선 입꼬리를 올려 웃고 있는 사람.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이번엔 같이 갈 거야?”</p>
+<p class="empty">&nbsp;</p>
+<p>영현이다.</p>
+<p>정말로 영현이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>눈만 깜빡이며 숨도 쉬지 못하고 멈춰있던 원필이 팔을 벌려 무작정 영현을 껴안았다.</p>
+<p>영현이 형-. 전혀 예상치 못한 말을 들은 사람처럼 눈이 동그랗게 커졌던 영현이 곧 원필의 머리를 쓰다듬었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>보고 싶었어. 진짜로 납치해 와야 하나 고민할 정도로.</p>
+<p>납치하지 말고 같이 가면 되잖아. 나 이제 해군도 아니에요.</p>
+<p>이제 해적섬 들어가면 다시 돌아오지 못할 텐데.</p>
+<p>상관없어요. 나도 해적 하지, 뭐.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 영현의 품 안을 더 파고들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>근데 나 아무 능력도 없는데 해도 돼요?</p>
+<p>왜 없어. 선장이 네 손에 있는데.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>누가 먼저일지 모를 가벼운 웃음이 새어 나왔다. 창밖으로 아침 햇살을 머금은 푸른 바다가 환영한다는 듯 너울거렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>푸른 바다의 이방인. fin.</p>
+<p class="empty">&nbsp;</p>
+
+</div>
+<!-- 본문 끝 -->
+
+<!-- 하단 버튼 -->
+<div class="btn-wrap">
+  <a class="btn" href="/fic/">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
+    목록으로
+  </a>
+  <a class="btn" href="https://forms.gle/eaJu5Zz7BGjGH1bR9" target="_blank">
+    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    후기쓰기
+  </a>
+</div>
+
+<div class="footer">© 2026 @worldbyyp. All Rights Reserved.</div>
+
+<!-- 설정 패널 -->
+<div id="settings-wrap">
+  <button id="gear-btn" onclick="toggleSettings()">⚙</button>
+  <div id="settings-panel">
+    <div class="panel-row">
+      <span class="panel-label">글씨</span>
+      <button class="ctrl-btn font-sm" onclick="changeFontSize(-1)">－</button>
+      <button class="ctrl-btn font-md" onclick="changeFontSize(0)">가</button>
+      <button class="ctrl-btn font-lg" onclick="changeFontSize(1)">＋</button>
+    </div>
+    <div class="panel-row">
+      <button class="ctrl-btn mode-btn" id="modeBtn" onclick="toggleMode()">🌙 다크모드</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOP 버튼 -->
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
+
+<script>
+  // 우클릭/드래그 방지
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, true);
+  document.addEventListener('selectstart', function(e){ e.preventDefault(); return false; }, true);
+  document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; }, true);
+
+  // 진행바 + TOP 버튼
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (scrollTop / docHeight * 100) + '%';
+    var btn = document.getElementById('top-btn');
+    if (scrollTop > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // 설정 패널 토글
+  function toggleSettings() {
+    document.getElementById('settings-panel').classList.toggle('open');
+  }
+  // 패널 외부 클릭시 닫기
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('settings-wrap');
+    if (!wrap.contains(e.target)) {
+      document.getElementById('settings-panel').classList.remove('open');
+    }
+  });
+
+  // 폰트 크기 (본문만, 제목 제외)
+  var fontSizes = [14, 16, 18];
+  var fontIdx = 1;
+  function changeFontSize(dir) {
+    if (dir === 0) { fontIdx = 1; }
+    else { fontIdx = Math.max(0, Math.min(2, fontIdx + dir)); }
+    document.querySelector('.content').style.fontSize = fontSizes[fontIdx] + 'px';
+  }
+
+  // 다크/라이트 모드
+  function toggleMode() {
+    document.body.classList.toggle('dark-mode');
+    document.getElementById('modeBtn').textContent =
+      document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
+  }
+
+
+</script>
+</body>
+</html>
