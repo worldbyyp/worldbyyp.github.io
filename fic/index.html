@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIC — YOUNGPIL Webzine : 世界2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box;
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default;
+    }
+    body {
+      background: #0b0b14;
+      color: #ffffff;
+      font-family: 'Nanum Gothic', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── 상단 네비 ── */
+    .nav-wrap {
+      position: relative;
+      display: block;
+      width: 100%;
+      line-height: 0;
+    }
+    .nav-wrap img { display: block; width: 100%; height: auto; pointer-events: none; }
+    .nav-wrap img.base { position: relative; }
+    .nav-wrap img.hover-img {
+      position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.1s;
+    }
+    .zone {
+      position: absolute; z-index: 10; text-decoration: none;
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
+    }
+    .zone-home   { left: 0%;  top: 0%; width: 13%; height: 100%; }
+    .zone-fic    { left: 76%; top: 0%; width: 11%; height: 100%; }
+    .zone-art    { left: 87%; top: 0%; width: 13%; height: 70%; }
+    .zone-behind { left: 87%; top: 50%; width: 13%; height: 50%; }
+
+    /* ── 본문 ── */
+    .page-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+    .page-title {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 6px;
+      color: #444444;
+      margin-bottom: 48px;
+      text-transform: uppercase;
+    }
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: #444444;
+      text-align: center;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid #1e1e2a;
+      margin: 36px auto;
+      width: 60%;
+    }
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ── 카드 ── */
+    .card {
+      position: relative;
+      width: 100%;
+      display: block;
+      text-decoration: none;
+      overflow: hidden;
+      border-radius: 6px;
+      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
+    }
+    .card img.bg {
+      width: 100%; height: auto; display: block;
+      transition: filter 0.35s;
+    }
+    .card:hover img.bg { filter: brightness(0.5); }
+    .inner {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      padding: 9% 30% 8% 22%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6%;
+    }
+    .title {
+      font-size: clamp(10px, 4.5vw, 32px);
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+      word-break: keep-all;
+    }
+    .author {
+      font-size: clamp(8px, 2.5vw, 18px);
+      color: #888888;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+    .tags {
+      position: absolute;
+      top: 25%; right: 10%;
+      display: flex;
+      flex-direction: row;
+      gap: 1vw;
+      align-items: center;
+    }
+    .tag {
+      font-size: clamp(7px, 2vw, 14px);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 6px;
+      padding: 0.3vw 1vw;
+      background: rgba(0,0,0,0.35);
+      white-space: nowrap;
+      font-family: 'Nanum Gothic', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 네비 -->
+  <div class="nav-wrap">
+    <img class="base" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-basic_vnsvwz.png" alt="메뉴">
+    <img class="hover-img" id="imgHome"   src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-home_lm2jsl.png"   alt="">
+    <img class="hover-img" id="imgFic"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-fic_nwj22t.png"    alt="">
+    <img class="hover-img" id="imgArt"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-art_zvol24.png"    alt="">
+    <img class="hover-img" id="imgBehind" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-behind_toqrv9.png" alt="">
+    <a class="zone zone-home"   href="/home"   onmouseenter="showHover('imgHome')"   onmouseleave="hideAll()"></a>
+    <a class="zone zone-fic"    href="/fic"    onmouseenter="showHover('imgFic')"    onmouseleave="hideAll()"></a>
+    <a class="zone zone-art"    href="/art"    onmouseenter="showHover('imgArt')"    onmouseleave="hideAll()"></a>
+    <a class="zone zone-behind" href="/behind" onmouseenter="showHover('imgBehind')" onmouseleave="hideAll()"></a>
+  </div>
+
+  <!-- 본문 -->
+  <div class="page-wrap">
+    <p class="page-title">FIC</p>
+
+    <p class="section-label">19+</p>
+    <div class="list">
+    <a class="card" href="/fic/01.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="도취">
+      <div class="inner">
+        <div class="title">도취</div>
+        <div class="author">김수한무</div>
+      </div>
+      <div class="tags"><span class="tag">시대물</span><span class="tag">오메가버스</span></div>
+    </a>
+    <a class="card" href="/fic/03.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="배덕(背徳)">
+      <div class="inner">
+        <div class="title">배덕(背徳)</div>
+        <div class="author">나선</div>
+      </div>
+      <div class="tags"><span class="tag">고전물</span><span class="tag">오메가버스</span></div>
+    </a>
+    <a class="card" href="/fic/04.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="만월의 낙원">
+      <div class="inner">
+        <div class="title">만월의 낙원</div>
+        <div class="author">네보름</div>
+      </div>
+      <div class="tags"><span class="tag">시대물</span></div>
+    </a>
+    <a class="card" href="/fic/05.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="피어나라, 이솝 학원!">
+      <div class="inner">
+        <div class="title">피어나라, 이솝 학원!</div>
+        <div class="author">노스</div>
+      </div>
+      <div class="tags"><span class="tag">시대물</span></div>
+    </a>
+    <a class="card" href="/fic/07.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="파흔(破痕)">
+      <div class="inner">
+        <div class="title">파흔(破痕)</div>
+        <div class="author">달링</div>
+      </div>
+      <div class="tags"><span class="tag">네임버스</span><span class="tag">포스트 아포칼립스</span></div>
+    </a>
+    <a class="card" href="/fic/09.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="동류(動流)">
+      <div class="inner">
+        <div class="title">동류(動流)</div>
+        <div class="author">대상</div>
+      </div>
+      <div class="tags"><span class="tag">인외물</span><span class="tag">조직물</span></div>
+    </a>
+    <a class="card" href="/fic/10.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="사바의 연">
+      <div class="inner">
+        <div class="title">사바의 연</div>
+        <div class="author">마치</div>
+      </div>
+      <div class="tags"><span class="tag">오컬트</span><span class="tag">정치물</span></div>
+    </a>
+    <a class="card" href="/fic/11.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="그럼에도 불구하고">
+      <div class="inner">
+        <div class="title">그럼에도 불구하고</div>
+        <div class="author">멜란지</div>
+      </div>
+      <div class="tags"><span class="tag">회귀물</span></div>
+    </a>
+    <a class="card" href="/fic/12.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="애인과 만나고 싶으면 애인을 공략하랍니다. ~공략해야할 애인이 너무 많아!~">
+      <div class="inner">
+        <div class="title">애인과 만나고 싶으면 애인을 공략하랍니다. ~공략해야할 애인이 너무 많아!~</div>
+        <div class="author">박타</div>
+      </div>
+      <div class="tags"><span class="tag">공략물</span><span class="tag">멀티버스</span></div>
+    </a>
+    <a class="card" href="/fic/13.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="낭만주의">
+      <div class="inner">
+        <div class="title">낭만주의</div>
+        <div class="author">부이</div>
+      </div>
+      <div class="tags"><span class="tag">센티넬버스</span></div>
+    </a>
+    <a class="card" href="/fic/15.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="불온한 명명법">
+      <div class="inner">
+        <div class="title">불온한 명명법</div>
+        <div class="author">온즈</div>
+      </div>
+      <div class="tags"><span class="tag">네임버스</span></div>
+    </a>
+    <a class="card" href="/fic/16.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="멸망지구">
+      <div class="inner">
+        <div class="title">멸망지구</div>
+        <div class="author">요일</div>
+      </div>
+      <div class="tags"><span class="tag">SF</span><span class="tag">인외물</span></div>
+    </a>
+    <a class="card" href="/fic/18.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="파이널 피스">
+      <div class="inner">
+        <div class="title">파이널 피스</div>
+        <div class="author">주포스</div>
+      </div>
+      <div class="tags"><span class="tag">케이크버스</span></div>
+    </a>
+    <a class="card" href="/fic/20.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="不時着">
+      <div class="inner">
+        <div class="title">不時着</div>
+        <div class="author">채원</div>
+      </div>
+      <div class="tags"><span class="tag">인외물</span></div>
+    </a>
+    <a class="card" href="/fic/22.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="Tango Down">
+      <div class="inner">
+        <div class="title">Tango Down</div>
+        <div class="author">키나</div>
+      </div>
+      <div class="tags"><span class="tag">군부물</span></div>
+    </a>
+    <a class="card" href="/fic/23.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="마진 콜">
+      <div class="inner">
+        <div class="title">마진 콜</div>
+        <div class="author">페달</div>
+      </div>
+      <div class="tags"><span class="tag">SF</span></div>
+    </a>
+    <a class="card" href="/fic/25.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="비나이다, 비나이다">
+      <div class="inner">
+        <div class="title">비나이다, 비나이다</div>
+        <div class="author">하테</div>
+      </div>
+      <div class="tags"><span class="tag">고전물</span><span class="tag">인외물</span></div>
+    </a>
+    <a class="card" href="/fic/26.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape19_dadilx.png" alt="절대 사랑보존의 법칙">
+      <div class="inner">
+        <div class="title">절대 사랑보존의 법칙</div>
+        <div class="author">KaKi</div>
+      </div>
+      <div class="tags"><span class="tag">SF</span></div>
+    </a>
+    </div>
+
+    <hr class="divider">
+
+    <p class="section-label">General</p>
+    <div class="list">
+    <a class="card" href="/fic/02.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape00_qyhejj.png" alt="형제의 방식">
+      <div class="inner">
+        <div class="title">형제의 방식</div>
+        <div class="author">나른</div>
+      </div>
+      <div class="tags"><span class="tag">이능력물</span></div>
+    </a>
+    <a class="card" href="/fic/06.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape00_qyhejj.png" alt="반쪽짜리 둘을 합한다 하여도">
+      <div class="inner">
+        <div class="title">반쪽짜리 둘을 합한다 하여도</div>
+        <div class="author">노원</div>
+      </div>
+      <div class="tags"><span class="tag">인외물</span></div>
+    </a>
+    <a class="card" href="/fic/08.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape00_qyhejj.png" alt="나를 모르느냐 하지 마시고">
+      <div class="inner">
+        <div class="title">나를 모르느냐 하지 마시고</div>
+        <div class="author">당연</div>
+      </div>
+      <div class="tags"><span class="tag">센티넬버스</span></div>
+    </a>
+    <a class="card" href="/fic/14.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape00_qyhejj.png" alt="푸른 바다의 이방인">
+      <div class="inner">
+        <div class="title">푸른 바다의 이방인</div>
+        <div class="author">삐룸</div>
+      </div>
+      <div class="tags"><span class="tag">근미래물</span><span class="tag">센티넬버스</span></div>
+    </a>
+    <a class="card" href="/fic/17.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape00_qyhejj.png" alt="천사의 날개를 떼는 방법">
+      <div class="inner">
+        <div class="title">천사의 날개를 떼는 방법</div>
+        <div class="author">이칠</div>
+      </div>
+      <div class="tags"><span class="tag">센티넬버스</span></div>
+    </a>
+    <a class="card" href="/fic/19.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape00_qyhejj.png" alt="영영">
+      <div class="inner">
+        <div class="title">영영</div>
+        <div class="author">쥐양이</div>
+      </div>
+      <div class="tags"><span class="tag">타임리프</span></div>
+    </a>
+    <a class="card" href="/fic/21.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape00_qyhejj.png" alt="나의 히어로, XXXXX">
+      <div class="inner">
+        <div class="title">나의 히어로, XXXXX</div>
+        <div class="author">콜프</div>
+      </div>
+      <div class="tags"><span class="tag">디스토피아</span><span class="tag">센티넬버스</span></div>
+    </a>
+    <a class="card" href="/fic/24.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape00_qyhejj.png" alt="영원">
+      <div class="inner">
+        <div class="title">영원</div>
+        <div class="author">필름</div>
+      </div>
+      <div class="tags"><span class="tag">환생물</span></div>
+    </a>
+    <a class="card" href="/fic/27.html">
+      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803183/tape00_qyhejj.png" alt="우리가 잃어버린 것에 대하여">
+      <div class="inner">
+        <div class="title">우리가 잃어버린 것에 대하여</div>
+        <div class="author">track</div>
+      </div>
+      <div class="tags"><span class="tag">디스토피아</span><span class="tag">센티넬버스</span></div>
+    </a>
+    </div>
+  </div>
+
+  <script>
+    var currentHover = null;
+    function showHover(id) {
+      if (currentHover === id) return;
+      currentHover = id;
+      document.querySelectorAll('.hover-img').forEach(function(el) { el.style.opacity = '0'; });
+      document.getElementById(id).style.opacity = '1';
+    }
+    function hideAll() {
+      currentHover = null;
+      document.querySelectorAll('.hover-img').forEach(function(el) { el.style.opacity = '0'; });
+    }
+  </script>
+</body>
+</html>
