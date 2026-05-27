@@ -34,10 +34,10 @@
     font-size: 16px;
     line-height: 2;
     color: var(--text);
-    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default;
+    cursor: default;
     transition: background 0.3s, color 0.3s;
   }
-  .header, .btn-wrap, .footer {
+  .header, .btn-wrap, .footer, #settings-wrap, #top-btn {
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
   }
   .content { cursor: default !important; }
@@ -102,15 +102,6 @@
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
   }
   .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
-
-
-  .bgm2-wrap, .bgm3-wrap, .bgm4-wrap {
-    background: var(--bg);
-    display: flex;
-    justify-content: center;
-    padding: 20px 20px 0;
-    transition: background 0.3s;
-  }
 
   /* 톱니바퀴 + 패널 */
   #settings-wrap {
@@ -215,7 +206,7 @@
     display: flex;
     gap: 16px;
     justify-content: center;
-    padding: 120px 0 90px;
+    padding: 60px 0 60px;
     background: var(--btn-wrap-bg);
     transition: background 0.3s;
   }
@@ -286,7 +277,13 @@
 <!-- 진행바 -->
 <div id="progress-bar"></div>
 
-
+<!-- ★BGM 있는 경우만: YouTube ID를 E244Db-Cd5I 자리에 넣기. 없으면 이 블록 삭제★ -->
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
+  <iframe id="ytplayer"
+    src="https://www.youtube.com/embed/EqEyLeutKGA?enablejsapi=1&autoplay=0"
+    allow="autoplay" allowfullscreen>
+  </iframe>
+</div>
 
 <!-- 헤더 -->
 <div class="header">
@@ -298,17 +295,13 @@
   </div>
   <h1>마진 콜</h1>
   <div class="author">페달</div>
-  <div class="trigger" style="color:#0b0b14;">*No Trigger Warning</div>
+  <div class="trigger" style="color:#0b0b14;">*Trigger Warning</div>
 </div>
-
-
-
-
 
 <!-- 본문 시작 -->
 <div class="content">
 
-<div class="bgm-wrap bgm1-wrap"><button class="bgm-btn" id="bgmBtn" onclick="toggleBGM()">▶</button></div>
+<div class="bgm-wrap"><button class="bgm-btn" id="bgmBtn" onclick="toggleBGM()">▶</button></div>
 <p>1. 강 선생</p>
 <p class="empty">&nbsp;</p>
 <p>—살려주세요, 선생님.</p>
@@ -821,7 +814,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<div class="bgm-wrap bgm2-wrap"><button class="bgm-btn" id="bgmBtn2" onclick="toggleBGM2()">▶</button></div>
+<div class="bgm-wrap"><button class="bgm-btn" id="bgmBtn2" onclick="toggleBGM2()">▶</button></div>
 <p>2. 강 사장</p>
 <p class="empty">&nbsp;</p>
 <p>강 사장의 엘피 바. 하와이안 파라다이스라는 다소 촌스러운 간판을 내걸었다. 밤 아홉 시부터 새벽 다섯 시까지 연다. 손님이 많지는 않다. 간혹 그를 알아보는 사람들이 있다. 과거의 동료들. 여전히 그를 강 쌤이라 부르는 사람들이 한 번씩 찾아와 위스키 두어 잔 마시고 일어난다. 학교 똑같지 뭐. 교감 그 너구리 새끼 아직도 굴에 가둬놓고 잔소리하고. 애들 말 더 안 듣지, 뻑하면 신고한다 그러지, 학부모들 사흘 밤낮으로 전화해대지. 아유, 요즘 생각하면 그때 강 쌤이 그만두고 나가길 잘했다 싶고. 나도 이런 거 차려서 아주 강 쌤처럼 여유롭게 살고 싶네. 부럽다 부러워!</p>
@@ -887,7 +880,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<div class="bgm-wrap bgm3-wrap"><button class="bgm-btn" id="bgmBtn3" onclick="toggleBGM3()">▶</button></div>
+<div class="bgm-wrap"><button class="bgm-btn" id="bgmBtn3" onclick="toggleBGM3()">▶</button></div>
 <p>3. 강 팀장</p>
 <p class="empty">&nbsp;</p>
 <p>“깼어요?”</p>
@@ -1415,7 +1408,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<div class="bgm-wrap bgm4-wrap"><button class="bgm-btn" id="bgmBtn4" onclick="toggleBGM4()">▶</button></div>
+<div class="bgm-wrap"><button class="bgm-btn" id="bgmBtn4" onclick="toggleBGM4()">▶</button></div>
 <p>4. 김원필</p>
 <p class="empty">&nbsp;</p>
 <p>"기억을 지운다는 건, 삶의 한 페이지를 찢어내는 정도가 아니에요. 책 전체의 문맥을 훼손하는 일에 가깝다고 볼 수 있겠죠."</p>
@@ -1697,7 +1690,48 @@
   var tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(tag);
-
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('ytplayer', { events: { 'onReady': function(e){} } });
+    player2 = new YT.Player('ytplayer2', { events: { 'onReady': function(e){} } });
+    player3 = new YT.Player('ytplayer3', { events: { 'onReady': function(e){} } });
+    player4 = new YT.Player('ytplayer4', { events: { 'onReady': function(e){} } });
+  }
+  var player2; var isPlaying2 = false;
+  (function(){
+    var d = document.createElement('div');
+    d.style = 'position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;';
+    d.innerHTML = '<iframe id="ytplayer2" src="https://www.youtube.com/embed/FY4pFBs-Y3w?enablejsapi=1&autoplay=0" allow="autoplay" allowfullscreen></iframe>';
+    document.body.appendChild(d);
+  })();
+  function toggleBGM2() {
+    var btn = document.getElementById('bgmBtn2');
+    if (!isPlaying2) { if(player2&&player2.playVideo) player2.playVideo(); btn.textContent='■'; isPlaying2=true; }
+    else { if(player2&&player2.stopVideo) player2.stopVideo(); btn.textContent='▶'; isPlaying2=false; }
+  }
+  var player3; var isPlaying3 = false;
+  (function(){
+    var d = document.createElement('div');
+    d.style = 'position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;';
+    d.innerHTML = '<iframe id="ytplayer3" src="https://www.youtube.com/embed/FDlDKvidYbk?enablejsapi=1&autoplay=0" allow="autoplay" allowfullscreen></iframe>';
+    document.body.appendChild(d);
+  })();
+  function toggleBGM3() {
+    var btn = document.getElementById('bgmBtn3');
+    if (!isPlaying3) { if(player3&&player3.playVideo) player3.playVideo(); btn.textContent='■'; isPlaying3=true; }
+    else { if(player3&&player3.stopVideo) player3.stopVideo(); btn.textContent='▶'; isPlaying3=false; }
+  }
+  var player4; var isPlaying4 = false;
+  (function(){
+    var d = document.createElement('div');
+    d.style = 'position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;';
+    d.innerHTML = '<iframe id="ytplayer4" src="https://www.youtube.com/embed/dFrtX4BXxYw?enablejsapi=1&autoplay=0" allow="autoplay" allowfullscreen></iframe>';
+    document.body.appendChild(d);
+  })();
+  function toggleBGM4() {
+    var btn = document.getElementById('bgmBtn4');
+    if (!isPlaying4) { if(player4&&player4.playVideo) player4.playVideo(); btn.textContent='■'; isPlaying4=true; }
+    else { if(player4&&player4.stopVideo) player4.stopVideo(); btn.textContent='▶'; isPlaying4=false; }
+  }
   function toggleBGM() {
     var btn = document.getElementById('bgmBtn');
     if (!isPlaying) {
@@ -1710,51 +1744,6 @@
       isPlaying = false;
     }
   }
-
-  // BGM2~4 플레이어 변수
-  var player2, player3, player4;
-  var isPlaying2 = false, isPlaying3 = false, isPlaying4 = false;
-
-  // BGM2~4 숨김 iframe 삽입
-  (function() {
-    var items = [
-      { id: 'ytplayer', vid: 'EqEyLeutKGA' },
-      { id: 'ytplayer2', vid: 'FY4pFBs-Y3w' },
-      { id: 'ytplayer3', vid: 'FDlDKvidYbk' },
-      { id: 'ytplayer4', vid: 'dFrtX4BXxYw' }
-    ];
-    items.forEach(function(item) {
-      var d = document.createElement('div');
-      d.style = 'position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;';
-      d.innerHTML = '<iframe id="' + item.id + '" src="https://www.youtube.com/embed/' + item.vid + '?enablejsapi=1&autoplay=0" allow="autoplay" allowfullscreen></iframe>';
-      document.body.appendChild(d);
-    });
-  })();
-
-  // YouTube API 로드 완료 후 전체 초기화
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('ytplayer', { events: { 'onReady': function(e){} } });
-    player2 = new YT.Player('ytplayer2', { events: { 'onReady': function(e){} } });
-    player3 = new YT.Player('ytplayer3', { events: { 'onReady': function(e){} } });
-    player4 = new YT.Player('ytplayer4', { events: { 'onReady': function(e){} } });
-  }
-
-  function toggleBGM2() {
-    var btn = document.getElementById('bgmBtn2');
-    if (!isPlaying2) { if(player2&&player2.playVideo) player2.playVideo(); btn.textContent='■'; isPlaying2=true; }
-    else { if(player2&&player2.stopVideo) player2.stopVideo(); btn.textContent='▶'; isPlaying2=false; }
-  }
-  function toggleBGM3() {
-    var btn = document.getElementById('bgmBtn3');
-    if (!isPlaying3) { if(player3&&player3.playVideo) player3.playVideo(); btn.textContent='■'; isPlaying3=true; }
-    else { if(player3&&player3.stopVideo) player3.stopVideo(); btn.textContent='▶'; isPlaying3=false; }
-  }
-  function toggleBGM4() {
-    var btn = document.getElementById('bgmBtn4');
-    if (!isPlaying4) { if(player4&&player4.playVideo) player4.playVideo(); btn.textContent='■'; isPlaying4=true; }
-    else { if(player4&&player4.stopVideo) player4.stopVideo(); btn.textContent='▶'; isPlaying4=false; }
-  }
-
 </script>
 </body>
 </html>
