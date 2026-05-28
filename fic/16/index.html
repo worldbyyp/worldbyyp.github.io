@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>멸망지구</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #222222;
+    --header-bg: #0b0b14;
+    --btn-wrap-bg: #0b0b14;
+    --footer-bg: #0b0b14;
+  }
+  .dark-mode {
+    --bg: #111111;
+    --text: #ffffff;
+    --header-bg: #111120;
+    --btn-wrap-bg: #111120;
+    --footer-bg: #111120;
+  }
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }
+  html, body {
+    background: var(--bg);
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 16px;
+    line-height: 2;
+    color: var(--text);
+    cursor: default;
+    transition: background 0.3s, color 0.3s;
+  }
+  .header, .btn-wrap, .footer, #settings-wrap, #top-btn {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
+  }
+  .content { cursor: default !important; }
+  a, button {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: #888888; z-index: 9999; transition: width 0.1s;
+  }
+  .header {
+    background: var(--header-bg);
+    color: #ffffff;
+    text-align: center;
+    padding: 60px 20px 50px;
+    transition: background 0.3s;
+  }
+  .header-img-wrap {
+    margin-top: 0;
+    margin-bottom: 60px;
+    display: flex;
+    justify-content: center;
+  }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
+  .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
+  .header .trigger { font-size: 13px; color: #888888; }
+  .bgm-wrap {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 0 20px 60px;
+    transition: background 0.3s;
+  }
+  .bgm-btn {
+    width: 48px;
+    height: 32px;
+    border: 1px solid var(--text);
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .bgm-btn:hover { border-color: #ffffff; color: #ffffff; opacity: 0.6; }
+  #settings-wrap {
+    position: fixed; bottom: 36px; left: 28px; z-index: 999;
+    display: flex; flex-direction: row; align-items: flex-end; gap: 8px;
+  }
+  #settings-panel {
+    background: rgba(30, 30, 40, 0.82);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    opacity: 0; pointer-events: none; transform: translateX(-10px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  #settings-panel.open { opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .panel-row { display: flex; flex-direction: row; align-items: center; gap: 6px; }
+  .panel-row:last-child { justify-content: center; }
+  .panel-label {
+    font-size: 10px; color: #888888;
+    font-family: 'Nanum Gothic', sans-serif;
+    width: 28px; user-select: none !important;
+  }
+  .ctrl-btn {
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent; color: #cccccc;
+    font-family: 'Nanum Gothic', sans-serif;
+    padding: 3px 10px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .ctrl-btn.font-sm { font-size: 13px; }
+  .ctrl-btn.font-md { font-size: 13px; }
+  .ctrl-btn.font-lg { font-size: 13px; }
+  .ctrl-btn.mode-btn { font-size: 13px; width: 100%; text-align: center; gap: 4px; }
+  .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); color: #ffffff; }
+  #gear-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7); font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px); transition: background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  #gear-btn:hover { background: rgba(40,40,55,0.8); color: rgba(255,255,255,0.9); }
+  .content {
+    max-width: 680px; margin: 0 auto; padding: 40px 24px 60px;
+    background: var(--bg); color: var(--text); font-size: 16px;
+    transition: background 0.3s, color 0.3s, font-size 0.2s;
+  }
+  .content p { margin-bottom: 1em; min-height: 1.4em; }
+  .content p.empty { height: 1.4em; margin-bottom: 0; }
+  em { font-style: italic; }
+  strong { font-weight: 700; }
+  .btn-wrap {
+    display: flex; gap: 16px; justify-content: center;
+    padding: 60px 0;
+    background: var(--btn-wrap-bg); transition: background 0.3s;
+  }
+  .btn {
+    display: flex; align-items: center; gap: 8px; padding: 10px 28px;
+    border: 1px solid #555555; background: transparent; color: #cccccc;
+    font-size: 14px; letter-spacing: 1px; text-decoration: none;
+    font-family: 'Nanum Gothic', sans-serif;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .btn:hover { border-color: #ffffff; color: #ffffff; }
+  .btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+  .footer {
+    background: var(--footer-bg); text-align: center; padding: 20px;
+    font-size: 12px; color: #ffffff;
+    font-family: 'Nanum Gothic', sans-serif; transition: background 0.3s;
+  }
+  #top-btn {
+    position: fixed; bottom: 36px; right: 28px;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7); font-size: 11px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px); opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 1; pointer-events: auto; }
+  #top-btn:hover { background: rgba(40,40,55,0.8); color: rgba(255,255,255,0.9); }
+  @media (max-width: 600px) {
+    .header h1 { font-size: 22px; }
+    .content { padding: 30px 18px 50px; }
+  }
+</style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
+  <iframe id="ytplayer"
+    src="https://www.youtube.com/embed/Vygno8gQGc4?enablejsapi=1&autoplay=0"
+    allow="autoplay" allowfullscreen>
+  </iframe>
+</div>
+
+<div id="progress-bar"></div>
+
+<div class="header">
+  <div class="header-img-wrap">
+    <img src="/images/top-world.png" alt="" style="width:57px; height:auto;">
+  </div>
+  <h1>멸망지구</h1>
+  <div class="author">요일</div>
+  <div class="trigger">*Trigger Warning</div>
+</div>
+
+<div class="content">
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>똑똑. 원래 산타가 문을 두드리던가. 원필은 눈을 꾹 감고 깊어 가는 새벽을 견디는 중이었다. 불면의 뜻도 알지 못할 열 살의 끝자락. 삼촌은 갑자기 한식구가 된 원필을 위해 기꺼이 다락을 꾸려주었지만, 이렇게 잠 못들 때면 베개를 챙겨 들고 이불을 파고들던 부모의 품까지 바랄 순 없었다. 지난번처럼 그 사이에서 곤히 잠든 사촌 동생을 발견하기라도 한다면 더는 이 현실을 모른척할 수 없을 것 같아서. 원필은 스스로를 지키기 위해 사각지대를 향해 걸어 들어갔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>똑똑.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 눈을 떴다. 희미했지만 깨어있는 어린 두 귀엔 분명한 소리였다. 똑똑. 그리운 얼굴들이 떠올랐다. 엄마. 그리고 아빠. 그러자 더는 무섭지가 않았다. 살금살금 발소리를 죽이고 계단을 내려간 원필이 현관문을 살짝 열었다. 기다렸다는 듯 휘잉 하고 눈보라가 불어왔다. 눈이 오는 줄도 몰랐던 원필의 입이 작게 벌어졌다. 새하얀 눈으로 뒤덮인 세상은 평소와는 달라 보였다. 그리고 그 풍경을 한층 더 낯설게 만드는 남자. 얼굴을 보려고 하니 저절로 고개가 꺾였다.</p>
+<p class="empty">&nbsp;</p>
+<p>아빠가 아니다. 당연하겠지. 삼촌이 나는 하늘나라에 못 간다 그랬으니까. 그럼 거기서도 여긴 못 올 거고. 원필은 그게 무슨 뜻인지 잘 알고 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“안녕”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>남자의 파란 머리 위로 하얀 눈이 쌓이지 못하고 녹아내렸다. …산타? 누가 봐도 할아버지는 아니라서 뒷말은 생략한 주제에, 하필 그날이 12월 24일이란 이유만으로 그렇게 물었다. 빨간 거라곤 코끝과 손끝뿐이었는데도. 남자는 잠시 고민하는 듯했으나 시계 알람이 울리자 그게 낫겠다며 제 앞에 쪼그려 앉았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“메리 크리스마스, 원필아”</p>
+<p>“……”</p>
+<p>“근데 너 진짜 똑같이 생겼다”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>남자가 신기하다는 듯 원필의 얼굴을 빤히 훑었다. 매섭게만 보이던 눈매가 어느새 다정한 주름을 만들어냈다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“울 엄마, 아빠를 알아요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>저를 아냐고 물으려 했는데 그보단 이쪽인 것 같았다. 실시간으로 눈물이 차오르는 게 느껴졌지만 산타를 면전에 두고 울 순 없었다. 남자가 차가운 손으로 머리를 쓰다듬었다. 미안. 내가 시간이 별로 없어. 다시 한번 알람이 울리자 남자가 투박하게 생긴 기계를 내밀었다. 게임기처럼 생겼지만 그 흔한 상표도 붙어 있지 않은, 10년 인생에 난생처음 보는 것이었다. 원필이 그렁그렁한 눈으로 남자를 쳐다보았다. 많이 울었는데… 받을 자격이 있느냐고 묻는 듯했다. 괜찮아.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“나는 알거든. 울 수밖에 없었다는 거. 그리고 네가 착하다는 거”</p>
+<p>“……”</p>
+<p>“그러니까 이거 꼭 갖고 있어 줄 수 있지?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>나중에 이 집을 떠나고, 어른이 돼도. 원필이 크게 끄덕이자 결국 두 눈에서 물이 후두둑 떨어졌다. 까마득하게만 느껴지는 미래를 덥석 약속했다는 자각은 없었다. 새끼손가락도 걸지 않고 일어서는 남자를 원필이 다시 올려다보았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이제 진짜 가야 돼”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>루돌프가 저 뒤에서 기다리거든. 손가락이 집 뒤편을 가리켰다. 안 가면 안 돼요? 저도 모르게 붙잡는 말이 불쑥 나갔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“걱정하지 마. 우린 다시 만날 거야”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>거짓말… 엄마도 뒤집힌 차에 매달려 그랬는데. 아무 일 없을 거라고. 걱정하지 말라고. 원필은 더 이상 그런 말에 속고 싶지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“언제요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>눈물을 벅벅 닦은 원필이 재차 확인하듯 물었다. 어느새 음영이 드리워져 얼굴이 보이지 않게 된 남자가 말했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“지구가 멸망할 때”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p style="text-align:center;"><strong>멸망지구 (</strong><strong>滅亡地球)</strong></p>
+<p style="text-align:center;">강영현 김원필</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 베갯잇을 적시며 깨어났다. 또 그 꿈이다. 몇 달 간격으로 제 꿈에 등장하는 한 남자. 저번엔 졸업식 사진 기사였는데 이번엔 또 무슨 산타. 차라리 로또 번호를 알려주지. 찝찝하게. 원필은 꿈이 워낙 생생한 탓에 실은 전생이 아닐까, 잊어버리거나 잃어버린 기억이 아닐까, 어디서 본 장면을 제 것인 양 착각하는 건 아닐까 하고 매번 혼란스러워했다. 거짓에 사실을 살짝 더하면 더 효과적인 것처럼 남자를 제외하면 원필이 살아온 인생 그 자체였으니까. 진짜 뭐지. 하지만 정말 이상한 건 내내 본 얼굴이 꿈에서 깨어남과 동시에, 놀라울 정도로 기억나지 않는다는 것. 그리고 그가 늘 시간에 쫓긴다는 것.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>띠링.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>소리 난 쪽으로 고개가 돌아갔다. 게다가 남자가 매번 제 손에 쥐여주는 저 운세 기계까지. 원필은 안 되겠는지 이불을 젖히고 일어나 삼촌에게 전화를 걸었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“혹시 기억 안 나세요?”</p>
+<p>“안 나긴. 네가 얼마나 애지중지했는데. 근데 그걸 내가 줬다고?”</p>
+<p>“…삼촌 아니었어요?”</p>
+<p>“아닌데?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 진짜 아니냐며 한동안 삼촌과 실랑이를 하다 통화를 마무리했다. <em>오늘은 설명이 안 되는 것을 믿어보세요. </em>화면에 뜬 문장을, 원필은 오래 들여다보았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p style="text-align:center;">*</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“나사가 발표한 기사를 보시면요. 최근 관측된 유성우가 예년 평균의 4배를 넘겼는데 심지어 이게 예보에도 없던 일이었다고 하죠. 이 부분에 대해서는 어떻게 생각하시나요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>진행자의 매끄러운 목소리에 이어 화면 하단으로 붉은 자막이 날카롭게 박혔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이례적이긴 합니다만 그렇게까지 심각해할 일은 아니라고 생각합니다”</p>
+<p>“박 교수님, 지금 나사에서도 명확한 이유를 내놓지 못하고 있어요. 최근 유성우 빈도가 비정상적으로 폭증한 건 우주 어딘가에서 소행성의 물리 값이 지구 충돌 궤도에 들어섰다는 신호로 충분히 볼 수 있다구요. 국민들도 알 권리가 있는데 우리끼리 눈 가리고 아웅 해서 뭐 합니까”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>소장이라는 사람이 다소 격양된 말투로 반문하자 덩달아 교수도 목소리를 높였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“수치가 좀 튀었다고 멸망설이니 뭐니 하는 건 공포 조장이에요. 대중의 공포를 자극해서 얻는 게 뭡니까. 그런 근거 없는 소리가 사람들을 광장으로 내몰고 생필품 사재기 현상을 만드는 겁니다”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>타이밍 좋게 교수의 뒤로 멸망은 구원이다 피켓을 들고 구호를 외치는 사람들의 모습이 자료화면으로 나왔다. 사회 분위기는 이미 한낱 가십거리로 치부되던 음모론의 경지를 넘어선 듯했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“자자, 이게 다 현실이 멸망보다 가혹하다는 증거 아니겠습니까? 차라리 하늘에서 행성이 떨어지는 게 더 낫다 이거죠”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 모든 상황을 얌전히 지켜보던 사회학자가 능청스레 입을 열었다. 지구가 멸망할 때. 순간 꿈에서 깨기 전, 남자의 마지막 말이 떠올랐다. …이게 다 저 멸망설 때문이야. 흉흉한 분위기가 제 무의식에까지 영향을 준 거라고. 원필은 그렇게 믿기로 했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p style="text-align:center;">*</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>시간을 확인한 원필이 스위치를 내리자 불이 꺼지고 이내 천체투영기가 돌았다. 뒤로 젖혀진 의자에 몸을 맡긴 사람들이 일제히 천장을 바라보았다. 광활한 우주가 곧 눈앞에 펼쳐지자 여기저기서 작은 탄성이 터져 나왔다. 원필은 굳어 있던 이들의 표정이 무장해제 되는 이 찰나를 좋아했다.</p>
+<p class="empty">&nbsp;</p>
+<p>레이저 포인터가 손을 따라 별자리와 행성 위를 유영했다. 여느 때와 같이 차분히 해설을 이어가는데 순간 커다란 굉음이 들리더니 이내 팟, 하는 파열음과 함께 천장의 별들이 단번에 사라졌다. 천체투영관은 순식간에 칠흑 같은 어둠에 잠겼고 사람들의 웅성거림이 들려왔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“설마 이거 그거 아니야? 멸망“</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>아주 그냥 그놈의 멸망. 누군가가 내뱉은 불안이 전염병처럼 빠르게 번져 나갔다. 사람들은 보이지 않는 어둠 속에서 서둘러 가방을 챙기기 시작했다. 분명 예사롭지 않은 소리긴 했지만, 생각보다 격한 반응에 원필은 당황할 수밖에 없었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“엄마, 우리 이제 다 죽는 거야? 진짜 지구가 없어지는 거야?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>아이의 울음 섞인 목소리에 사람들의 움직임이 일시적으로 멎었다. 아니야. 지구가 왜 없어지겠어. 원필의 다정하고 차분한 목소리가 마이크 없이 울렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“기계가 저기 멀리 있는 별들을 우리한테 보여주느라 힘을 많이 썼나 봐. 잠깐 멈춘 거니까 진짜로 걱정 안 해도 돼”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 정전에 대해 양해를 구하며 안심시키자, 동요하던 사람들도 조금씩 차분해지기 시작했다. 시간이 흘러 눈이 차츰 어둠에 적응하게 되니 희미하게나마 형체를 파악할 수 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“지금부터 이 빛이 북극성인 거예요. 이 빛 따라서 천천히 밖으로 이동할게요”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>사람들을 두 줄로 세운 원필이 문 쪽을 향해 레이저 포인터를 비췄다. 복도 창 너머, 멀리 강가에서 잿빛 연기가 뭉게뭉게 피어오르는 게 보였다. 아무래도 무슨 일이 터진 게 분명했다.</p>
+<p class="empty">&nbsp;</p>
+<p>과학관 로비를 지나 야외 광장으로 사람들을 무사히 대피시킨 원필은 그제야 자신이 긴장하고 있었다는 사실을 깨달았다. 손바닥에 난 땀을 바지에 문질러 닦으며 안도의 한숨을 내쉬던 찰나, 옆에 있던 아이가 관측소 옥상을 가리키며 외쳤다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“엄마! 저기 사람이 있어”</p>
+<p>“뭐? 어디”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 심장이 발끝까지 떨어지는 기분을 느꼈다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“제가 가볼게요. 다들 우선 집으로 돌아가세요!”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>사람들의 만류에도 원필이 다시 어둠 속으로 뛰어들었다. 계단을 단숨에 오르느라 숨이 턱끝까지 차올랐다. 옥상 문을 열자 일교차가 만들어낸 서늘한 밤바람이 훅 끼쳐왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>믿을 수가 없네. 지금… 관측을 하고 있는 거야? 저렇게 홀딱 젖은 채로? 남자는 이 상황을 아는지 모르는지 그저 태연히 망원경 렌즈에 눈을 고정하고 있었다. 어쩐지 현실감이 전혀 느껴지지 않았다. 한 걸음, 한 걸음 가까이 다가설수록 물비린내가 짙게 풍겨왔다. 근처에 강이 있긴 한데 거기서 나는 건지 남자한테서 나는 건지 도무지 분간이 안 됐다. 인기척을 느낀 남자가 이쪽을 향해 돌아보았다. 순간 원필은 알 수 없는 기분에 압도되어 그 자리에 우뚝 멈춰 서게 되었다. 이상하다. 분명 처음 보는 얼굴인데 어디서 많이 본 듯한 저 눈…</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“저기… 여기 계시면 안 돼요”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>멍한 표정의 남자가 저를 쳐다보았다. 내가 왜 여기 있지? 나 기억이 안 나요. 자기 자신을 분실한 사람의 혼란스러움이 원필에게까지 고스란히 전해졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“저, 구급차 좀 불러주실래요?”</p>
+<p>“왜요. 어디 아프세요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 잠시 잠깐 경찰을 불러야 하는 게 아닌가 고민했지만 저보다 큰 사내가 꼬꾸라지는 광경을 보고 싶진 않았다. 일단 여기 좀 앉아보세요. 구급차 불렀으니까 금방 올 거예요. 원필이 남자의 안색을 살피며 옥상 바닥에 나란히 앉았다. 계단을 너무 급하게 올라온 탓인지, 정전 이후 계속된 긴장 탓인지 이젠 손끝이 저릿했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“정말 이름도 기억이 안 나요?”</p>
+<p>“…원필”</p>
+<p>“네?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>남자의 시선이 아래로 향했다. 가슴팍에 달린 명찰에는 김원필 해설사가 새겨져 있었다. 아… 난 또. 원필은 메슥거리는 속을 애써 누르며, 제 가디건을 벗어 남자의 물기를 대충이나마 닦아주었다. 손은 달달 떨렸고 입술은 바짝 말랐지만 별일 아닐 거라 믿었다. 그보다 시급한 건 눈앞의 남자였다. 원필은 그를 안심시키기 위해 아무 말이나 떠오르는 대로 뱉기 시작했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“사실은요. 저도 그랬던 적이 있어요. 내가 누군지, 어디로 가야 하는지”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 숨을 고르며 오래전 기억을 꺼냈다. 어쩐지 기분이 몽롱해지는 듯했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“어릴 때 사고가 났는데 정신 차려보니 사방이 캄캄하더라구요. 꼭 세상이 통째로 지워진 것 같고… 이 어둠이 언제 끝나나, 매일 그것만 생각했는데. 그때 부모님이 알려주셨던 별자리들 찾아보면서, 나도 어떻게든 길을 찾을 수 있을 거라고 믿었어요”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필은 창백하게 질린 얼굴로 남자를 바라보았다. 지금 내가 무슨 얘길 하고 있는 건지 모르겠다는 생각을 하며.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그러니까 너무 무서워하지 마세요”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>남자가 대답 없이 원필을 바라보았다. 멀리서 사이렌 소리가 들려왔다. 정신이 점점 아득해졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“구급차가 오나 봐요. 다행이…”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>팽팽하게 당겨졌던 정신 줄이 툭 하고 끊어졌다. 원필은 바람 빠진 풍선처럼 바닥으로 힘없이 쓰러졌다. 걱정스러운 표정을 짓던 남자가 타이밍을 놓치지 않고 머리를 받쳤다. 멀어지는 의식 속에서 남자의 서늘한 손길과 희미한 목소리를 들은 것만 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p style="text-align:center;">*</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>코끝을 찌르는 소독약 냄새에 무거운 눈꺼풀이 뜨였다. 지끈거리는 머리를 누르려 무심코 팔을 들었지만, 주렁주렁 흔들리는 링거 줄이 원필을 가로막았다. 아야… 손등에 뻐근한 통증이 밀려왔다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“정신이 좀 드세요?”</p>
+<p>“아. 네. …근데 괜찮으세요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>저도 모르게 묻고는 누가 누굴 걱정하나, 싶어 헛웃음이 나왔다. 구급차를 불러달라던 남자는 지나치게 멀쩡해 보였다. 원필이 몸을 추스르며 일어나려 하자 그는 마치 늘 그래왔던 것처럼 제 등을 받쳐 일으켰다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“긴장 상태가 계속돼서 일시적으로 신경에 무리가 간 거래요. …저 때문에 많이 놀란 거죠”</p>
+<p>“아… 그런 거 아니에요. 그리고 제때 구급차 부른 덕분에 저도 이렇게 멀쩡한 건데요”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>하지만 이내 조심스럽게 다시 말문을 열었다. 근데…</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아직 기억 안 나시는 거죠? 혹시 검사는 해보셨어요?”</p>
+<p>“강영현. 그게 아마 제 이름인 것 같아요”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>지금 기억나는 건 그거밖에. 낯설어야 마땅한 이름인데도 원필은 뭐가 자꾸 마음에 걸리는지 깊은 고민에 빠졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그럼 기억 돌아올 때까지만 당분간 저희 집에 계실래요?”</p>
+<p>“진짜 그래도 돼요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 고개를 끄덕이자 영현의 입가에 처음으로 옅은 미소가 번졌다. 띠링. 주머니 속에서 알림음이 울렸다. <em>귀인의 손을 절대로 놓지 마세요.</em> 화면 속 문구를 빤히 보던 원필이 천천히 고갤 들어 눈앞의 남자를 쳐다보았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>현관문을 열자 갇혀 있던 공기와 함께 원필에게 은은히 배어있던 익숙한 집 냄새가 났다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“좀 좁죠?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 어색해하며 거실 불을 켰다. 하지만 영현은 오히려 전혀 낯설어하지 않는 눈치였다. 아뇨. 혼자 살기 딱 좋은데요.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“갈아입을 옷 좀 드릴게요”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 방으로 들어가 자신의 옷 중 가장 넉넉한 티셔츠와 바지를 꺼내 오는 사이, 밖에 있던 영현이 물었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“물 좀 마셔도 될까요?”</p>
+<p>“그럼요! 컵은 찬장 왼쪽…”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>방에서 고개만 빼꼼 내민 원필이 말을 채 다 마치기도 전, 이미 영현은 찬장을 연 후였다. 또 이러네. 아까는 분명 들어오자마자 신발장 구석에 둔 손님용 슬리퍼를 꺼내 신었잖아. 영현의 뒷모습에서 피어오르는 기묘한 이질감이 원필의 신경을 건드렸다. 하지만 의문은 오래가지 않았다. 몸은 이미 지칠 대로 지쳐 한계를 넘어선 지 오래였다. 영현이 씻는 사이 소파에 털썩 주저앉은 원필은 까무룩 눈을 감았다.</p>
+<p class="empty">&nbsp;</p>
+<p>얼마 지나지 않아 영현은 잠든 원필을 가만히 내려다보았다. 거실 창밖으로 별 하나가 아주 긴 꼬리를 남기며 짙은 어둠 속으로 떨어졌다. 원필은 자신의 몸이 침대 위로 옮겨지는 줄도 모른 채, 더 깊은 잠에 빠져들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>날카로운 소음이 새벽의 정적을 찢어놓았다. 원필이 파드득 소스라치며 잠에서 깨어났다. 흐릿한 초점 사이로 재난 문자가 번쩍였다. 무의식중에 읽어 내려간 활자들이 머릿속에 박히는 순간, 언제 잠들었었냐는 듯 정신이 번쩍 들었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“영현… 씨?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 그의 이름을 외치며 거실로 뛰쳐나갔다. 곤히 자고 있을 거라 생각했던 영현은 세상 급하게 짐 가방을 챙기고 있었다. 옷장 깊숙이 넣어두어 주인조차 잊고 있었던, 오른쪽 모서리가 구겨진, 영락없는 제 것이었다. 지금 뭐 하는 거예요?</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“가요. 지금 당장”</p>
+<p>“갑자기 그게 무슨. 혹시 재난 문자 받았어요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>바보 같은 질문이었다는 걸 곧바로 깨달았다. 영현은 폰이 없었으니까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“일단 진정하고 뉴스 좀… 무슨 상황인지 알아야“</p>
+<p>”이건 내가 예상했던 것보다 훨씬 빨라”</p>
+<p>“대체 무슨 말을 하는 거예요”</p>
+<p>“제발! 날 믿어. 이번엔 또 어떤 형태일지 몰라요. 나랑 같이 떠나요, 제발“</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 절박하게 원필의 손을 붙들었다. 창밖으로 바라본 하늘은 이미 온통 핏빛이었다. 유성우를 닮은 파편들이 커다란 굉음을 내며 산발적으로 추락했고, 가속도에 불이 붙은 잔해들이 저 너머 산등성을 집어삼키고 있었다. 원필은 겨우 비명을 삼켰다. 이건 진짜였다. 진짜 멸망의 시작이었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 손에 이끌려 복도로 나선 순간 쩍, 하는 소리와 함께 아파트 외벽이 종잇장처럼 찢겨 나갔다. 재난 문자의 소음보다 더 날카로운 고성과 매캐한 연기가 순식간에 주위를 잠식했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“정신 바짝 차려요. 지금 바로 안 나가면 우리 둘 다 죽으니까. 알겠죠”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 생전 처음 보는 냉철한 눈으로 상황을 직시했다. 만난 지 얼마 안 된 사이였지만 원필은 알 수 있었다. 제 이름조차 가물가물해하던 이 남자는 지금 무엇을 해야 하는지 그 누구보다 정확히 알고 있었다. 하지만 1층 로비에 다다랐을 때, 원필의 발걸음은 돌처럼 굳어졌다. 무너진 천장 잔해 아래, 다리가 끼인 아이가 숨이 넘어가게 울고 있었기 때문이다. 아, 안 돼.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“저 애만 구하고 가요. 네?”</p>
+<p>“안 돼. 소용없어. 지금 구해도 어차피 제때 치료 못 받아서 일주일도 못 버티고 죽는다고. 그니까 제발… 여기 곧 무너질 거야”</p>
+<p>“어, 어떻게”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 지독하게 비정했다. 그런데 표정은 왜 이렇게 슬퍼 보일까.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“소용없지 않아. 적어도 이게 마지막 기억은 아니어야 하잖아요”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 손을 떼어내고 아이에게 달려갔다. 그 뒷모습을 멍하니 보던 영현은 저항할 수 없는 운명 앞에 무릎 꿇듯, 이내 두 사람 곁으로 달려가 함께 잔해를 치우기 시작했다. 몇 번의 시도 끝에 커다란 콘크리트 더미가 움직이기 시작했다. 원필은 제 손바닥이 찢어지는 줄도 모르고 혼신의 힘을 다했다.</p>
+<p class="empty">&nbsp;</p>
+<p>두 사람이 만들어 낸 틈새로 아이를 끌어낸 순간, 불길한 진동이 느껴졌다. 건물이 급격히 기울기 시작하자 사람들이 균형을 잃고 우르르 넘어졌다. 그리고 하필 원필이 서 있던 발밑 콘크리트 역시 맥없이 무너져 내렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“김원필!”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 늦지 않게 낚아챈 덕에 원필은 대롱대롱 매달린 채 간신히 목숨을 건졌다. 곧이어 찢어질 듯한 통증이 몰려왔다. 날카로운 잔해에 긁힌 손바닥에서부터 새빨간 피가 팔을 타고 흘러내렸다. 핏방울을 바라보다 영현을 올려다본 원필은 바람에 흔들리는 빨간 머리카락에 제 눈을 의심했다. 나 이제 헛것이 보이나 봐. 원필은 뭔가 잘못됐다는 생각을 하며 서서히 손에 힘을 풀었다. 그게 무슨 뜻인지 알아챈 영현의 표정이 순식간에 싸해졌다. 뭐 하는 거야… 잡아, 얼른.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“손이 너무 아파서 그래요. 난 괜찮으니까 그냥 놔줘요”</p>
+<p>“이러지 마… 내가 여기까지 어떻게 다시 왔는데”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>다시? 영현의 눈에서 쏟아지는 눈물이 원필의 뺨 위로 투둑 쏟아졌다. 꼭 비가 내리는 것 같네. 울음 때문인지 온 힘을 다하고 있어서인지 영현의 목소리가 잘게 떨렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“오늘의 운세. 귀인의 손을 절대로 놓지 마세요”</p>
+<p>“그걸… 어떻게”</p>
+<p>“내가 보냈으니까. 네가 자꾸 내 손을 놓으니까 이번엔 제발 그러지 말라고 내가 보낸 거야. 그니까 제발. 원필아, 응?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>도무지 이해할 수 없는 말에 원필의 미간이 구겨졌다. 그러다 깨달았다. 헛것이 아니구나. 설명은 못 하겠는데 바로 믿어졌다. 나는 늘 혼자라고 생각했는데 늘 옆에 있었던 거야. 그러자 이상하게 웃음이 나왔다. 눈꼬리를 타고 눈물 한 방울이 또르르 흘러내렸다. 영현의 몸이 아래로 쏠리는 게 느껴졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“고마워”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 힘을 주어 손아귀에서 제 손을 빼냈다. 손가락 끝이 아슬아슬하게 스치고 슬로우 모션처럼 원필이 아래로 멀어져 갔다. 안 돼! 처절한 부르짖음이 무너지는 건물 속에 울려 퍼졌다. 영현은 제 손바닥에 남은 온기를 움켜쥐며 정신없이 강가로 뛰어갔다. 원필아… 김원필. 네 말이 맞아. 소용없지 않아. 영현이 거침없이 강물 안으로 걸어 들어가 다리 기둥 뒤로 사라졌다. 그곳엔 얼핏 잠수함처럼 보이는 녹슨 우주선이 숨겨져 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“다시 할게. 다시 할 거야. 나 할 수 있어. 내가 살릴게. 그러니까 나 기다려줘”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이로써 열세 번째 원필이가 죽었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p style="text-align:center;">◀◀</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이렇게 착륙이 안 는다고. 영현이 차가운 강가에 반쯤 담긴 채 정신을 차렸다. 벌써 몇 번째더라. 영현이 그대로 하늘을 올려다보며 혼잣말을 내뱉었다. 푸른색 머리카락이 물결을 따라 일렁거렸다. 시간이 없다. 멸망이 어떤 형태로 원필을 닥칠지 알 수 없어 더 초조했다. 영현이 무거운 몸을 일으키며 물길을 헤엄쳐 나왔다.</p>
+<p class="empty">&nbsp;</p>
+<p>멸망기록관. 수백 년 동안 행성이 소멸하는 과정을 지켜보고 기록으로 남기는 일. 세상에 그런 직업도 있냐 묻겠지만 이 우주는 얼마나 넓고 또 광활한가. 영현을 외계인이라 부르는 저들도 그에겐 외계인에 지나지 않는다는 사실을 자꾸 간과하는 것처럼 세상에는 이런저런 일들이 당연하게도 존재한다. 그저 다들 모를 뿐.</p>
+<p class="empty">&nbsp;</p>
+<p>그가 사는 곳에서 영현은 꽤 일을 잘했다. 누군가는 해야 하는 일이라 믿었고, 그동안 문제없이 잘해왔다고 생각했다. 하지만 어느 순간 깨닫고 말았다. 실은 전혀 쉽지 않았다는 걸. 화염에 휩싸여 수십억의 생명이 증발하는 광경을 지켜만 보는 최우수 관찰자에게 남은 거라곤 소멸의 허무함, 스스로에 대한 경멸이었다. 기록해서 뭐 하지? 어차피 다 사라질 텐데. 영현은 가끔 울고 싶었지만 감정이 멸망해버린 사람처럼 눈물도 나오지 않게 되었다.</p>
+<p class="empty">&nbsp;</p>
+<p>그러다 지구가 배정되었다. 몇 번째였는지 기억도 나지 않는 곧 멸망할 관측지. 그리고 거기서 걔를 만났다. 강가를 거닐던 원필이 물에 떠 있는 영현을 건지다 못해 우주선까지 발견해버린 그날부터였을까. 영문도 모른 채 낯선 손에 끄집어내진 영현은 이 지구인을 어떻게 처리할까, 머리를 팽팽 굴렸다. 슬쩍 돌아보니 주위엔 다행히 아무도 없었다. 어차피 죽을 거잖아 너도. 안 그래? 그런 말도 안 되는 생각까지 하다 제 멱살을 쥐고 흔드는 얼굴을 마주했을 때, 추운 날씨도 아니었건만 몸을 달달 떨고 있는 원필을 보는데 속이 울렁거렸다. 그저 불시착 부작용인 줄로만 알았던 증상의 해답을 우연히 본 드라마에서 찾게 될 줄은 꿈에도 몰랐다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“너 좋아해. 네가 남자건 외계인이건 이제 상관 안 해. 가보자, 갈 때까지. 한번 가보자”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>음… 나도 원필이가 남자건 외계인이건 상관 안 하는데. 아… 그럼 내가 저 지구인을 좋아하는 거구나. 의외로 담담히 제 마음을 받아들이던 영현의 속도 모르고, 원필은 그저 옆에서 신기해했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“저 명작을 안 봤다고? 진짜 처음 본다고?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>네가 더 신기해. 물도 무서워하는 애가 나를 왜 구해, 구하기는. 영현은 다가올 멸망을 두 손바닥으로 가린 채 나란히 앉아 드라마나 보는 시간을 꽤 좋아했다.</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 금기를 어겼다. 더는 방관하며 기록만 하고 있을 수 없었으니까. 시간을 돌리는 법은 선대 기록관이 남긴 폐기 자료에서 처음 접했다. 이론상으론 가능하나 그 누구도 시도하지 않았던, 존재의 소멸을 담보로 한 도박. 그게 정말 될 줄은 몰랐는데. 시간을 되돌리려면 우주 정거장의 중앙 관제 시스템을 속여야 했고, 제 몸을 강제로 과부하시켜 시공간의 틈을 비집고 들어가야만 했다. 그 과정은 말할 수 없을 만큼 고통스러웠다. 온몸이 거대한 믹서기에 갈려 나가는 기분이랄까. 영현은 멋대로 상상했다. 그 선대 기록관도 어느 지구인을 지독히 사랑했던 게 아닐까 하고. 영현은 한순간도 주저하지 않았다. 첫 번째도. 두 번째도. 그리고 열두 번째도.</p>
+<p class="empty">&nbsp;</p>
+<p>멸망은 해일을 몰고 오기도 했고 화산을 터트리기도 했으며, 때로는 보이지 않는 바이러스가 되어 숨통을 조였고, 때로는 대지를 찢어 모든 것을 심연으로 삼키기도 했다. 태양이 폭발할 듯 팽창해 바다를 말려버리거나, 끔찍한 빙하기로 살아있는 것들을 모조리 박제하기도 했다. 영현은 그 모든 멸망 속에서 원필을 살려보려 애썼다. 하지만 원필은 꼭 죽어야만 사는 것처럼 죽고 또 죽었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p style="text-align:center;">*</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>성인이 되면 모든 게 명확해질 줄 알았는데 막상 마주한 이태원의 밤은 네온사인에 물든 토사물과 시끄러운 소음으로 뒤섞여 있었다. 용기 내 발을 들인 클럽 안 공기는 생각보다 더 마음 둘 곳이 없었다. 그래서 퍼마시기 시작한 술잔들은 저 스스로를 한계치까지 몰아넣었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“몇 살이야? 처음 보는데”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>낯선 이의 손길이 어느새 뺨을 타고 흘러 턱을 쥐었다. 입술이 점점 가까워지자 원필이 저도 모르게 남자를 힘주어 밀쳤다. 방어할 새도 없이 뒤로 벌러덩 넘어간 남자가 씩씩거리며 원필을 쳤다. 귓가에 이명이 울리더니 음악이 이상하게 웅웅거렸다. 내가 여기서 뭘 하고 있는 거지. 원필은 클럽을 뛰쳐나와 골목으로 숨어들었다. 입술과 뺨이 따가워 그만 눈물이 핑 돌았다. 외로웠다. 외롭기 싫어서 여기까지 온 건데. 원필이 어깨를 웅크리고 앉아 울음을 삼켰다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아. 한참 찾았네. 왜 여기 숨어 있어요”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>헉헉거리는 숨소리에 원필이 움찔했다. 어떡해. 나 쫓아왔나 봐. 어떡하지. 원필은 숨을 죽인 채 떨리는 고개를 천천히 들어 올렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…누구세요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>파란 머리카락이 땀에 젖은 채 헝클어진 영현이 원필을 내려다보았다. 맞았다는 얘긴 안 했잖아. 엉망이 된 얼굴을 발견한 그의 표정이 순식간에 구겨졌다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“어떤 새끼야”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>이럴 줄 알았으면 약도 같이 사 오는 건데. 원필의 눈이 커다래졌다. 저를 무서워하는 것 같기도 했다. 영현이 한숨을 푹 내쉬며 무릎을 굽혀 마주 앉았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“마셔”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 그저 쳐다만 보고 있자 영현이 직접 손에 숙취해소제 한 병을 쥐여주었다. 지금 힘들잖아. 마셔. 원필이 눈치를 보면서도 시선을 줄곧 피하지 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아팠겠네. …말을 하지”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그 말이 신호탄이라도 됐는지 원필이 다시 훌쩍거리기 시작했다. 아. 울리려던 건 아닌데.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“아주 나중에 만나게 될 거야. 외로워지려고만 하면 어느새 눈앞에 나타나고 막, 너 위해서 시간도 돌리는 그런…”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 눈썹을 긁적이다 알람 소리에 정신을 번뜩 차렸다. 시간이 얼마 안 남았다. 5분 후엔 이 시간대에서 튕겨 쫓겨나게 될 거다. 사실 여태 우주의 감시망을 피한 것만 해도 천운에 가까웠다. 지구인들은 이럴 때 우주가 도왔다, 하던데.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“나 부탁 하나 해도 돼?”</p>
+<p>“부탁이요?”</p>
+<p>“이거 나한테 엄청 중요한 건데 맡아줄 수 있어?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 이번엔 기계를 내밀었다. 원필은 운세 기계쯤으로 여기겠지만, 사실 이건 영현의 정보가 담긴 이정표라고 할 수 있다. 이걸 원필이 지니고 있는 한 영현은 그를 찾을 수 있고, 지금처럼 시간에 쫓기지 않고 지구에 더 오래 머무를 수 있다. 원필은 언젠가 이 순간을 또 꿈이라 착각하겠지만… 아니, 아니야. 다음 같은 건 없어.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“꼭 찾으러 올 테니까 그때까지 갖고 있어야 돼. 그래 줄 수 있지?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 결심한 듯 고개를 끄덕이고 숙취해소제의 뚜껑을 땄다. 씁쓸한 액체를 들이켜는 사이, 영현은 바람처럼 사라져 버렸다. 원필은 한참을 두리번거리며 그를 찾았다. 이태원의 소음은 여전했고 두 손엔 투박한 기계가 들려 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p style="text-align:center;">▶▶</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“살렸잖아. 그럼 살았어야지!”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 창백한 원필을 껴안고 절규했다. 겨우 찾아낸 방공호 안에서도 원필은 끝끝내 살지 못했다. 또다시 자신만 살아남았다는 자책 때문에 나날이 시들어갔다. 마치 죽음을 최초로 목격했던 10살의 김원필처럼 손을 맞잡고 있어도 마음만은 지구와 함께 무너지고 있었다. 원필의 시간은 이미 멸망의 순간에 멈춰버린 듯했다. 살리려고 애쓰면 애쓸수록 멸망은 더 잔인하고 교묘한 방식으로 원필을 앗아갔다. 마치 온 우주가 두 사람을 조롱하듯.</p>
+<p class="empty">&nbsp;</p>
+<p>그래서 영현은 결심했다. 더는 원필을 구하지 않기로. 대신…</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“지구를 구할 거야”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>원필이 사랑하는, 얼굴도, 이름도, 존재도 모르는 사람들이 살고 있는 이 거지 같은 지구를. 소행성의 궤도 자체를 수정하려면 시간이 아주 오래 걸릴 것이다. 영현이 아무리 지구인보다 몇 배는 오래 산다 하더라도 기어이 늙고 낡을 것이다. 하지만 영현은 절대 멈추지 않을 것이다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“끝까지 가줄게. 내가”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p style="text-align:center;">*</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>우주 정거장은 정적에 잠겨 있었다. 하지만 영현은 알고 있다. 저 뒤, 수십 개의 감시 센서가 자신을 쫓고 있다는 걸. 수차례의 불법적인 타임 워프를 거치면서 수배 번호 129번은 어느새 또 다른 이름이 되어 있었다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현이 중력 제어 장치가 꺼진 폐쇄 배기구 속으로 몸을 밀어 넣었다. 벽면의 돌출부를 차며 신속히 어둠 속을 부유하며 가로질렀다. 고요함 속 오직 거친 숨소리만 울려 퍼졌다. 몸은 예전 같지 않은 건 어쩔 수 없었다. 폐부의 통증이 이전보다 잦아졌다. 영현은 원필과의 유일한 연결고리이자 지구로 돌아갈 마지막 좌표를 잊어버리지 않기 위해 계속해서 되뇌고 또 되뇌었다. 메인 동력실로 향하는 최후의 격벽 앞에 섰을 때 시스템은 예상대로였다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p><em>경고 : 수배자 129번. 생체 신호 불안정 및 심박수 과부하. 즉시 사살 허가. 전 구역 시스템 중앙 통로로 집결.</em></p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“좀… 조용히 좀 하자!”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 행동이 급해졌다. 눈으로 빠르게 콘솔을 훑다가, 어느 홈에 장치 하나를 꽂아 넣자 푸른 스파크가 튀었다. 긴장감에 손끝이 미세하게 떨렸지만 눈빛만큼은 어느 때보다 형형했다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“이제 그만 포기해!”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>어느새 도착한 무장 감시자들의 외침이 울려 퍼졌다. 천장의 패널들이 날카로운 금속음을 내며 열렸다. 그 틈 사이로 수백 개의 총구가 고개를 내밀었다. 정거장이 보유한 모든 전력이 이곳으로 모이기 시작했다. 저주파의 소음이 고막을 압박했다. 영현이 손등으로 코를 훔치자 피가 묻어나왔다. 마치 영현의 몸이 보내는 붉은 경고등 같았다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“그래. 이 정도는 돼야지”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>감시 카메라가 얼굴을 클로즈업했다. 코피를 흘리면서도 영현은 씨익, 하고 웃어 보였다. 쟤 지금 뭐 하냐? 황당한 목소리와 동시에 입자포가 일제히 섬광을 내뿜었다. 순식간에 시야가 하얀 소용돌이에 휘말렸고 거대한 폭발음이 정거장을 뒤흔들었다. 하지만 영현을 증발시키려던 그 가공할 전력은 그의 몸에 닿기 직전 미리 설치해 둔 장치 속으로 빨려 들어가며 기묘하게 휘어졌다. 영현은 장치를 악착같이 붙든 채 고통을 삼켜냈다. 쏟아져 들어오는 에너지가 자석에 이끌리듯 장치를 통과하며 신경계를 난도질했지만 영현은 끝까지 장치를 놓치지 않았다. 출력에 반응하듯 그의 머리카락도 시시각각 바뀌었다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“뭐야! 무슨 상황이야”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>감시자들의 당황스러운 경악이 터져 나왔다. 폭발하는 패널들 사이, 영현은 메인 서버의 냉각 장치를 주먹으로 내리쳐 박살 냈다. 손날에 날카로운 파편 조각이 박혀도 더는 아픈 것 같지도 않았다.</p>
+<p class="empty">&nbsp;</p>
+<p>머지않아 정거장 자체가 거대한 태양처럼 빛을 뿜으며 팽창하기 시작했다. 영현이 늦지 않게 구석에 세워져 있던 소형 탐사정 안으로 몸을 던졌다. 유리창 너머로 정거장이 불꽃이 되어 흩어지는 광경이 보였다. 이제 다시는 돌아갈 수 없으리라. 고향 행성으로부터의 영원한 추방은 물론, 다시는 시간을 되돌릴 수도 없다. 하지만 계획만 성공한다면 아무래도 좋았다. 저를 죽이려던 에너지가 추진력이 되어 폭발하는 순간, 그 파동이 소행성의 궤도를 바꿔만 준다면.</p>
+<p class="empty">&nbsp;</p>
+<p>그런데 문제는 탐사정까지 무자비하게 밀어붙이는 이 충격파의 위력까진 미처 계산하지 못했다는 점이다. 벨트로 몸을 고정해 보려던 영현의 머리가 반동에 의해 꺾이면서 벽에 세게 부딪혔다. 시야가 아득해지는 사이, 대기권 밖으로 스쳐 지나가는 파편들이 마치 눈부신 유성우처럼 보였다. 그간의 것들과는 달리 지구가 아닌 우주 먼 곳으로 비껴가며 떨어지고 있었다. 영현은 흐릿하게 미소 지으며 조용히 눈을 감았다. 지구인들은 그저 평소와 다름없는 오늘을 살아가겠지. 그 지루하고도 평온한 일상을.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p style="text-align:center;">*</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>영현의 몸이 일정한 간격으로 일렁였다. 차가운 물에 반쯤 담긴 채 정신을 차리자, 머리가 깨질 듯이 아프고 쓰라렸다. 손가락 끝에 힘을 주자 부드러운 모래 알갱이가 만져졌다. 귓가엔 철썩이는 파도 소리가 들렸다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“…바다?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>푸른 머리카락 위로 파도가 부서지며 하얀 포말을 남겼다. 하늘은 여전히 파랬고 그 어떤 일도 일어나지 않을 것처럼 조용했다. 영현은 살아있는 원필이가 보고 싶었다. 비틀거리는 두 발로 땅을 딛고 일어섰다.</p>
+<p class="empty">&nbsp;</p>
+<p>영현은 만신창이가 된 몸으로 관측소를 향해 걸었다. 옥상에 다다랐을 때, 그 자리에 우뚝 멈춰 서게 되었다. 망원경 렌즈에 눈을 고정한 채 하늘을 관측을 하고 있는 원필이 보였다. 어쩐지 현실감이 전혀 느껴지지 않았다. 인기척을 느낀 원필이 이쪽을 향해 돌아보았다. 영현은 떨리는 숨을 몰아쉬며 천천히 다가갔다. 원필은 피투성이의 낯선 남자를 보고 당황한 듯 눈을 크게 떴다.</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>“저기… 괜찮으세요?”</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p>그리운 저 목소리. 어느새 눈물이 고인 영현이 참지 못하고 안도의 웃음을 터트렸다.</p>
+<p class="empty">&nbsp;</p>
+<p>원필이의 지구이자, 이제는 나의 지구가 된 이곳에서 우리는 다시 만났다.</p>
+<p class="empty">&nbsp;</p>
+</div>
+
+<div class="bgm-wrap">
+  <button class="bgm-btn" id="bgmBtn" onclick="toggleBGM()">▶</button>
+</div>
+
+<div class="btn-wrap">
+  <a class="btn" href="/fic/">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
+    목록으로
+  </a>
+  <a class="btn" href="https://forms.gle/eaJu5Zz7BGjGH1bR9" target="_blank">
+    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    후기쓰기
+  </a>
+</div>
+
+<div class="footer">© 2026 @worldbyyp. All Rights Reserved.</div>
+
+<div id="settings-wrap">
+  <button id="gear-btn" onclick="toggleSettings()">⚙</button>
+  <div id="settings-panel">
+    <div class="panel-row">
+      <span class="panel-label">글씨</span>
+      <button class="ctrl-btn font-sm" onclick="changeFontSize(-1)">－</button>
+      <button class="ctrl-btn font-md" onclick="changeFontSize(0)">가</button>
+      <button class="ctrl-btn font-lg" onclick="changeFontSize(1)">＋</button>
+    </div>
+    <div class="panel-row">
+      <button class="ctrl-btn mode-btn" id="modeBtn" onclick="toggleMode()">🌙 다크모드</button>
+    </div>
+  </div>
+</div>
+
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
+
+<script>
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, true);
+  document.addEventListener('selectstart', function(e){ e.preventDefault(); return false; }, true);
+  document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; }, true);
+
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (scrollTop / docHeight * 100) + '%';
+    var btn = document.getElementById('top-btn');
+    if (scrollTop > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  function toggleSettings() {
+    document.getElementById('settings-panel').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('settings-wrap');
+    if (!wrap.contains(e.target)) {
+      document.getElementById('settings-panel').classList.remove('open');
+    }
+  });
+
+  var fontSizes = [14, 16, 18];
+  var fontIdx = 1;
+  function changeFontSize(dir) {
+    if (dir === 0) { fontIdx = 1; }
+    else { fontIdx = Math.max(0, Math.min(2, fontIdx + dir)); }
+    document.querySelector('.content').style.fontSize = fontSizes[fontIdx] + 'px';
+  }
+
+  function toggleMode() {
+    document.body.classList.toggle('dark-mode');
+    document.getElementById('modeBtn').textContent =
+      document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
+  }
+
+  var player;
+  var isPlaying = false;
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('ytplayer', { events: { 'onReady': function(e) {} } });
+  }
+  function toggleBGM() {
+    var btn = document.getElementById('bgmBtn');
+    if (!isPlaying) {
+      if (player && player.playVideo) player.playVideo();
+      btn.textContent = '■';
+      isPlaying = true;
+    } else {
+      if (player && player.stopVideo) player.stopVideo();
+      btn.textContent = '▶';
+      isPlaying = false;
+    }
+  }
+</script>
+</body>
+</html>
