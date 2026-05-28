@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그 여름을 기억해</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #222222;
+    --header-bg: #0b0b14;
+    --btn-wrap-bg: #0b0b14;
+    --footer-bg: #0b0b14;
+  }
+  .dark-mode {
+    --bg: #111111;
+    --text: #ffffff;
+    --header-bg: #111120;
+    --btn-wrap-bg: #111120;
+    --footer-bg: #111120;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important; }
+  html, body {
+    background: var(--bg);
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 16px; line-height: 2; color: var(--text);
+    cursor: default; transition: background 0.3s, color 0.3s;
+  }
+  .header, .btn-wrap, .footer, #settings-wrap, #top-btn {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
+  }
+  .content { cursor: default !important; }
+  a, button {
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: #888888; z-index: 9999; transition: width 0.1s;
+  }
+  .header {
+    background: var(--header-bg); color: #ffffff;
+    text-align: center; padding: 60px 20px 50px; transition: background 0.3s;
+  }
+  .header-img-wrap { margin-top: 0; margin-bottom: 60px; display: flex; justify-content: center; }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
+  .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
+  .header .trigger { font-size: 13px; }
+  .bgm-wrap {
+    background: var(--bg); display: flex; justify-content: center;
+    padding: 30px 20px 0; transition: background 0.3s;
+  }
+  .bgm-btn {
+    width: 48px; height: 32px; border: 1px solid var(--text);
+    background: transparent; color: var(--text); font-size: 14px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .bgm-btn:hover { opacity: 0.6; }
+  #settings-wrap {
+    position: fixed; bottom: 36px; left: 28px; z-index: 999;
+    display: flex; flex-direction: row; align-items: flex-end; gap: 8px;
+  }
+  #settings-panel {
+    background: rgba(30,30,40,0.82); border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px); padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    opacity: 0; pointer-events: none; transform: translateX(-10px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  #settings-panel.open { opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .panel-row { display: flex; flex-direction: row; align-items: center; gap: 6px; }
+  .panel-row:last-child { justify-content: center; }
+  .ctrl-btn {
+    border: 1px solid rgba(255,255,255,0.2); background: transparent; color: #cccccc;
+    font-family: 'Nanum Gothic', sans-serif; padding: 3px 10px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .ctrl-btn.mode-btn { font-size: 13px; width: 100%; text-align: center; gap: 4px; }
+  .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); color: #ffffff; }
+  #gear-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5); background: rgba(20,20,30,0.55);
+    color: rgba(200,200,200,0.7); font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px); transition: background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  #gear-btn:hover { background: rgba(40,40,55,0.8); color: rgba(255,255,255,0.9); }
+  .content {
+    max-width: 680px; margin: 0 auto; padding: 40px 24px 60px;
+    background: var(--bg); transition: background 0.3s;
+  }
+  .btn-wrap {
+    display: flex; gap: 16px; justify-content: center;
+    padding: 60px 0; background: var(--btn-wrap-bg); transition: background 0.3s;
+  }
+  .btn {
+    display: flex; align-items: center; gap: 8px; padding: 10px 28px;
+    border: 1px solid #555555; background: transparent; color: #cccccc;
+    font-size: 14px; letter-spacing: 1px; text-decoration: none;
+    font-family: 'Nanum Gothic', sans-serif; transition: border-color 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+  }
+  .btn:hover { border-color: #ffffff; color: #ffffff; }
+  .btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+  .footer {
+    background: var(--footer-bg); text-align: center; padding: 20px;
+    font-size: 12px; color: #ffffff; font-family: 'Nanum Gothic', sans-serif;
+    transition: background 0.3s;
+  }
+  #top-btn {
+    position: fixed; bottom: 36px; right: 28px;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5); background: rgba(20,20,30,0.55);
+    color: rgba(200,200,200,0.7); font-size: 11px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px); opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, background 0.2s, color 0.2s;
+    cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 1; pointer-events: auto; }
+  #top-btn:hover { background: rgba(40,40,55,0.8); color: rgba(255,255,255,0.9); }
+  @media (max-width: 600px) {
+    .header h1 { font-size: 22px; }
+    .content { padding: 30px 18px 50px; }
+  }
+</style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
+  <iframe id="ytplayer_x3-mNx5b8h0"
+    src="https://www.youtube.com/embed/x3-mNx5b8h0?enablejsapi=1&autoplay=0"
+    allow="autoplay" allowfullscreen>
+  </iframe>
+</div>
+<div id="progress-bar"></div>
+<div class="header">
+  <div class="header-img-wrap">
+    <img src="/images/top-world.png" alt="" style="width:57px; height:auto;">
+  </div>
+  <h1>그 여름을 기억해</h1>
+  <div class="author">필폭스</div>
+  <div class="trigger" style="font-size:13px; color:#0b0b14;">*No Trigger Warning</div>
+</div>
+
+<div class="content">
+    <img src="https://art.theworldbyyp.kr/39/39(1).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/39/39(2).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/39/39(3).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/39/39(4).png" alt="" style="width:100%; height:auto; display:block;">
+<div class="bgm-wrap">
+  <button class="bgm-btn" id="bgmBtn_mid_39_4" onclick="toggleBGM('x3-mNx5b8h0', 'mid_39_4')">▶</button>
+</div>
+    <img src="https://art.theworldbyyp.kr/39/39(5).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/39/39(6).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/39/39(7).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/39/39(8).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/39/39(9).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/39/39(10).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/39/39(11).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/39/39(12).png" alt="" style="width:100%; height:auto; display:block;">
+</div>
+
+<div class="btn-wrap">
+  <a class="btn" href="/art/">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
+    목록으로
+  </a>
+  <a class="btn" href="https://forms.gle/eaJu5Zz7BGjGH1bR9" target="_blank">
+    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    후기쓰기
+  </a>
+</div>
+<div class="footer">© 2026 @worldbyyp. All Rights Reserved.</div>
+<div id="settings-wrap">
+  <button id="gear-btn" onclick="toggleSettings()">⚙</button>
+  <div id="settings-panel">
+    <div class="panel-row">
+      <button class="ctrl-btn mode-btn" id="modeBtn" onclick="toggleMode()">🌙 다크모드</button>
+    </div>
+  </div>
+</div>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
+<script>
+
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, true);
+  document.addEventListener('selectstart', function(e){ e.preventDefault(); return false; }, true);
+  document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; }, true);
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (scrollTop / docHeight * 100) + '%';
+    var btn = document.getElementById('top-btn');
+    if (scrollTop > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+  function toggleSettings() {
+    document.getElementById('settings-panel').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('settings-wrap');
+    if (!wrap.contains(e.target)) {
+      document.getElementById('settings-panel').classList.remove('open');
+    }
+  });
+  function toggleMode() {
+    document.body.classList.toggle('dark-mode');
+    document.getElementById('modeBtn').textContent =
+      document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
+  }
+
+  var players = {};
+  var isPlaying = {};
+  isPlaying['x3-mNx5b8h0'] = false;
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+  function onYouTubeIframeAPIReady() {
+    players['x3-mNx5b8h0'] = new YT.Player('ytplayer_x3-mNx5b8h0', {events: {'onReady': function(e) {}}});
+  }
+  function toggleBGM(ytId, btnId) {
+    var btn = document.getElementById('bgmBtn_' + btnId);
+    if (!isPlaying[ytId]) {
+      if (players[ytId] && players[ytId].playVideo) players[ytId].playVideo();
+      btn.textContent = '■';
+      isPlaying[ytId] = true;
+    } else {
+      if (players[ytId] && players[ytId].stopVideo) players[ytId].stopVideo();
+      btn.textContent = '▶';
+      isPlaying[ytId] = false;
+    }
+  }
+</script>
+</body>
+</html>
