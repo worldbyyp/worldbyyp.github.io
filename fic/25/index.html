@@ -65,7 +65,8 @@
     transition: background 0.3s;
   }
   .header-img-wrap {
-    margin-bottom: 16px;
+    margin-top: 0;
+    margin-bottom: 60px;
     display: flex;
     justify-content: center;
   }
@@ -273,6 +274,32 @@
 </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  <div id="adult-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0b0b14;z-index:9999;display:flex;align-items:center;justify-content:center;font-family:'Nanum Gothic',sans-serif;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:24px;">
+      <div style="color:#aaaaaa;font-size:13px;letter-spacing:2px;">비밀번호를 입력하세요</div>
+      <a href="https://posty.pe/7kuplk" target="_blank" style="background:transparent;border:1px solid #444444;color:#666666;font-size:11px;padding:6px 18px;letter-spacing:1px;text-decoration:none;" onmouseover="this.style.borderColor='#888';this.style.color='#aaa'" onmouseout="this.style.borderColor='#444';this.style.color='#666'">비밀번호 확인하기</a>
+      <div style="display:flex;gap:10px;align-items:flex-end;">
+        <input type="password" id="adultPw" maxlength="6" placeholder="······" style="background:transparent;border:none;border-bottom:1px solid #555555;color:#ffffff;font-size:20px;letter-spacing:6px;width:140px;padding:8px 4px;text-align:center;font-family:'Nanum Gothic',sans-serif;outline:none;" onfocus="this.style.borderBottomColor='#ffffff'" onblur="this.style.borderBottomColor='#555555'">
+        <button onclick="checkAdultPw()" style="background:transparent;border:1px solid #555555;color:#aaaaaa;font-size:13px;padding:8px 24px;letter-spacing:1px;font-family:'Nanum Gothic',sans-serif;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff'" onmouseout="this.style.borderColor='#555';this.style.color='#aaa'">입력</button>
+      </div>
+      <div id="adultErr" style="color:#cc4444;font-size:12px;letter-spacing:1px;height:16px;"></div>
+    </div>
+  </div>
+  <script>
+    function checkAdultPw() {
+      var val = document.getElementById('adultPw').value.trim();
+      if (val === '616479') {
+        document.getElementById('adult-overlay').style.display = 'none';
+      } else {
+        document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
+        document.getElementById('adultPw').value = '';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      var pw = document.getElementById('adultPw');
+      if (pw) pw.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAdultPw(); });
+    });
+  </script>
 
 <!-- 진행바 -->
 <div id="progress-bar"></div>
@@ -282,7 +309,7 @@
 <!-- 헤더 -->
 <div class="header">
   <div class="header-img-wrap">
-    <div class="header-img-placeholder">★</div>
+    <img src="/images/top-world.png" alt="" style="width:57px; height:auto;">
     <!-- 이미지 생기면 위 div 지우고 아래 주석 해제:
     <img src="★이미지주소★" alt="" style="width:80px; height:auto;">
     -->
@@ -423,7 +450,7 @@
 <p>그때, 들짐승이 그르렁거리는 소리가 들렸다. 아니 어쩌면 사람이 내는 소리 같기도 했다. 그 소리의 주인공이 누군지 가늠하지도 못한 원필은 기절하고야 말았다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“감히 인간 주제에 건방지게 산신님의 품에 안겨 왔다니요. 저는 용서할 수 없습니다. 가뜩이나 저 녀석은!”</p>
@@ -607,7 +634,7 @@
 <p>그중에서도 가장 평범하고 무난한 은 단검을 집어 원필은 제 품에 챙겨 넣었다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“네 놈이 숨는다고 내가 발견하지 못할 줄 알았더냐?”</p>
@@ -837,7 +864,7 @@
 <p>듣지 못할 이야기를 뱉은 영현은 원필의 동그란 머리통에 입을 맞췄다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“그쯤 하셨어야 했습니다.”</p>
@@ -945,7 +972,7 @@
 <p>그 방법을 찾아내면 얼마나 좋을까. 하지만 지금 당장 찾아낼 방도가 없으니, 원필은 자신을 향하는 영현을 시선에 등을 돌리는 것 외에는 할 수 있는 게 없었다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>연회 이후로 또 한차례 내부가 소란해졌다. 원필은 이제 더 이상 영현과 함께하지 못하게 되었다. 영현이 얼굴을 비추지 않았다. 하긴…. 저라도 그랬을 것이다.</p>
@@ -1063,7 +1090,7 @@
 <p>그리 영현을 불러대었으나, 영현은 다시 돌아오지 않았다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“이게 무엇입니까?”</p>
@@ -1160,7 +1187,7 @@
 <p>울컥한 원필이 왕에게 달려들려 했으나, 몸이 움직이지 않았다. 큰 충격을 받은 탓에 눈앞이 흐릿해지고 어지러웠다. 그대로 원필은 그 자리에서 기절하고야 말았다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>“왕자님, 나와보세요! 눈이 내립니다! 어서요 어서!”</p>
@@ -1204,7 +1231,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>-마침-</p>
+<p style="text-align:right;">-마침-</p>
 
 </div>
 <!-- 본문 끝 -->
