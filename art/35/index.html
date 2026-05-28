@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>나에게서 당신에게</title>
+<title>59.5AU</title>
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -140,8 +140,8 @@
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
 <div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
-  <iframe id="ytplayer_YSm8nVlGp5Y"
-    src="https://www.youtube.com/embed/YSm8nVlGp5Y?enablejsapi=1&autoplay=0"
+  <iframe id="ytplayer_yiPTOpGWaeM"
+    src="https://www.youtube.com/embed/yiPTOpGWaeM?enablejsapi=1&autoplay=0"
     allow="autoplay" allowfullscreen>
   </iframe>
 </div>
@@ -150,15 +150,27 @@
   <div class="header-img-wrap">
     <img src="/images/top-world.png" alt="" style="width:57px; height:auto;">
   </div>
-  <h1>나에게서 당신에게</h1>
-  <div class="author">마카</div>
+  <h1>59.5AU</h1>
+  <div class="author">빠삐</div>
   <div class="trigger" style="font-size:13px; color:#0b0b14;">*No Trigger Warning</div>
 </div>
 <div class="bgm-wrap">
-  <button class="bgm-btn" id="bgmBtn_top_34" onclick="toggleBGM('YSm8nVlGp5Y', 'top_34')">▶</button>
+  <button class="bgm-btn" id="bgmBtn_top_35" onclick="toggleBGM('yiPTOpGWaeM', 'top_35')">▶</button>
 </div>
 <div class="content">
-    <img src="https://art.theworldbyyp.kr/34/34(1).png" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(1).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(2).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(3).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(4).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(5).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(6).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(7).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(8).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(9).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(10).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(11).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(12).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/35/35(13).jpeg" alt="" style="width:100%; height:auto; display:block;">
 </div>
 
 <div class="btn-wrap">
@@ -211,12 +223,12 @@
 
   var players = {};
   var isPlaying = {};
-  isPlaying['YSm8nVlGp5Y'] = false;
+  isPlaying['yiPTOpGWaeM'] = false;
   var tag = document.createElement('script');
   tag.src = 'https://www.youtube.com/iframe_api';
   document.head.appendChild(tag);
   function onYouTubeIframeAPIReady() {
-    players['YSm8nVlGp5Y'] = new YT.Player('ytplayer_YSm8nVlGp5Y', {events: {'onReady': function(e) {}}});
+    players['yiPTOpGWaeM'] = new YT.Player('ytplayer_yiPTOpGWaeM', {events: {'onReady': function(e) {}}});
   }
   function toggleBGM(ytId, btnId) {
     var btn = document.getElementById('bgmBtn_' + btnId);
