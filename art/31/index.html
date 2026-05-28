@@ -20,22 +20,16 @@
     --btn-wrap-bg: #111120;
     --footer-bg: #111120;
   }
-
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
+  * { margin: 0; padding: 0; box-sizing: border-box;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
     -ms-user-select: none !important;
-    user-select: none !important;
-  }
+    user-select: none !important; }
   html, body {
     background: var(--bg);
     font-family: 'Nanum Gothic', sans-serif;
-    font-size: 16px;
-    line-height: 2;
-    color: var(--text);
-    cursor: default;
-    transition: background 0.3s, color 0.3s;
+    font-size: 16px; line-height: 2; color: var(--text);
+    cursor: default; transition: background 0.3s, color 0.3s;
   }
   .header, .btn-wrap, .footer, #settings-wrap, #top-btn {
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default !important;
@@ -44,199 +38,99 @@
   a, button {
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
   }
-
   #progress-bar {
-    position: fixed;
-    top: 0; left: 0;
-    height: 3px;
-    width: 0%;
-    background: #888888;
-    z-index: 9999;
-    transition: width 0.1s;
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: #888888; z-index: 9999; transition: width 0.1s;
   }
-
   .header {
-    background: var(--header-bg);
-    color: #ffffff;
-    text-align: center;
-    padding: 60px 20px 50px;
-    transition: background 0.3s;
+    background: var(--header-bg); color: #ffffff;
+    text-align: center; padding: 60px 20px 50px; transition: background 0.3s;
   }
-  .header-img-wrap {
-    margin-top: 0;
-    margin-bottom: 60px;
-    display: flex;
-    justify-content: center;
-  }
+  .header-img-wrap { margin-top: 0; margin-bottom: 60px; display: flex; justify-content: center; }
   .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
   .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
   .header .trigger { font-size: 13px; }
-
   .bgm-wrap {
-    background: var(--bg);
-    display: flex;
-    justify-content: center;
-    padding: 30px 20px 0;
-    transition: background 0.3s;
+    background: var(--bg); display: flex; justify-content: center;
+    padding: 30px 20px 0; transition: background 0.3s;
   }
   .bgm-btn {
-    width: 48px;
-    height: 32px;
-    border: 1px solid var(--text);
-    background: transparent;
-    color: var(--text);
-    font-size: 14px;
+    width: 48px; height: 32px; border: 1px solid var(--text);
+    background: transparent; color: var(--text); font-size: 14px;
     font-family: 'Nanum Gothic', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     transition: border-color 0.2s, color 0.2s;
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
   }
-  .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
-
+  .bgm-btn:hover { opacity: 0.6; }
   #settings-wrap {
-    position: fixed;
-    bottom: 36px;
-    left: 28px;
-    z-index: 999;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    gap: 8px;
+    position: fixed; bottom: 36px; left: 28px; z-index: 999;
+    display: flex; flex-direction: row; align-items: flex-end; gap: 8px;
   }
   #settings-panel {
-    background: rgba(30, 30, 40, 0.82);
-    border: 1px solid rgba(255,255,255,0.12);
-    backdrop-filter: blur(6px);
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(-10px);
+    background: rgba(30,30,40,0.82); border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px); padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    opacity: 0; pointer-events: none; transform: translateX(-10px);
     transition: opacity 0.25s, transform 0.25s;
   }
-  #settings-panel.open {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateX(0);
-  }
-  .panel-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 6px;
-  }
-  .panel-row:last-child {
-    justify-content: center;
-  }
+  #settings-panel.open { opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .panel-row { display: flex; flex-direction: row; align-items: center; gap: 6px; }
+  .panel-row:last-child { justify-content: center; }
   .ctrl-btn {
-    border: 1px solid rgba(255,255,255,0.2);
-    background: transparent;
-    color: #cccccc;
-    font-family: 'Nanum Gothic', sans-serif;
-    padding: 3px 10px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.2); background: transparent; color: #cccccc;
+    font-family: 'Nanum Gothic', sans-serif; padding: 3px 10px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
     transition: border-color 0.2s, color 0.2s;
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
   }
-  .ctrl-btn.mode-btn { font-size: 13px; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; gap: 4px; }
+  .ctrl-btn.mode-btn { font-size: 13px; width: 100%; text-align: center; gap: 4px; }
   .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); color: #ffffff; }
   #gear-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5);
-    background: rgba(20, 20, 30, 0.55);
-    color: rgba(200,200,200,0.7);
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-    transition: background 0.2s, color 0.2s;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5); background: rgba(20,20,30,0.55);
+    color: rgba(200,200,200,0.7); font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px); transition: background 0.2s, color 0.2s;
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
   }
-  #gear-btn:hover {
-    background: rgba(40, 40, 55, 0.8);
-    color: rgba(255,255,255,0.9);
-  }
-
+  #gear-btn:hover { background: rgba(40,40,55,0.8); color: rgba(255,255,255,0.9); }
   .content {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 40px 24px 60px;
-    background: var(--bg);
-    transition: background 0.3s;
+    max-width: 680px; margin: 0 auto; padding: 40px 24px 60px;
+    background: var(--bg); transition: background 0.3s;
   }
-
   .btn-wrap {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    padding: 60px 0 60px;
-    background: var(--btn-wrap-bg);
-    transition: background 0.3s;
+    display: flex; gap: 16px; justify-content: center;
+    padding: 60px 0; background: var(--btn-wrap-bg); transition: background 0.3s;
   }
   .btn {
-    display: flex; align-items: center; gap: 8px;
-    padding: 10px 28px;
-    border: 1px solid #555555;
-    background: transparent;
-    color: #cccccc;
-    font-size: 14px;
-    letter-spacing: 1px;
-    text-decoration: none;
-    font-family: 'Nanum Gothic', sans-serif;
-    transition: border-color 0.2s, color 0.2s;
+    display: flex; align-items: center; gap: 8px; padding: 10px 28px;
+    border: 1px solid #555555; background: transparent; color: #cccccc;
+    font-size: 14px; letter-spacing: 1px; text-decoration: none;
+    font-family: 'Nanum Gothic', sans-serif; transition: border-color 0.2s, color 0.2s;
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
   }
   .btn:hover { border-color: #ffffff; color: #ffffff; }
   .btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
-
   .footer {
-    background: var(--footer-bg);
-    text-align: center;
-    padding: 20px;
-    font-size: 12px;
-    color: #ffffff;
-    font-family: 'Nanum Gothic', sans-serif;
+    background: var(--footer-bg); text-align: center; padding: 20px;
+    font-size: 12px; color: #ffffff; font-family: 'Nanum Gothic', sans-serif;
     transition: background 0.3s;
   }
-
   #top-btn {
-    position: fixed;
-    bottom: 36px;
-    right: 28px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5);
-    background: rgba(20, 20, 30, 0.55);
-    color: rgba(200,200,200,0.7);
-    font-size: 11px;
+    position: fixed; bottom: 36px; right: 28px;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5); background: rgba(20,20,30,0.55);
+    color: rgba(200,200,200,0.7); font-size: 11px;
     font-family: 'Nanum Gothic', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-    opacity: 0;
-    pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px); opacity: 0; pointer-events: none;
     transition: opacity 0.3s, background 0.2s, color 0.2s;
     cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important;
     z-index: 999;
   }
   #top-btn.visible { opacity: 1; pointer-events: auto; }
-  #top-btn:hover {
-    background: rgba(40, 40, 55, 0.8);
-    color: rgba(255,255,255,0.9);
-  }
-
+  #top-btn:hover { background: rgba(40,40,55,0.8); color: rgba(255,255,255,0.9); }
   @media (max-width: 600px) {
     .header h1 { font-size: 22px; }
     .content { padding: 30px 18px 50px; }
@@ -245,40 +139,32 @@
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
-
 <div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
   <iframe id="ytplayer_PxNnVYUKWM8"
     src="https://www.youtube.com/embed/PxNnVYUKWM8?enablejsapi=1&autoplay=0"
     allow="autoplay" allowfullscreen>
   </iframe>
 </div>
-
-
 <div id="progress-bar"></div>
-
 <div class="header">
   <div class="header-img-wrap">
     <img src="/images/top-world.png" alt="" style="width:57px; height:auto;">
   </div>
   <h1>형은 가끔</h1>
   <div class="author">두덩</div>
-  <div class="trigger" style="font-size: 13px; color: #0b0b14;">*No Trigger Warning</div>
+  <div class="trigger" style="font-size:13px; color:#0b0b14;">*No Trigger Warning</div>
 </div>
-
 <div class="bgm-wrap">
   <button class="bgm-btn" id="bgmBtn_top_31" onclick="toggleBGM('PxNnVYUKWM8', 'top_31')">▶</button>
 </div>
-
 <div class="content">
-    <img src="https://art.theworldbyyp.kr/31/31(1).jpg" alt="" style="width:100%; height:auto; display:block; margin-bottom:8px;">
-    <img src="https://art.theworldbyyp.kr/31/31(2).jpg" alt="" style="width:100%; height:auto; display:block; margin-bottom:8px;">
-    <img src="https://art.theworldbyyp.kr/31/31(3).jpg" alt="" style="width:100%; height:auto; display:block; margin-bottom:8px;">
-    <img src="https://art.theworldbyyp.kr/31/31(4).jpg" alt="" style="width:100%; height:auto; display:block; margin-bottom:8px;">
-    <img src="https://art.theworldbyyp.kr/31/31(5).jpg" alt="" style="width:100%; height:auto; display:block; margin-bottom:8px;">
-    <img src="https://art.theworldbyyp.kr/31/31(6).jpg" alt="" style="width:100%; height:auto; display:block; margin-bottom:8px;">
+    <img src="https://art.theworldbyyp.kr/31/31(1).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/31/31(2).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/31/31(3).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/31/31(4).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/31/31(5).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/31/31(6).jpg" alt="" style="width:100%; height:auto; display:block;">
 </div>
-
-
 
 <div class="btn-wrap">
   <a class="btn" href="/art/">
@@ -290,9 +176,7 @@
     후기쓰기
   </a>
 </div>
-
 <div class="footer">© 2026 @worldbyyp. All Rights Reserved.</div>
-
 <div id="settings-wrap">
   <button id="gear-btn" onclick="toggleSettings()">⚙</button>
   <div id="settings-panel">
@@ -301,14 +185,12 @@
     </div>
   </div>
 </div>
-
 <button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
-
 <script>
+
   document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, true);
   document.addEventListener('selectstart', function(e){ e.preventDefault(); return false; }, true);
   document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; }, true);
-
   window.addEventListener('scroll', function() {
     var scrollTop = window.scrollY;
     var docHeight = document.body.scrollHeight - window.innerHeight;
@@ -317,7 +199,6 @@
     if (scrollTop > 300) btn.classList.add('visible');
     else btn.classList.remove('visible');
   });
-
   function toggleSettings() {
     document.getElementById('settings-panel').classList.toggle('open');
   }
@@ -327,7 +208,6 @@
       document.getElementById('settings-panel').classList.remove('open');
     }
   });
-
   function toggleMode() {
     document.body.classList.toggle('dark-mode');
     document.getElementById('modeBtn').textContent =
