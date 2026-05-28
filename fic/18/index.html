@@ -65,7 +65,8 @@
     transition: background 0.3s;
   }
   .header-img-wrap {
-    margin-bottom: 16px;
+    margin-top: 0;
+    margin-bottom: 60px;
     display: flex;
     justify-content: center;
   }
@@ -273,6 +274,32 @@
 </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  <div id="adult-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0b0b14;z-index:9999;display:flex;align-items:center;justify-content:center;font-family:'Nanum Gothic',sans-serif;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:24px;">
+      <div style="color:#aaaaaa;font-size:13px;letter-spacing:2px;">비밀번호를 입력하세요</div>
+      <a href="https://posty.pe/7kuplk" target="_blank" style="background:transparent;border:1px solid #444444;color:#666666;font-size:11px;padding:6px 18px;letter-spacing:1px;text-decoration:none;" onmouseover="this.style.borderColor='#888';this.style.color='#aaa'" onmouseout="this.style.borderColor='#444';this.style.color='#666'">비밀번호 확인하기</a>
+      <div style="display:flex;gap:10px;align-items:flex-end;">
+        <input type="password" id="adultPw" maxlength="6" placeholder="······" style="background:transparent;border:none;border-bottom:1px solid #555555;color:#ffffff;font-size:20px;letter-spacing:6px;width:140px;padding:8px 4px;text-align:center;font-family:'Nanum Gothic',sans-serif;outline:none;" onfocus="this.style.borderBottomColor='#ffffff'" onblur="this.style.borderBottomColor='#555555'">
+        <button onclick="checkAdultPw()" style="background:transparent;border:1px solid #555555;color:#aaaaaa;font-size:13px;padding:8px 24px;letter-spacing:1px;font-family:'Nanum Gothic',sans-serif;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff'" onmouseout="this.style.borderColor='#555';this.style.color='#aaa'">입력</button>
+      </div>
+      <div id="adultErr" style="color:#cc4444;font-size:12px;letter-spacing:1px;height:16px;"></div>
+    </div>
+  </div>
+  <script>
+    function checkAdultPw() {
+      var val = document.getElementById('adultPw').value.trim();
+      if (val === '616479') {
+        document.getElementById('adult-overlay').style.display = 'none';
+      } else {
+        document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
+        document.getElementById('adultPw').value = '';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      var pw = document.getElementById('adultPw');
+      if (pw) pw.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAdultPw(); });
+    });
+  </script>
 
 <!-- 진행바 -->
 <div id="progress-bar"></div>
@@ -282,7 +309,7 @@
 <!-- 헤더 -->
 <div class="header">
   <div class="header-img-wrap">
-    <div class="header-img-placeholder">★</div>
+    <img src="/images/top-world.png" alt="" style="width:57px; height:auto;">
     <!-- 이미지 생기면 위 div 지우고 아래 주석 해제:
     <img src="★이미지주소★" alt="" style="width:80px; height:auto;">
     -->
@@ -319,7 +346,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -364,7 +391,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -378,7 +405,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -390,7 +417,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -441,7 +468,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -465,7 +492,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -524,7 +551,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -621,7 +648,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -676,7 +703,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -688,7 +715,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -705,7 +732,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -766,7 +793,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -803,7 +830,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -815,7 +842,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -828,7 +855,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -883,7 +910,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -896,7 +923,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -911,7 +938,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -983,7 +1010,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1028,7 +1055,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1090,7 +1117,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1130,7 +1157,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1193,7 +1220,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1205,7 +1232,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1283,7 +1310,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1294,7 +1321,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1326,7 +1353,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1345,7 +1372,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1364,7 +1391,7 @@
 <p>키퍼가 반찬을 마무리하는 동안, 거실 한 편에서 무언가 끝없이 주고받는 목소리가 들렸다. 선명하진 않지만, 근근이 웃음소리가 들렸던 것도 같다. 키퍼는 뒤 한 번 돌아보지 않은 채, 미미한 웃음을 새겼다. 생기 하나 없던 저택이 꼭 봄처럼 느껴졌다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>둘 다 거실 바닥에 내려앉았다. 소파에 기댄 영현의 앞으로 원필의 등판이 비친다. 영현을 등받이 삼아 기댔다가도 귓가와 목덜미를 빨아대는 통에, 자꾸만 상체를 바로 세운다. 그럼에도 영현의 손바닥이 금세 허리춤을 꿰차 당겨온다. 그 상의를 들추고 뱃가죽을 쓸어내면, 원필의 웃음소리가 바람처럼 흐른다. 동시에 영현의 손등으로 손바닥이 겹쳐온다. 그 온기만으로도 허기가 채워지는 듯하다.</p>
@@ -1438,7 +1465,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1603,7 +1630,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1653,7 +1680,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1664,7 +1691,7 @@
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p>***</p>
+<p style="text-align:center;">***</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
