@@ -6,30 +6,35 @@
   <title>ART — YOUNGPIL Webzine : 世界2</title>
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse1_tqbkrp.png'), default; }
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('https://art.theworldbyyp.kr/main/mouse-basic.png'), default; }
     body { background: #0b0b14; font-family: 'Nanum Gothic', sans-serif; }
 
-    .nav-outer { padding: 60px 0; }
+    .nav-outer { padding: 80px 0 60px 0; }
+    .top-img-wrap { padding-top: 80px; padding-bottom: 10px; display:flex; justify-content:center; }
     .nav-wrap {
       position: relative;
       width: 100%; max-width: 672px;
       margin: 0 auto; line-height: 0;
     }
     .nav-wrap img { display: block; width: 100%; height: auto; pointer-events: none; }
-    .nav-wrap img.hover-img { position: absolute; top:0; left:0; opacity:0; transition: opacity 0.1s; }
+    .nav-wrap img.hover-img { position: absolute; top:0; left:0; opacity:0; transition: opacity 0.0s; }
     .zone {
       position: absolute; z-index: 10; text-decoration: none;
-      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer;
+      cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer;
     }
-    .zone-home   { left:0%;  top:0%; width:13%; height:100%; }
-    .zone-fic    { left:76%; top:0%; width:6%;  height:100%; }
-    .zone-art    { left:82%; top:0%; width:18%; height:70%; }
-    .zone-behind { left:82%; top:50%; width:18%; height:50%; }
+    .zone-home   { left:0%;   top:0%;  width:13%; height:100%; }
+    .zone-fic    { left:76%;  top:0%;  width:7%;  height:70%; }
+    .zone-art    { left:84%;  top:0%;  width:7%;  height:70%; }
+    .zone-behind { left:88%;  top:55%; width:7%;  height:17%; }
+    .zone-rew    { left:55%;  top:68%; width:5%;  height:24%; }
+    .zone-ffw    { left:60%;  top:68%; width:5%;  height:24%; }
 
     .page-wrap { max-width: 672px; margin: 0 auto; padding: 0 20px; }
     .list { display: flex; flex-direction: column; gap: 12px; }
 
-    .card, .card * { cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer !important; }
+    .card, .card * {
+      cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
+    }
     .card {
       position: relative; display: block;
       text-decoration: none; overflow: hidden; border-radius: 6px;
@@ -51,24 +56,23 @@
       position: relative; top: -1px;
     }
     .author {
-      font-size: clamp(7px, 1.8vw, 14px);
-      color: #888; letter-spacing: 0.5px; line-height: 1;
+      font-size: clamp(14px, 2vw, 14px);
+      color: #999; letter-spacing: 0.5px; line-height: 1;
       text-shadow: 0 1px 3px rgba(0,0,0,0.8);
       position: relative; top: 3px;
     }
     .tags {
       position: absolute;
-      bottom: 22%; right: 7%;
+      bottom: 22%; right: 9.4%;
       display: flex; gap: 4px; align-items: center;
     }
     .tag {
-      font-size: clamp(6px, 1.2vw, 11px); color: #fff;
+      font-size: clamp(6.5px, 1.2vw, 11px); color: #fff;
       border: 1px solid rgba(255,255,255,0.7); border-radius: 4px;
       padding: 2px 6px; background: rgba(0,0,0,0.35);
       white-space: nowrap; line-height: 1.4; text-align: center;
       font-family: 'Nanum Gothic', sans-serif;
     }
-
     .footer-area {
       height: 300px; display: flex;
       align-items: flex-end; justify-content: center;
@@ -83,7 +87,7 @@
       border: 1px solid rgba(255,255,255,0.2);
       color: #888; font-size: 11px;
       display: flex; align-items: center; justify-content: center;
-      cursor: url('https://res.cloudinary.com/dcaiskf8f/image/upload/v1779699457/mouse2_nubpj6.png'), pointer; text-decoration: none;
+      cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer; text-decoration: none;
       opacity: 0; transition: opacity 0.3s;
     }
     #top-btn.visible { opacity: 1; }
@@ -91,24 +95,31 @@
   </style>
 </head>
 <body>
+
+  <!-- 네비 -->
   <div class="nav-outer">
     <div class="nav-wrap">
-      <img class="base" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-basic_vnsvwz.png" alt="">
-      <img class="hover-img" id="imgHome"   src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-home_lm2jsl.png"   alt="">
-      <img class="hover-img" id="imgFic"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-fic_nwj22t.png"    alt="">
-      <img class="hover-img" id="imgArt"    src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-art_zvol24.png"    alt="">
-      <img class="hover-img" id="imgBehind" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779803182/menu-behind_toqrv9.png" alt="">
+      <img class="base" src="https://art.theworldbyyp.kr/main/main-basic.png" alt="">
+      <img class="hover-img" id="imgHome"   src="https://art.theworldbyyp.kr/main/main-home.png"   alt="">
+      <img class="hover-img" id="imgFic"    src="https://art.theworldbyyp.kr/main/main-fic.png"    alt="">
+      <img class="hover-img" id="imgArt"    src="https://art.theworldbyyp.kr/main/main-art.png"    alt="">
+      <img class="hover-img" id="imgBehind" src="https://art.theworldbyyp.kr/main/main-behind.png" alt="">
+      <img class="hover-img" id="imgRew"    src="https://art.theworldbyyp.kr/main/main-REW.png"    alt="">
+      <img class="hover-img" id="imgFfw"    src="https://art.theworldbyyp.kr/main/main-FFW.png"    alt="">
       <a class="zone zone-home"   href="/home"   onmouseenter="showHover('imgHome')"   onmouseleave="hideAll()"></a>
       <a class="zone zone-fic"    href="/fic"    onmouseenter="showHover('imgFic')"    onmouseleave="hideAll()"></a>
       <a class="zone zone-art"    href="/art"    onmouseenter="showHover('imgArt')"    onmouseleave="hideAll()"></a>
       <a class="zone zone-behind" href="/behind" onmouseenter="showHover('imgBehind')" onmouseleave="hideAll()"></a>
+      <a class="zone zone-rew"    href="https://theworldofyp.web.app/" target="_blank" onmouseenter="showHover('imgRew')" onmouseleave="hideAll()"></a>
+      <a class="zone zone-ffw"    href="#" onmouseenter="showHover('imgFfw')" onmouseleave="hideAll()" onclick="showFfw(); return false;"></a>
     </div>
   </div>
 
+  <!-- 카드 목록 -->
   <div class="page-wrap">
     <div class="list">
     <a class="card" href="/art/28">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art28_lijlxd.png" alt="여름 키우기">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art28.png" alt="여름 키우기">
       <div class="inner">
         <div class="title">여름 키우기</div>
         <div class="author">김끼잉</div>
@@ -116,7 +127,7 @@
       <div class="tags"><span class="tag">SF</span><span class="tag">인외물</span></div>
     </a>
     <a class="card" href="/art/29">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art29_dcspk2.png" alt="천계의 사랑!">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art29.png" alt="천계의 사랑!">
       <div class="inner">
         <div class="title">천계의 사랑!</div>
         <div class="author">나흘</div>
@@ -124,7 +135,7 @@
       <div class="tags"><span class="tag">현대판타지</span></div>
     </a>
     <a class="card" href="/art/30">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art30_cmzzph.png" alt="소원이 머물다 간 자리">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art30.png" alt="소원이 머물다 간 자리">
       <div class="inner">
         <div class="title">소원이 머물다 간 자리</div>
         <div class="author">덕수</div>
@@ -132,7 +143,7 @@
       <div class="tags"><span class="tag">인외물</span><span class="tag">현대판타지</span></div>
     </a>
     <a class="card" href="/art/31">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art31_e7ro84.png" alt="형은 가끔">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art31.png" alt="형은 가끔">
       <div class="inner">
         <div class="title">형은 가끔</div>
         <div class="author">두덩</div>
@@ -140,7 +151,7 @@
       <div class="tags"><span class="tag">수인물</span><span class="tag">환생물</span></div>
     </a>
     <a class="card" href="/art/32">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art32_toola1.png" alt="페어">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art32.png" alt="페어">
       <div class="inner">
         <div class="title">페어</div>
         <div class="author">두부</div>
@@ -148,7 +159,7 @@
       <div class="tags"><span class="tag">센티넬버스</span></div>
     </a>
     <a class="card" href="/art/33">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880982/art33_tq4kyy.png" alt="적당한 상실">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art33.png" alt="적당한 상실">
       <div class="inner">
         <div class="title">적당한 상실</div>
         <div class="author">따불</div>
@@ -156,7 +167,7 @@
       <div class="tags"><span class="tag">센티넬버스</span></div>
     </a>
     <a class="card" href="/art/34">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art34_elwxjg.png" alt="나에게서 당신에게">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art34.png" alt="나에게서 당신에게">
       <div class="inner">
         <div class="title">나에게서 당신에게</div>
         <div class="author">마카</div>
@@ -164,7 +175,7 @@
       <div class="tags"><span class="tag">SF</span></div>
     </a>
     <a class="card" href="/art/35">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art35_zt3opq.png" alt="59.5AU">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art35.png" alt="59.5AU">
       <div class="inner">
         <div class="title">59.5AU</div>
         <div class="author">빠삐</div>
@@ -172,7 +183,7 @@
       <div class="tags"><span class="tag">SF</span></div>
     </a>
     <a class="card" href="/art/36">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art36_u4gqja.png" alt="만개의 조건">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art36.png" alt="만개의 조건">
       <div class="inner">
         <div class="title">만개의 조건</div>
         <div class="author">뽀동</div>
@@ -180,7 +191,7 @@
       <div class="tags"><span class="tag">인외물</span></div>
     </a>
     <a class="card" href="/art/37">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art37_auevf2.png" alt="龍虎相搏">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art37.png" alt="龍虎相搏">
       <div class="inner">
         <div class="title">龍虎相搏</div>
         <div class="author">음이</div>
@@ -188,7 +199,7 @@
       <div class="tags"><span class="tag">동양판타지</span></div>
     </a>
     <a class="card" href="/art/38">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art38_dhzcye.png" alt="천사는 오늘도 일합니다">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art38.png" alt="천사는 오늘도 일합니다">
       <div class="inner">
         <div class="title">천사는 오늘도 일합니다</div>
         <div class="author">청바</div>
@@ -196,7 +207,7 @@
       <div class="tags"><span class="tag">천사물</span><span class="tag">판타지</span></div>
     </a>
     <a class="card" href="/art/39">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880984/art39_lsa2j5.png" alt="그 여름을 기억해">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art39.png" alt="그 여름을 기억해">
       <div class="inner">
         <div class="title">그 여름을 기억해</div>
         <div class="author">필폭스</div>
@@ -204,7 +215,7 @@
       <div class="tags"><span class="tag">인외물</span><span class="tag">현대물</span></div>
     </a>
     <a class="card" href="/art/40">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880983/art40_hxvh5k.png" alt="At the sight of thee">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art40.png" alt="At the sight of thee">
       <div class="inner">
         <div class="title">At the sight of thee</div>
         <div class="author">loveubettter</div>
@@ -212,7 +223,7 @@
       <div class="tags"><span class="tag">고전물</span></div>
     </a>
     <a class="card" href="/art/41">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880984/art41_qe2izq.png" alt="up all (k)night">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art41.png" alt="up all (k)night">
       <div class="inner">
         <div class="title">up all (k)night</div>
         <div class="author">mai</div>
@@ -220,7 +231,7 @@
       <div class="tags"><span class="tag">시대물</span><span class="tag">왕정물</span></div>
     </a>
     <a class="card" href="/art/42">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880984/art42_cz63u5.png" alt="Server Maintenance">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art42.png" alt="Server Maintenance">
       <div class="inner">
         <div class="title">Server Maintenance</div>
         <div class="author">ravie</div>
@@ -228,7 +239,7 @@
       <div class="tags"><span class="tag">게임물</span><span class="tag">NPC물</span></div>
     </a>
     <a class="card" href="/art/43">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880984/art43_nronul.png" alt="우리 집, 어느 날 (Our Home, One Day)">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art43.png" alt="우리 집, 어느 날 (Our Home, One Day)">
       <div class="inner">
         <div class="title">Our Home, One Day</div>
         <div class="author">Shark</div>
@@ -236,7 +247,7 @@
       <div class="tags"><span class="tag">수인물</span></div>
     </a>
     <a class="card" href="/art/44">
-      <img class="bg" src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1779880984/art44_snjjc9.png" alt="From that rainy night">
+      <img class="bg" src="https://art.theworldbyyp.kr/art/art44.png" alt="From that rainy night">
       <div class="inner">
         <div class="title">From that rainy night</div>
         <div class="author">uyoonim</div>
@@ -267,5 +278,27 @@
       document.getElementById('top-btn').classList.toggle('visible', window.scrollY > 200);
     });
   </script>
+
+<!-- FFW 팝업 -->
+<div id="ffw-popup" style="
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  background:rgba(11,11,20,0.6); border:1px solid rgba(255,255,255,0.2);
+  color:#fff; font-size:22px; letter-spacing:3px; font-weight:400;
+  padding:40px 60px; z-index:200; display:none;
+  align-items:center; gap:24px; white-space:nowrap;
+  backdrop-filter:blur(4px);">
+  <span>세계世界3 : 2028?</span>
+  <button onclick="hideFfw()" style="background:none;border:none;color:#aaa;font-size:18px;cursor:pointer;">✕</button>
+</div>
+<script>
+  function showFfw() {
+    var p = document.getElementById('ffw-popup');
+    p.style.display = 'flex';
+    setTimeout(function() { hideFfw(); }, 3000);
+  }
+  function hideFfw() {
+    document.getElementById('ffw-popup').style.display = 'none';
+  }
+</script>
 </body>
 </html>
