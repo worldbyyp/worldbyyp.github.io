@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦊 RESCUE — YOUNGPIL</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0b0b14; font-family:'Courier New',monospace; color:#fff; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding:20px; }
+h2 { font-size:14px; letter-spacing:4px; color:#888; margin-bottom:4px; }
+.sub { font-size:11px; color:#444; letter-spacing:2px; margin-bottom:12px; }
+.info-bar { display:flex; gap:40px; margin-bottom:10px; font-size:12px; letter-spacing:2px; color:#666; }
+.info-bar span { color:#fff; }
+canvas { border:1px solid #222; display:block; }
+.msg { margin-top:14px; font-size:13px; letter-spacing:3px; color:#888; height:20px; }
+.btn { margin-top:12px; padding:8px 32px; border:1px solid #444; background:transparent; color:#888; cursor:pointer; font-size:12px; letter-spacing:2px; font-family:'Courier New',monospace; }
+.btn:hover { border-color:#fff; color:#fff; }
+.lives { font-size:16px; letter-spacing:4px; }
+</style>
+</head>
+<body>
+<h2>🦊 RESCUE</h2>
+<div class="sub">🐰 를 구하러 가라 — 🧟 를 피해서</div>
+<div class="info-bar">
+  SCORE <span id="score">0</span> &nbsp;&nbsp;
+  STAGE <span id="stage">1</span> &nbsp;&nbsp;
+  LIFE <span id="lives" class="lives">🦊🦊🦊</span>
+</div>
+<canvas id="c"></canvas>
+<div class="msg" id="msg"></div>
+<button class="btn" id="startBtn" onclick="startGame()">START</button>
+
+<script>
+const C = document.getElementById('c');
+const ctx = C.getContext('2d');
+const CELL = 20;
+const COLS = 19;
+const ROWS = 19;
+C.width = COLS * CELL;
+C.height = ROWS * CELL;
+
+// 미로: 1=벽, 0=통로, 2=🐰 목표
+const BASE_MAZE = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+  [1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
+  [1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
+  [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
+  [1,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1],
+  [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+  [1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1],
+  [0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+  [1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,1],
+  [0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0],
+  [1,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1],
+  [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
+  [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
+  [1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
+  [1,1,0,1,0,1,0,1,1,0,1,1,0,1,0,1,0,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+let maze, dots, player, zombies, score, stage, lives, gameLoop, state, invincible;
+
+function getMaze() {
+  return BASE_MAZE.map(r => [...r]);
+}
+
+function startGame() {
+  document.getElementById('startBtn').style.display = 'none';
+  score = 0; stage = 1; lives = 3;
+  updateUI();
+  startStage();
+}
+
+function startStage() {
+  clearInterval(gameLoop);
+  maze = getMaze();
+  // 🐰 목표 위치 (미로 끝 우하단 통로)
+  maze[17][17] = 2;
+
+  // 점 배치
+  dots = [];
+  for(let r=0;r<ROWS;r++)
+    for(let c=0;c<COLS;c++)
+      if(maze[r][c]===0) dots.push({r,c,eaten:false});
+
+  player = {x:1, y:1, dx:0, dy:0, ndx:0, ndy:0};
+  invincible = 0;
+
+  // 스테이지별 좀비 수/속도
+  const zCount = Math.min(2 + stage, 6);
+  const zSpeed = Math.max(120 - stage * 12, 50);
+  zombies = [];
+  const zStarts = [{x:9,y:8},{x:9,y:10},{x:8,y:9},{x:10,y:9},{x:7,y:8},{x:11,y:10}];
+  for(let i=0;i<zCount;i++) {
+    const moveEvery = Math.max(2, 5 - Math.floor(stage/2) - i);
+    zombies.push({x:zStarts[i].x, y:zStarts[i].y, dx:1, dy:0, timer:0, moveEvery});
+  }
+
+  state = 'playing';
+  document.getElementById('msg').textContent = `STAGE ${stage}`;
+  setTimeout(()=>{ if(state==='playing') document.getElementById('msg').textContent=''; }, 1200);
+  gameLoop = setInterval(step, 80);
+}
+
+function canMove(x, y) {
+  if(y<0||y>=ROWS||x<0||x>=COLS) return false;
+  return maze[Math.round(y)][Math.round(x)] !== 1;
+}
+
+function step() {
+  if(state !== 'playing') return;
+  if(invincible > 0) invincible--;
+
+  // 플레이어 이동
+  if(canMove(player.x + player.ndx, player.y + player.ndy)) {
+    player.dx = player.ndx; player.dy = player.ndy;
+  }
+  const nx = player.x + player.dx * 0.5;
+  const ny = player.y + player.dy * 0.5;
+  if(canMove(nx, ny)) { player.x = nx; player.y = ny; }
+
+  // 점 먹기
+  dots.forEach(d => {
+    if(!d.eaten && Math.abs(d.c - player.x) < 0.5 && Math.abs(d.r - player.y) < 0.5) {
+      d.eaten = true; score += 10; updateUI();
+    }
+  });
+
+  // 🐰 도달 체크
+  const pr = Math.max(0,Math.min(ROWS-1,Math.round(player.y)));
+  const pc = Math.max(0,Math.min(COLS-1,Math.round(player.x)));
+  if(maze[pr] && maze[pr][pc] === 2) {
+    state = 'clear';
+    clearInterval(gameLoop);
+    score += stage * 500;
+    updateUI();
+    document.getElementById('msg').textContent = `🐰 RESCUED! +${stage*500}`;
+    setTimeout(()=>{ stage++; updateUI(); startStage(); }, 2000);
+    return;
+  }
+
+  // 좀비 이동
+  zombies.forEach(z => {
+    z.timer++;
+    if(z.timer < z.moveEvery) return;
+    z.timer = 0;
+
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+    let best = null, bestDist = Infinity;
+
+    if(Math.random() < 0.82) {
+      dirs.forEach(d => {
+        const nx = z.x+d[0], ny = z.y+d[1];
+        if(canMove(nx, ny)) {
+          const dist = Math.abs(nx-player.x) + Math.abs(ny-player.y);
+          if(dist < bestDist) { bestDist = dist; best = d; }
+        }
+      });
+    }
+    if(!best) {
+      const valid = dirs.filter(d => canMove(z.x+d[0], z.y+d[1]));
+      if(valid.length) best = valid[Math.floor(Math.random()*valid.length)];
+    }
+    if(best) { z.x += best[0]; z.y += best[1]; }
+
+    if(invincible === 0 && Math.abs(z.x - player.x) < 0.8 && Math.abs(z.y - player.y) < 0.8) {
+      lives--;
+      updateUI();
+      if(lives <= 0) {
+        state = 'dead';
+        clearInterval(gameLoop);
+        document.getElementById('msg').textContent = 'GAME OVER';
+        document.getElementById('startBtn').style.display = 'block';
+        document.getElementById('startBtn').textContent = 'RETRY';
+        draw(); return;
+      }
+      invincible = 30;
+      player.x = 1; player.y = 1; player.dx = 0; player.dy = 0;
+    }
+  });
+
+  draw();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, C.width, C.height);
+
+  // 미로
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) {
+    if(maze[r][c]===1) {
+      ctx.fillStyle = '#0d0d2b';
+      ctx.fillRect(c*CELL, r*CELL, CELL, CELL);
+      ctx.strokeStyle = '#1a1a4a';
+      ctx.strokeRect(c*CELL, r*CELL, CELL, CELL);
+    }
+  }
+
+  // 점
+  dots.forEach(d => {
+    if(!d.eaten) {
+      ctx.fillStyle = '#555';
+      ctx.beginPath();
+      ctx.arc(d.c*CELL+CELL/2, d.r*CELL+CELL/2, 2, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+
+  // 🐰 목표
+  ctx.font = `${CELL-2}px serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('🐰', 17*CELL+CELL/2, 17*CELL+CELL/2);
+
+  // 🦊 플레이어
+  if(invincible === 0 || Math.floor(invincible/4)%2===0)
+    ctx.fillText('🦊', (player.x+0.5)*CELL, (player.y+0.5)*CELL);
+
+  // 🧟 좀비
+  zombies.forEach(z => ctx.fillText('🧟', (z.x+0.5)*CELL, (z.y+0.5)*CELL));
+
+  // 게임오버 오버레이
+  if(state === 'dead') {
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(0,0,C.width,C.height);
+    ctx.fillStyle = '#fff';
+    ctx.font = '18px Courier New';
+    ctx.fillText('GAME OVER', C.width/2, C.height/2 - 16);
+    ctx.font = '13px Courier New';
+    ctx.fillStyle = '#888';
+    ctx.fillText(`FINAL SCORE: ${score}`, C.width/2, C.height/2 + 12);
+  }
+}
+
+function updateUI() {
+  document.getElementById('score').textContent = score;
+  document.getElementById('stage').textContent = stage;
+  document.getElementById('lives').textContent = '🦊'.repeat(Math.max(0,lives));
+}
+
+document.addEventListener('keydown', e => {
+  if(!player) return;
+  const map = {ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
+  if(map[e.key]) { e.preventDefault(); player.ndx = map[e.key][0]; player.ndy = map[e.key][1]; }
+});
+
+// 모바일 스와이프
+let tx=0, ty=0;
+C.addEventListener('touchstart', e=>{ tx=e.touches[0].clientX; ty=e.touches[0].clientY; }, {passive:true});
+C.addEventListener('touchend', e=>{
+  if(!player) return;
+  const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>Math.abs(dy)) { player.ndx=dx>0?1:-1; player.ndy=0; }
+  else { player.ndy=dy>0?1:-1; player.ndx=0; }
+}, {passive:true});
+
+draw();
+</script>
+</body>
+</html>
