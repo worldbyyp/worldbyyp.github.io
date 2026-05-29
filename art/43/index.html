@@ -275,17 +275,18 @@
   position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
   background:rgba(11,11,20,0.6); border:1px solid rgba(255,255,255,0.2);
   color:#fff; font-size:14px; letter-spacing:1px; font-weight:400;
-  padding:40px 60px; z-index:200;
+  padding:32px 40px; z-index:200;
+  max-width:90vw; width:max-content;
   display:flex; align-items:center; gap:24px;
   text-align:center; line-height:2;
-  backdrop-filter:blur(4px);">
+  backdrop-filter:blur(4px);cursor:pointer;" onclick="this.style.display='none'">
   <span>본 작품은 <span style="font-size:15px; font-weight:700; color:#fff;">중국어 번체</span>로 제작되었습니다.<br>한국어 번역을 원하시면<br>상단의 <span style="font-size:15px; font-weight:700; color:#fff;">[번역보기]</span> 버튼을 눌러주세요.</span>
  </div>
 <script>
   setTimeout(function() {
     var p = document.getElementById('lang-popup');
     if(p) p.style.display = 'none';
-  }, 1800);
+  }, 3000);
 </script>
 </body>
 </html>
