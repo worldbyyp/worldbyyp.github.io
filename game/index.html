@@ -451,7 +451,7 @@ function fStep(){
   if(fInv>0) fInv--;
   fBird.vy+=0.38;
   fBird.y+=fBird.vy;
-  var speed=2.4+Math.floor(fTick/300)*0.42;
+  var speed=2.6+Math.floor(fTick/300)*0.42;
   if(fTick%100===0){
     var gap=Math.max(145-fTick/120,90);
     var top=55+Math.random()*(FH-gap-110);
