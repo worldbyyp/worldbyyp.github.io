@@ -17,11 +17,11 @@ body{background:#0b0b14;font-family:'Nanum Gothic',sans-serif;color:#fff;display
 .info-bar span{color:#fff;font-weight:700;}
 .canvas-wrap{position:relative;line-height:0;}
 canvas{display:block;}
-.overlay{position:absolute;inset:0;background:rgba(11,11,20,0.93);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;cursor:pointer;z-index:10;border-radius:2px;}
+.overlay{position:absolute;inset:0;background:rgba(11,11,20,0.93);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:48px 20px 32px;gap:16px;cursor:pointer;z-index:10;border-radius:2px;}
 .ov-title{font-size:18px;font-weight:700;letter-spacing:2px;color:#fff;}
 .ov-body{font-size:12px;color:#fff;letter-spacing:1px;line-height:2.2;text-align:center;}
 .ov-body b{font-weight:700;color:#aaa;}
-.ov-start{font-size:13px;font-weight:700;color:#0b0b14;letter-spacing:3px;background:#ffffff;border:none;padding:14px 36px;margin-top:12px;border-radius:3px;}
+.ov-start{font-size:13px;font-weight:700;color:#0b0b14;letter-spacing:3px;background:#ffffff;border:none;padding:14px 36px;margin-top:auto;border-radius:3px;}
 .dpad{display:grid;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(2,46px);gap:4px;margin-top:8px;}
 .dbtn{width:46px;height:46px;border:1px solid #444;background:rgba(255,255,255,0.04);color:#aaa;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;user-select:none;font-family:'Nanum Gothic',sans-serif;}
 .dbtn:active,.dbtn.pressed{background:rgba(255,255,255,0.15);border-color:#fff;color:#fff;}
@@ -46,7 +46,7 @@ canvas{display:block;}
 <div class="game-wrap active" id="g0">
   <div class="info-bar">SCORE <span id="p-sc">0</span>&nbsp;&nbsp;STAGE <span id="p-st">1</span>&nbsp;&nbsp;LIFE <span id="p-li">3</span></div>
   <div class="canvas-wrap">
-    <canvas id="pc" width="304" height="304"></canvas>
+    <canvas id="pc" width="304" height="400"></canvas>
     <div class="overlay" id="p-ov" onclick="startPacman()">
       <div class="ov-title">🦊 Zombie 🐰</div>
       <div class="ov-body">🧟는 피하고 ❤️는 먹으며<br>🐰를 구하러 가요<br><br><b>PC</b> 이동 : 방향키<br><b>모바일</b> 이동 : 하단 버튼</div>
@@ -68,7 +68,7 @@ canvas{display:block;}
 <div class="game-wrap" id="g1">
   <div class="info-bar">SCORE <span id="s-sc">0</span>&nbsp;&nbsp;STAGE <span id="s-st">1</span>&nbsp;&nbsp;LIFE <span id="s-li">3</span></div>
   <div class="canvas-wrap">
-    <canvas id="sc" width="340" height="400"></canvas>
+    <canvas id="sc" width="340" height="480"></canvas>
     <div class="overlay" id="s-ov" onclick="startShoot()">
       <div class="ov-title">🦊 Shoot me 🐰</div>
       <div class="ov-body">🐰의 거절을 피하며<br>❤️를 쏴서 🐰를 공략해요<br><br><b>PC</b> 이동 : 방향키 &nbsp; 발사 : Space키<br><b>모바일</b> 이동·발사 : 하단 버튼</div>
@@ -87,7 +87,7 @@ canvas{display:block;}
 <div class="game-wrap" id="g2">
   <div class="info-bar">SCORE <span id="f-sc">0</span>&nbsp;&nbsp;LIFE <span id="f-li">3</span></div>
   <div class="canvas-wrap">
-    <canvas id="fc" width="340" height="400"></canvas>
+    <canvas id="fc" width="340" height="480"></canvas>
     <div class="overlay" id="f-ov" onclick="startFlappy()">
       <div class="ov-title">🦊 The Power of Love 🐰</div>
       <div class="ov-body">사랑의 🦊❤️🐰 힘으로<br>장애물을 피해서 앞으로 나아가요<br><br><b>PC</b> 점프 : Space키 또는 클릭<br><b>모바일</b> 점프 : 화면 탭</div>
@@ -106,7 +106,7 @@ function switchGame(i){
 
 // ════════ GAME 1: PACMAN ════════
 var pcCanvas, pctx;
-var CELL=16, COLS=19, ROWS=19;
+var CELL=16, COLS=19, ROWS=25;
 var MAZE_T=[
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
   [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
@@ -126,6 +126,12 @@ var MAZE_T=[
   [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
   [1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
   [1,1,0,1,0,1,0,1,1,0,1,1,0,1,0,1,0,1,1],
+  [1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1],
+  [1,0,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,0,1],
+  [1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,1],
+  [1,0,1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1],
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
 var pMaze,pDots,pPl,pZoms,pSc,pSt,pLi,pLoop,pStt,pInv,pNdc,pNdr;
@@ -152,7 +158,7 @@ function startPacman(){
 function pInitStage(){
   clearInterval(pLoop);
   pMaze=MAZE_T.map(function(r){return r.slice();});
-  pMaze[17][17]=2;
+  pMaze[23][17]=2;
   pDots=[];
   for(var r=0;r<ROWS;r++) for(var c=0;c<COLS;c++)
     if(pMaze[r][c]===0) pDots.push({c:c,r:r,e:false});
@@ -160,7 +166,7 @@ function pInitStage(){
   pNdc=0;pNdr=0;pInv=0;
   var zn=Math.min(2+pSt,6);
   var mv=Math.max(6-Math.floor(pSt/2),2);
-  var zS=[{c:9,r:8},{c:9,r:10},{c:8,r:9},{c:10,r:9},{c:7,r:8},{c:11,r:10}];
+  var zS=[{c:9,r:11},{c:9,r:13},{c:8,r:12},{c:10,r:12},{c:7,r:11},{c:11,r:13}];
   pZoms=[];
   for(var i=0;i<zn;i++) pZoms.push({c:zS[i].c,r:zS[i].r,t:0,mv:mv+i});
   pStt='playing';
@@ -249,7 +255,7 @@ function pDraw(){
   });
   pctx.font=(CELL)+'px serif';
   pctx.textAlign='center';pctx.textBaseline='middle';
-  pctx.fillText('🐰',17*CELL+CELL/2,17*CELL+CELL/2);
+  pctx.fillText('🐰',17*CELL+CELL/2,23*CELL+CELL/2);
   if(pStt&&(pInv===0||Math.floor(pInv/3)%2===0))
     pctx.fillText('🦊',pPl.c*CELL+CELL/2,pPl.r*CELL+CELL/2);
   pZoms.forEach(function(z){pctx.fillText('🧟',z.c*CELL+CELL/2,z.r*CELL+CELL/2);});
@@ -265,7 +271,7 @@ function pDir(dc,dr){pNdc=dc;pNdr=dr;}
 
 // ════════ GAME 2: SHOOTING ════════
 var scCanvas, sctx;
-var SW=340,SH=400;
+var SW=340,SH=480;
 var sPl,sBul,sEn,sEB,sSc,sSt,sLi,sLoop,sStt,sTick,sCool;
 var sK={l:false,r:false};
 
@@ -365,7 +371,7 @@ function sStep(){
       sPl.x=SW/2;
     }
   });
-  var invaded=sEn.filter(function(e){return e.alive;}).some(function(e){return e.y>SH-55;});
+  var invaded=sEn.filter(function(e){return e.alive;}).some(function(e){return e.y>SH-75;});
   if(invaded){sStt='dead';clearInterval(sLoop);sDraw();
     setTimeout(function(){
       var ov=document.getElementById('s-ov');
@@ -411,7 +417,7 @@ function sDraw(){
 
 // ════════ GAME 3: FLAPPY ════════
 var fcCanvas, fctx;
-var FW=340,FH=400;
+var FW=340,FH=480;
 var fBird,fPipes,fSc,fBest,fLi,fLoop,fStt,fTick,fStars,fInv;
 fBest=0;
 
@@ -451,7 +457,7 @@ function fStep(){
   if(fInv>0) fInv--;
   fBird.vy+=0.38;
   fBird.y+=fBird.vy;
-  var speed=2.6+Math.floor(fTick/300)*0.42;
+  var speed=2.4+Math.floor(fTick/300)*0.42;
   if(fTick%100===0){
     var gap=Math.max(145-fTick/120,90);
     var top=55+Math.random()*(FH-gap-110);
