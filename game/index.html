@@ -17,11 +17,11 @@ body{background:#0b0b14;font-family:'Nanum Gothic',sans-serif;color:#fff;display
 .info-bar span{color:#fff;font-weight:700;}
 .canvas-wrap{position:relative;line-height:0;}
 canvas{display:block;}
-.overlay{position:absolute;inset:0;background:rgba(11,11,20,0.93);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:48px 20px 32px;gap:16px;cursor:pointer;z-index:10;border-radius:2px;}
-.ov-title{font-size:18px;font-weight:700;letter-spacing:2px;color:#fff;}
+.overlay{position:absolute;inset:0;background:rgba(11,11,20,0.93);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 20px 100px;gap:0;cursor:pointer;z-index:10;border-radius:2px;}
+.ov-title{font-size:18px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:20px;}
 .ov-body{font-size:12px;color:#fff;letter-spacing:1px;line-height:2.2;text-align:center;}
 .ov-body b{font-weight:700;color:#aaa;}
-.ov-start{font-size:13px;font-weight:700;color:#0b0b14;letter-spacing:3px;background:#ffffff;border:none;padding:14px 36px;margin-top:auto;border-radius:3px;}
+.ov-start{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);font-size:14px;font-weight:700;color:#0b0b14;letter-spacing:3px;background:#ffffff;border:none;padding:21px 36px;border-radius:3px;white-space:nowrap;}
 .dpad{display:grid;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(2,46px);gap:4px;margin-top:8px;}
 .dbtn{width:46px;height:46px;border:1px solid #444;background:rgba(255,255,255,0.04);color:#aaa;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;user-select:none;font-family:'Nanum Gothic',sans-serif;}
 .dbtn:active,.dbtn.pressed{background:rgba(255,255,255,0.15);border-color:#fff;color:#fff;}
@@ -29,7 +29,7 @@ canvas{display:block;}
 .s-controls{display:flex;gap:12px;margin-top:8px;align-items:center;}
 .sbtn{width:46px;height:46px;border:1px solid #444;background:rgba(255,255,255,0.04);color:#aaa;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;user-select:none;}
 .sbtn:active{background:rgba(255,255,255,0.15);border-color:#fff;}
-.firebtn{width:90px;height:46px;border:1px solid #ff6688;background:rgba(255,102,136,0.08);color:#ff6688;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;user-select:none;font-family:'Nanum Gothic',sans-serif;letter-spacing:1px;}
+.firebtn{width:135px;height:46px;border:1px solid #ff6688;background:rgba(255,102,136,0.08);color:#ff6688;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;user-select:none;font-family:'Nanum Gothic',sans-serif;}
 .firebtn:active{background:rgba(255,102,136,0.25);}
 .gmsg{height:18px;font-size:11px;color:#888;letter-spacing:2px;margin-top:5px;text-align:center;}
 </style>
@@ -45,21 +45,21 @@ canvas{display:block;}
 <!-- GAME 1 -->
 <div class="game-wrap active" id="g0">
   <div class="info-bar">SCORE <span id="p-sc">0</span>&nbsp;&nbsp;STAGE <span id="p-st">1</span>&nbsp;&nbsp;LIFE <span id="p-li">3</span></div>
-  <div class="canvas-wrap">
+  <div class="canvas-wrap" style="width:340px;height:480px;display:flex;align-items:center;justify-content:center;">
     <canvas id="pc" width="304" height="400"></canvas>
     <div class="overlay" id="p-ov" onclick="startPacman()">
       <div class="ov-title">🦊 Zombie 🐰</div>
-      <div class="ov-body">🧟는 피하고 ❤️는 먹으며<br>🐰를 구하러 가요<br><br><b>PC</b> 이동 : 방향키<br><b>모바일</b> 이동 : 하단 버튼</div>
+      <div class="ov-body">🧟는 피하고 ❤️는 먹으며<br>🐰를 구하러 가요<br><br><br><b>PC</b> 이동 : 방향키<br><b>모바일</b> 이동 : 하단 버튼</div>
       <div class="ov-start">TOUCH TO START</div>
     </div>
   </div>
-  <div class="dpad">
-    <div class="empty-btn"></div>
-    <div class="dbtn" id="pBU" ontouchstart="pDir(0,-1);event.preventDefault()" onclick="pDir(0,-1)">▲</div>
-    <div class="empty-btn"></div>
-    <div class="dbtn" id="pBL" ontouchstart="pDir(-1,0);event.preventDefault()" onclick="pDir(-1,0)">◀</div>
-    <div class="dbtn" id="pBD" ontouchstart="pDir(0,1);event.preventDefault()" onclick="pDir(0,1)">▼</div>
-    <div class="dbtn" id="pBR" ontouchstart="pDir(1,0);event.preventDefault()" onclick="pDir(1,0)">▶</div>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;width:340px;margin-top:10px;padding:0 8px;">
+    <div class="dbtn" ontouchstart="pDir(-1,0);event.preventDefault()" onclick="pDir(-1,0)">◀</div>
+    <div style="display:flex;gap:6px;">
+      <div class="dbtn" ontouchstart="pDir(0,-1);event.preventDefault()" onclick="pDir(0,-1)">▲</div>
+      <div class="dbtn" ontouchstart="pDir(0,1);event.preventDefault()" onclick="pDir(0,1)">▼</div>
+    </div>
+    <div class="dbtn" ontouchstart="pDir(1,0);event.preventDefault()" onclick="pDir(1,0)">▶</div>
   </div>
   <div class="gmsg" id="p-msg"></div>
 </div>
@@ -71,14 +71,14 @@ canvas{display:block;}
     <canvas id="sc" width="340" height="480"></canvas>
     <div class="overlay" id="s-ov" onclick="startShoot()">
       <div class="ov-title">🦊 Shoot me 🐰</div>
-      <div class="ov-body">🐰의 거절을 피하며<br>❤️를 쏴서 🐰를 공략해요<br><br><b>PC</b> 이동 : 방향키 &nbsp; 발사 : Space키<br><b>모바일</b> 이동·발사 : 하단 버튼</div>
+      <div class="ov-body">🐰의 거절을 피하며<br>❤️를 쏴서 🐰를 공략해요<br><br><br><b>PC</b> 이동 : 방향키 &nbsp; 발사 : Space키<br><b>모바일</b> 이동·발사 : 하단 버튼</div>
       <div class="ov-start">TOUCH TO START</div>
     </div>
   </div>
-  <div class="s-controls">
-    <div class="sbtn" id="sBL" ontouchstart="sK.l=true;event.preventDefault()" ontouchend="sK.l=false" onmousedown="sK.l=true" onmouseup="sK.l=false">◀</div>
-    <div class="firebtn" ontouchstart="sShoot();event.preventDefault()" onclick="sShoot()">SHOOT</div>
-    <div class="sbtn" id="sBR" ontouchstart="sK.r=true;event.preventDefault()" ontouchend="sK.r=false" onmousedown="sK.r=true" onmouseup="sK.r=false">▶</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;width:340px;margin-top:10px;padding:0 8px;">
+    <div class="sbtn" ontouchstart="sK.l=true;event.preventDefault()" ontouchend="sK.l=false" onmousedown="sK.l=true" onmouseup="sK.l=false">◀</div>
+    <div class="firebtn" ontouchstart="sShoot();event.preventDefault()" onclick="sShoot()">♥</div>
+    <div class="sbtn" ontouchstart="sK.r=true;event.preventDefault()" ontouchend="sK.r=false" onmousedown="sK.r=true" onmouseup="sK.r=false">▶</div>
   </div>
   <div class="gmsg" id="s-msg"></div>
 </div>
@@ -90,7 +90,7 @@ canvas{display:block;}
     <canvas id="fc" width="340" height="480"></canvas>
     <div class="overlay" id="f-ov" onclick="startFlappy()">
       <div class="ov-title">🦊 The Power of Love 🐰</div>
-      <div class="ov-body">사랑의 🦊❤️🐰 힘으로<br>장애물을 피해서 앞으로 나아가요<br><br><b>PC</b> 점프 : Space키 또는 클릭<br><b>모바일</b> 점프 : 화면 탭</div>
+      <div class="ov-body">사랑의 🦊❤️🐰 힘으로<br>장애물을 피해서 앞으로 나아가요<br><br><br><b>PC</b> 점프 : Space키 또는 클릭<br><b>모바일</b> 점프 : 화면 탭</div>
       <div class="ov-start">TOUCH TO START</div>
     </div>
   </div>
@@ -261,10 +261,14 @@ function pDraw(){
   pZoms.forEach(function(z){pctx.fillText('🧟',z.c*CELL+CELL/2,z.r*CELL+CELL/2);});
   if(pStt==='dead'){
     pctx.fillStyle='rgba(0,0,0,0.7)';pctx.fillRect(0,0,COLS*CELL,ROWS*CELL);
-    pctx.fillStyle='#fff';pctx.font='bold 15px Nanum Gothic';
-    pctx.fillText('GAME OVER',COLS*CELL/2,ROWS*CELL/2-12);
-    pctx.fillStyle='#888';pctx.font='11px Nanum Gothic';
-    pctx.fillText('SCORE: '+pSc,COLS*CELL/2,ROWS*CELL/2+10);
+    var cx=COLS*CELL/2,cy=ROWS*CELL/2;
+    pctx.fillStyle='#fff';pctx.font='bold 18px Nanum Gothic';
+    pctx.fillText('GAME',cx,cy-28);
+    pctx.fillText('OVER',cx,cy-6);
+    pctx.fillStyle='#888';pctx.font='bold 15px Nanum Gothic';
+    pctx.fillText('SCORE',cx,cy+22);
+    pctx.fillStyle='#fff';pctx.font='bold 18px Nanum Gothic';
+    pctx.fillText(pSc,cx,cy+44);
   }
 }
 function pDir(dc,dr){pNdc=dc;pNdr=dr;}
@@ -407,11 +411,14 @@ function sDraw(){
   sEB.forEach(function(b){sctx.fillRect(b.x-2,b.y-5,4,10);});
   if(sStt==='dead'){
     sctx.fillStyle='rgba(0,0,0,0.75)';sctx.fillRect(0,0,SW,SH);
-    sctx.fillStyle='#fff';sctx.font='bold 17px Nanum Gothic';sctx.textAlign='center';
-    sctx.fillText('GAME OVER',SW/2,SH/2-18);
-    sctx.fillStyle='#888';sctx.font='12px Nanum Gothic';
-    sctx.fillText('SCORE: '+sSc,SW/2,SH/2+6);
-    sctx.fillText('STAGE '+sSt+' 도달',SW/2,SH/2+26);
+    var cx=SW/2,cy=SH/2;
+    sctx.fillStyle='#fff';sctx.font='bold 18px Nanum Gothic';sctx.textAlign='center';
+    sctx.fillText('GAME',cx,cy-30);
+    sctx.fillText('OVER',cx,cy-8);
+    sctx.fillStyle='#888';sctx.font='bold 15px Nanum Gothic';
+    sctx.fillText('SCORE',cx,cy+20);
+    sctx.fillStyle='#fff';sctx.font='bold 18px Nanum Gothic';
+    sctx.fillText(sSc,cx,cy+44);
   }
 }
 
@@ -538,10 +545,14 @@ function fDraw(){
   }
   if(fStt==='dead'){
     fctx.fillStyle='rgba(0,0,0,0.72)';fctx.fillRect(0,0,FW,FH);
-    fctx.fillStyle='#fff';fctx.font='bold 17px Nanum Gothic';fctx.textAlign='center';
-    fctx.fillText('GAME OVER',FW/2,FH/2-18);
-    fctx.fillStyle='#888';fctx.font='12px Nanum Gothic';
-    fctx.fillText('SCORE: '+fSc,FW/2,FH/2+8);
+    var cx=FW/2,cy=FH/2;
+    fctx.fillStyle='#fff';fctx.font='bold 18px Nanum Gothic';fctx.textAlign='center';
+    fctx.fillText('GAME',cx,cy-30);
+    fctx.fillText('OVER',cx,cy-8);
+    fctx.fillStyle='#888';fctx.font='bold 15px Nanum Gothic';
+    fctx.fillText('SCORE',cx,cy+20);
+    fctx.fillStyle='#fff';fctx.font='bold 18px Nanum Gothic';
+    fctx.fillText(fSc,cx,cy+44);
   }
 }
 
