@@ -143,6 +143,33 @@
 </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  <div id="adult-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0b0b14;z-index:9999;display:flex;align-items:center;justify-content:center;font-family:'Nanum Gothic',sans-serif;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:24px;">
+      <div style="color:#aaaaaa;font-size:13px;letter-spacing:2px;">비밀번호를 입력하세요</div>
+      <a href="https://posty.pe/7kuplk" target="_blank" style="background:transparent;border:1px solid #444444;color:#666666;font-size:11px;padding:6px 18px;letter-spacing:1px;text-decoration:none;" onmouseover="this.style.borderColor='#888';this.style.color='#aaa'" onmouseout="this.style.borderColor='#444';this.style.color='#666'">비밀번호 확인하기</a>
+      <div style="display:flex;gap:10px;align-items:flex-end;">
+        <input type="password" id="adultPw" maxlength="6" placeholder="······" style="background:transparent;border:none;border-bottom:1px solid #555555;color:#ffffff;font-size:20px;letter-spacing:6px;width:140px;padding:8px 4px;text-align:center;font-family:'Nanum Gothic',sans-serif;outline:none;" onfocus="this.style.borderBottomColor='#ffffff'" onblur="this.style.borderBottomColor='#555555'">
+        <button onclick="checkAdultPw()" style="background:transparent;border:1px solid #555555;color:#aaaaaa;font-size:13px;padding:8px 24px;letter-spacing:1px;font-family:'Nanum Gothic',sans-serif;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff'" onmouseout="this.style.borderColor='#555';this.style.color='#aaa'">입력</button>
+      </div>
+      <div id="adultErr" style="color:#cc4444;font-size:12px;letter-spacing:1px;height:16px;"></div>
+    </div>
+  </div>
+  <script>
+    function checkAdultPw() {
+      var val = document.getElementById('adultPw').value.trim();
+      if (val === '616479') {
+        document.getElementById('adult-overlay').style.display = 'none';
+      } else {
+        document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
+        document.getElementById('adultPw').value = '';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      var pw = document.getElementById('adultPw');
+      if (pw) pw.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAdultPw(); });
+    });
+  </script>
+
 
 <div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
   <iframe id="ytplayer_6ThfS7mQUqM"
@@ -214,10 +241,12 @@
     <img src="https://art.theworldbyyp.kr/32/32(44).jpg" alt="" style="width:100%; height:auto; display:block;">
     <img src="https://art.theworldbyyp.kr/32/32(45).jpg" alt="" style="width:100%; height:auto; display:block;">
     <img src="https://art.theworldbyyp.kr/32/32(46).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/32/32(47).jpg" alt="" style="width:100%; height:auto; display:block;">
 </div>
 <div class="bgm-wrap">
   <button class="bgm-btn" id="bgmBtn_bottom_32" onclick="toggleBGM('HwtEBQiuX-c', 'bottom_32')">▶</button>
 </div>
+<br><br><br><br><br>
 <div class="btn-wrap">
   <a class="btn" href="/art/">
     <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
