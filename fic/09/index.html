@@ -79,31 +79,6 @@
   .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
   .header .author { font-size: 15px; color: #aaaaaa; margin-bottom: 8px; }
   .header .trigger { font-size: 13px; color: #888888; }
-
-  /* BGM — BGM 없는 작품은 .bgm-wrap 째로 삭제 */
-  .bgm-wrap {
-    background: var(--bg);
-    display: flex;
-    justify-content: center;
-    padding: 30px 20px 0;
-    transition: background 0.3s;
-  }
-  .bgm-btn {
-    width: 48px;
-    height: 32px;
-    border: 1px solid var(--text);
-    background: transparent;
-    color: var(--text);
-    font-size: 14px;
-    font-family: 'Nanum Gothic', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.2s, color 0.2s;
-    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
-  }
-  .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
-
   /* 톱니바퀴 + 패널 */
   #settings-wrap {
     position: fixed;
@@ -304,14 +279,6 @@
 <!-- 진행바 -->
 <div id="progress-bar"></div>
 
-<!-- ★BGM 있는 경우만: YouTube ID를 E244Db-Cd5I 자리에 넣기. 없으면 이 블록 삭제★ -->
-<div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
-  <iframe id="ytplayer"
-    src="https://www.youtube.com/embed/YMgFEl5h8nI?enablejsapi=1&autoplay=0"
-    allow="autoplay" allowfullscreen>
-  </iframe>
-</div>
-
 <!-- 헤더 -->
 <div class="header">
   <div class="header-img-wrap">
@@ -325,11 +292,6 @@
   <div class="trigger" style="color:#0b0b14;">*Trigger Warning</div>
 </div>
 
-<!-- BGM 버튼 — BGM 없으면 이 블록 삭제 -->
-<div class="bgm-wrap">
-  <button class="bgm-btn" id="bgmBtn" onclick="toggleBGM()">▶</button>
-</div>
-
 
 
 <!-- 본문 시작 -->
@@ -341,7 +303,8 @@
 <p class="empty">&nbsp;</p>
 <p>“분류 할 때 류는 무리 류類고. 이건 흐를 류流.”</p>
 <p>“아, 죄송합니다.”</p>
-<p>“야이씨. 조선족 애들이든 다롄 새끼들한테든 이사님 보시기 전에 체크 하라고 했어, 안 했어?”“우리 이제 출발해야 하는 거 아닌가?”</p>
+<p>“야이씨. 조선족 애들이든 다롄 새끼들한테든 이사님 보시기 전에 체크 하라고 했어, 안 했어?”</p>
+<p>“우리 이제 출발해야 하는 거 아닌가?”</p>
 <p class="empty">&nbsp;</p>
 <p>흙빛으로 어두워지던 이들의 얼굴에 화색이 돌았다. 굳이 현장에 와서, 짭새 뜰 때나 꺼내 놓는 서류를 하나하나 들춰보던 불청객이 자진해서 퇴장하는 것만큼 좋은 소식이 또 있을까. 거대한 슬라이딩 도어가 육중한 소음을 내며 열렸다. 해가 떴을 시간인데도 어두컴컴했다. 해안가 특유의 찝찔하고 다습한 공기가 훅 밀려들었다. 큰 폭풍이 밀려오려는 듯했다.</p>
 <p class="empty">&nbsp;</p>
@@ -670,7 +633,8 @@
 <p class="empty">&nbsp;</p>
 <p>“그럼 뭐 같냐? 둘이.”</p>
 <p>“관계가 어떻든지 간에 상관없습니다. 로또 당첨된 수준으로 상속받은 건데 이상하게 재산엔 전혀 관심이 없다는 게 중요한 거죠.”</p>
-<p>“그럼 지금 뭐 하고 있는데?”“그 큰 집에 혼자 틀어박혀서 반지를 찾는다고 집을 다 들쑤시고 있다고요.”</p>
+<p>“그럼 지금 뭐 하고 있는데?”</p>
+<p>“그 큰 집에 혼자 틀어박혀서 반지를 찾는다고 집을 다 들쑤시고 있다고요.”</p>
 <p>“어떤 반지?”</p>
 <p>“유품이랍니다. 그 반지를 찾아주면 인천 물류 사업체 명의를 제 걸로 돌려주겠다고 했어요.”</p>
 <p>“야. 너는 딜을 쳐도 그렇게 … 정직하게 치냐.”</p>
@@ -1425,28 +1389,6 @@
     document.body.classList.toggle('dark-mode');
     document.getElementById('modeBtn').textContent =
       document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
-  }
-
-  // BGM — BGM 없는 작품은 아래 두 함수 삭제
-  var player;
-  var isPlaying = false;
-  var tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(tag);
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('ytplayer', { events: { 'onReady': function(e) {} } });
-  }
-  function toggleBGM() {
-    var btn = document.getElementById('bgmBtn');
-    if (!isPlaying) {
-      if (player && player.playVideo) player.playVideo();
-      btn.textContent = '■';
-      isPlaying = true;
-    } else {
-      if (player && player.stopVideo) player.stopVideo();
-      btn.textContent = '▶';
-      isPlaying = false;
-    }
   }
 </script>
 </body>
