@@ -28,6 +28,7 @@
     .zone-behind { left:88%;  top:55%; width:7%;  height:17%; }
     .zone-rew    { left:52%;  top:68%; width:7%; height:24%; }
     .zone-ffw    { left:60%;  top:68%; width:7%; height:24%; }
+    .zone-game   { left:30%;  top:68%; width:8.5%; height:24%; }
 
     .page-wrap { max-width: 672px; margin: 0 auto; padding: 0 20px; }
     .list { display: flex; flex-direction: column; gap: 12px; }
@@ -106,12 +107,14 @@
       <img class="hover-img" id="imgBehind" src="https://art.theworldbyyp.kr/main/main-behind.png" alt="">
       <img class="hover-img" id="imgRew"    src="https://art.theworldbyyp.kr/main/main-REW.png"    alt="">
       <img class="hover-img" id="imgFfw"    src="https://art.theworldbyyp.kr/main/main-FFW.png"    alt="">
+      <img class="hover-img" id="imgGame"   src="https://art.theworldbyyp.kr/main/main-game.png"   alt="">
       <a class="zone zone-home"   href="/home"   onmouseenter="showHover('imgHome')"   onmouseleave="hideAll()"></a>
       <a class="zone zone-fic"    href="/fic"    onmouseenter="showHover('imgFic')"    onmouseleave="hideAll()"></a>
       <a class="zone zone-art"    href="/art"    onmouseenter="showHover('imgArt')"    onmouseleave="hideAll()"></a>
       <a class="zone zone-behind" href="/behind" onmouseenter="showHover('imgBehind')" onmouseleave="hideAll()"></a>
       <a class="zone zone-rew"    href="https://theworldofyp.web.app/" target="_blank" onmouseenter="showHover('imgRew')" onmouseleave="hideAll()"></a>
       <a class="zone zone-ffw"    href="#" onmouseenter="showHover('imgFfw')" onmouseleave="hideAll()" onclick="showFfw(); return false;"></a>
+      <a class="zone zone-game"   href="/game" onmouseenter="showHover('imgGame')" onmouseleave="hideAll()"></a>
     </div>
   </div>
 
@@ -283,12 +286,12 @@
 <div id="ffw-popup" style="
   position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
   background:rgba(11,11,20,0.6); border:1px solid rgba(255,255,255,0.2);
-  color:#fff; font-size:22px; letter-spacing:3px; font-weight:400;
-  padding:40px 60px; z-index:200; display:none;
+  color:#fff; font-size:16px; letter-spacing:3px; font-weight:200;
+  padding:60px 80px; z-index:200; display:none;
   align-items:center; gap:24px; white-space:nowrap;
   backdrop-filter:blur(4px);">
   <span>세계世界3 : 2028?</span>
-  <button onclick="hideFfw()" style="background:none;border:none;color:#aaa;font-size:18px;cursor:pointer;">✕</button>
+  <button onclick="hideFfw()" style="background:none;border:none;color:#aaa;font-size:16px;cursor:pointer;">✕</button>
 </div>
 <script>
   function showFfw() {

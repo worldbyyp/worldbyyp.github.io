@@ -97,7 +97,7 @@
   /* 모바일: 이미지 가로 꽉 채우기 */
   @media (max-width: 768px) {
     #img-title {
-      width: 80vw;
+      width: 50vw;
     }
     #machine-wrap {
       width: 100vw;
@@ -211,7 +211,7 @@
   function showFfw() {
     var p = document.getElementById('ffw-popup');
     p.classList.add('show');
-    setTimeout(function() { hideFfw(); }, 1800);
+    setTimeout(function() { hideFfw(); }, 3000);
   }
   function hideFfw() {
     document.getElementById('ffw-popup').classList.remove('show');
