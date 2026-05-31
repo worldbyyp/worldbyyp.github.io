@@ -250,34 +250,94 @@ function drawGameOver(ctx,W,H,score,deadTick){
 }
 
 // == GAME 1: PACMAN ==
-var CELL=16,COLS=19,ROWS=25;
-var MAZE_T=[
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-  [1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
-  [1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
-  [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
-  [1,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1],
-  [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
-  [1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1],
-  [0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
-  [1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,1],
-  [0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0],
-  [1,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1],
-  [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
-  [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
-  [1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
-  [1,1,0,1,0,1,0,1,1,0,1,1,0,1,0,1,0,1,1],
-  [1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1],
-  [1,0,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,0,1],
-  [1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,1],
-  [1,0,1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-];
+var CELL=16,COLS=19,ROWS=25,pOX=0,pOY=0;
+
+
+
+function pBFSNext(zc,zr,tc,tr){
+  // BFS로 목표(tc,tr)까지 최단경로의 다음 한 칸 반환
+  if(zc===tc&&zr===tr)return null;
+  var visited={};
+  var queue=[{c:zc,r:zr,path:[]}];
+  visited[zr+','+zc]=true;
+  var dirs=[[1,0],[-1,0],[0,1],[0,-1]];
+  while(queue.length){
+    var cur=queue.shift();
+    for(var i=0;i<dirs.length;i++){
+      var nc=cur.c+dirs[i][0],nr=cur.r+dirs[i][1];
+      if(pIsWall(nc,nr)||visited[nr+','+nc])continue;
+      visited[nr+','+nc]=true;
+      var newPath=cur.path.concat([{c:nc,r:nr}]);
+      if(nc===tc&&nr===tr)return newPath[0];
+      queue.push({c:nc,r:nr,path:newPath});
+    }
+  }
+  return null;
+}
+function getMazeConfig(st){
+  var cfgs=[
+    {cols:11,rows:13},
+    {cols:13,rows:17},
+    {cols:15,rows:21},
+    {cols:17,rows:23},
+    {cols:19,rows:25}
+  ];
+  var cfg=cfgs[Math.min(st-1,cfgs.length-1)];
+  var cell=Math.min(Math.floor(304/cfg.cols),Math.floor(400/cfg.rows));
+  var ox=Math.floor((304-cfg.cols*cell)/2);
+  var oy=Math.floor((400-cfg.rows*cell)/2);
+  return {cols:cfg.cols,rows:cfg.rows,cell:cell,ox:ox,oy:oy};
+}
+function generateMaze(cols, rows) {
+  // 전체 벽으로 초기화 (홀수 좌표만 셀, 짝수는 벽)
+  var maze = [];
+  for(var r=0;r<rows;r++){
+    maze[r]=[];
+    for(var c=0;c<cols;c++) maze[r][c]=1;
+  }
+  // DFS로 미로 생성
+  function carve(c,r){
+    maze[r][c]=0;
+    var dirs=[[0,-2],[0,2],[-2,0],[2,0]];
+    // 섞기
+    for(var i=dirs.length-1;i>0;i--){
+      var j=Math.floor(Math.random()*(i+1));
+      var tmp=dirs[i];dirs[i]=dirs[j];dirs[j]=tmp;
+    }
+    dirs.forEach(function(d){
+      var nc=c+d[0],nr=r+d[1];
+      if(nr>0&&nr<rows-1&&nc>0&&nc<cols-1&&maze[nr][nc]===1){
+        maze[r+d[1]/2][c+d[0]/2]=0; // 벽 제거
+        carve(nc,nr);
+      }
+    });
+  }
+  carve(1,1);
+  // 테두리 벽 보장
+  for(var r=0;r<rows;r++){maze[r][0]=1;maze[r][cols-1]=1;}
+  for(var c=0;c<cols;c++){maze[0][c]=1;maze[rows-1][c]=1;}
+  // 추가 벽 제거 - 우회로 생성 (벽 약 30% 추가 제거)
+  for(var r=1;r<rows-1;r++){
+    for(var c=1;c<cols-1;c++){
+      if(maze[r][c]===1&&Math.random()<0.15){
+        var adj=0;
+        if(maze[r-1][c]===0)adj++;if(maze[r+1][c]===0)adj++;
+        if(maze[r][c-1]===0)adj++;if(maze[r][c+1]===0)adj++;
+        if(adj>=2) maze[r][c]=0;
+      }
+    }
+  }
+  // 테두리 재보장
+  for(var r=0;r<rows;r++){maze[r][0]=1;maze[r][cols-1]=1;}
+  for(var c=0;c<cols;c++){maze[0][c]=1;maze[rows-1][c]=1;}
+  // 🐰 목표 위치 (우하단 통로)
+  var gr=rows-2, gc=cols-2;
+  if(maze[gr][gc]===1){maze[gr][gc]=0;}
+  if(maze[gr-1][gc]===1&&maze[gr][gc-1]===1){maze[gr-1][gc]=0;}
+  maze[gr][gc]=2;
+  return maze;
+}
+
 var pMaze,pDots,pPl,pZoms,pSc,pSt,pLi,pLoop,pStt,pInv,pNdc,pNdr,pDT,pBan={t:"",life:0};
 
 function pIsWall(c,r){if(r<0||r>=ROWS||c<0||c>=COLS)return true;return pMaze[r][c]===1;}
@@ -290,15 +350,28 @@ function startPacman(){
 }
 function pInitStage(){
   clearInterval(pLoop);
-  pMaze=MAZE_T.map(function(r){return r.slice();});
-  pMaze[23][17]=2;
+  var cfg=getMazeConfig(pSt);
+  COLS=cfg.cols;ROWS=cfg.rows;CELL=cfg.cell;pOX=cfg.ox;pOY=cfg.oy;
+  pMaze=generateMaze(COLS,ROWS);
   pDots=[];
   for(var r=0;r<ROWS;r++)for(var c=0;c<COLS;c++)if(pMaze[r][c]===0)pDots.push({c:c,r:r,e:false});
-  pPl={c:1,r:1,dc:0,dr:0};pNdc=0;pNdr=0;pInv=0;pDT=0;pStt='playing';
-  var zn=Math.min(2+pSt,6),mv=Math.max(6-Math.floor(pSt/2),2);
-  var zS=[{c:9,r:11},{c:9,r:13},{c:8,r:12},{c:10,r:12},{c:7,r:11},{c:11,r:13}];
+  pPl={c:1,r:1,dc:0,dr:0};pNdc=0;pNdr=0;pInv=0;pDT=0;pStt='playing';pBH=null;
+  var zIdx=Math.min(pSt-1,4); // 0~4
+  var znBase=[2,3,4,5,6]; // stage1~5 기본 좀비 수
+  var zn=Math.min(znBase[zIdx]+(pSt>5?pSt-5:0),9);
+  var mv=Math.max(4-Math.floor(pSt/2),2);
+  // 통로 중 플레이어 시작점(1,1)과 멀리 떨어진 곳에 랜덤 배치
+  var openCells=[];
+  for(var _r=0;_r<ROWS;_r++) for(var _c=0;_c<COLS;_c++){
+    if(pMaze[_r][_c]===0){
+      var dist=Math.abs(_r-1)+Math.abs(_c-1);
+      if(dist>8) openCells.push({c:_c,r:_r});
+    }
+  }
+  // 섞기
+  for(var i=openCells.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=openCells[i];openCells[i]=openCells[j];openCells[j]=tmp;}
   pZoms=[];
-  for(var i=0;i<zn;i++)pZoms.push({c:zS[i].c,r:zS[i].r,t:0,mv:mv+i});
+  for(var i=0;i<zn&&i<openCells.length;i++)pZoms.push({c:openCells[i].c,r:openCells[i].r,t:0,mv:mv+i});
   
   pDraw();pLoop=setInterval(pStep,110);
 }
@@ -310,7 +383,36 @@ function pStep(){
   if(!pIsWall(pPl.c+pNdc,pPl.r+pNdr)){pPl.dc=pNdc;pPl.dr=pNdr;}
   var nc=pPl.c+pPl.dc,nr=pPl.r+pPl.dr;
   if(!pIsWall(nc,nr)){pPl.c=nc;pPl.r=nr;}
+  // 이동 직후 즉시 충돌 체크
+  if(pInv===0){
+    for(var _i=0;_i<pZoms.length;_i++){
+      if(pZoms[_i].c===pPl.c&&pZoms[_i].r===pPl.r){
+        pLi--;pUI();
+        if(pLi<=0){pStt='dead';clearInterval(pLoop);pDraw();
+          setTimeout(function(){var ov=document.getElementById('p-ov');ov.style.display='flex';ov.querySelector('.ov-start').textContent='RESTART';ov.onclick=startPacman;ov.querySelector('.ov-start').onclick=function(e){e.stopPropagation();startPacman();};},1500);
+          return;
+        }
+        pInv=20;pPl.c=1;pPl.r=1;pPl.dc=0;pPl.dr=0;
+        break;
+      }
+    }
+  }
   pDots.forEach(function(d){if(!d.e&&d.c===pPl.c&&d.r===pPl.r){d.e=true;pSc+=5;pUI();}});
+  // 보너스 하트 (생명 1개일 때만)
+  if(pLi===1&&!pBH){
+    var open=pDots.filter(function(d){return !d.e;});
+    if(open.length){var pick=open[Math.floor(Math.random()*open.length)];pBH={c:pick.c,r:pick.r,t:0};}
+  }
+  if(pBH){
+    pBH.t++;
+    if(pBH.t>=91){// ~10초 (91*110ms)
+      var open2=pDots.filter(function(d){return !d.e;});
+      if(open2.length){var pick2=open2[Math.floor(Math.random()*open2.length)];pBH.c=pick2.c;pBH.r=pick2.r;}
+      pBH.t=0;
+    }
+    if(pBH.c===pPl.c&&pBH.r===pPl.r){pLi++;pUI();pBH=null;}
+  }
+  if(pLi>1)pBH=null;
   var pr=Math.max(0,Math.min(ROWS-1,pPl.r)),pc2=Math.max(0,Math.min(COLS-1,pPl.c));
   if(pMaze[pr][pc2]===2){
     pStt='clear';clearInterval(pLoop);pUI();
@@ -332,17 +434,28 @@ function pStep(){
 }
 function pDraw(){
   if(!pctx)return;
-  var W=COLS*CELL,H=ROWS*CELL;
+  var W=304,H=400;
   pctx.clearRect(0,0,W,H);
+  pctx.fillStyle='#0b0b14';pctx.fillRect(0,0,W,H);
   for(var r=0;r<ROWS;r++)for(var c=0;c<COLS;c++){
-    if(pMaze[r][c]===1){pctx.fillStyle='#0d0d2b';pctx.fillRect(c*CELL,r*CELL,CELL,CELL);pctx.strokeStyle='#1c1c4a';pctx.lineWidth=0.5;pctx.strokeRect(c*CELL+0.5,r*CELL+0.5,CELL-1,CELL-1);}
+    if(pMaze[r][c]===1){pctx.fillStyle='#1e1e40';pctx.fillRect(pOX+c*CELL,pOY+r*CELL,CELL,CELL);pctx.strokeStyle='#2e2e58';pctx.lineWidth=0.5;pctx.strokeRect(pOX+c*CELL+0.5,pOY+r*CELL+0.5,CELL-1,CELL-1);}
   }
   pctx.fillStyle='#ff6688';pctx.font='bold 7px serif';pctx.textAlign='center';pctx.textBaseline='middle';
-  pDots.forEach(function(d){if(!d.e)pctx.fillText('♥',d.c*CELL+CELL/2,d.r*CELL+CELL/2);});
+  pDots.forEach(function(d){if(!d.e)pctx.fillText('♥',pOX+d.c*CELL+CELL/2,pOY+d.r*CELL+CELL/2);});
+  // 보너스 하트
+  if(pBH&&Math.floor(Date.now()/350)%2===0){
+    pctx.fillStyle='#ff1111';
+    pctx.font='bold 13px serif';
+    pctx.textAlign='center';pctx.textBaseline='middle';
+    pctx.fillText('♥',pOX+pBH.c*CELL+CELL/2,pOY+pBH.r*CELL+CELL/2);
+  }
   pctx.font=CELL+'px serif';pctx.globalAlpha=1;pctx.fillStyle='#fff';
-  pctx.fillText('🐰',17*CELL+CELL/2,23*CELL+CELL/2);
-  if(pInv===0||Math.floor(pInv/3)%2===0)pctx.fillText('🦊',pPl.c*CELL+CELL/2,pPl.r*CELL+CELL/2);
-  pZoms.forEach(function(z){pctx.fillText('🧟',z.c*CELL+CELL/2,z.r*CELL+CELL/2);});
+  // 🐰 목표 위치 동적 탐색
+  for(var _r=0;_r<ROWS;_r++)for(var _c=0;_c<COLS;_c++){
+    if(pMaze[_r]&&pMaze[_r][_c]===2) pctx.fillText('🐰',pOX+_c*CELL+CELL/2,pOY+_r*CELL+CELL/2);
+  }
+  if(pInv===0||Math.floor(pInv/3)%2===0)pctx.fillText('🦊',pOX+pPl.c*CELL+CELL/2,pOY+pPl.r*CELL+CELL/2);
+  pZoms.forEach(function(z){pctx.fillText('🧟',pOX+z.c*CELL+CELL/2,pOY+z.r*CELL+CELL/2);});
   drawBanner(pctx,W,H,pBan);
   if(pStt==='dead')drawGameOver(pctx,W,H,pSc,pDT);
 }
@@ -363,7 +476,7 @@ function sUI(){document.getElementById('s-sc').textContent=sSc;document.getEleme
 function startShoot(){
   document.getElementById('s-ov').style.display='none';
   sSc=0;sSt=1;sLi=3;sStt='playing';sTk=0;sCool=0;sDT=0;
-  sAutoFire=false;clearInterval(sAutoIv);sAutoIv=null;sPl={x:SW/2,y:SH-45};sBul=[];sEB=[];sEn=[];sInv=0;sBan={t:'S T A G E\n1',life:1400};
+  sAutoFire=false;clearInterval(sAutoIv);sAutoIv=null;sPl={x:SW/2,y:SH-45};sBul=[];sEB=[];sEn=[];sInv=0;sBonusUsed=false;sBan={t:'S T A G E\n1',life:1400};
   sSpawnWave();clearInterval(sLoop);sDraw();sLoop=setInterval(sStep,33);
 }
 function sSpawnWave(){
@@ -386,6 +499,11 @@ function sStep(){
   sBul=sBul.filter(function(b){return b.y>-10;});
   sBul.forEach(function(b){b.y-=11;});
   var fe=Math.max(38-sSt*4,10);
+  // 보너스 하트 총알 (생명 1개, 아직 안 씀, 화면에 없을 때)
+  if(sLi===1&&!sEB.some(function(b){return b.bonus;})&&sTk>0&&sTk%Math.max(fe*3,30)===0){
+    var alive2=sEn.filter(function(e){return e.alive;});
+    if(alive2.length){var be=alive2[Math.floor(Math.random()*alive2.length)];sEB.push({x:be.x,y:be.y+12,bonus:true});}
+  }
   if(sTk%fe===0){
     var alive=sEn.filter(function(e){return e.alive;}),front={};
     alive.forEach(function(e){var col=Math.round(e.x/44);if(!front[col]||e.y>front[col].y)front[col]=e;});
@@ -395,7 +513,7 @@ function sStep(){
   sEn.filter(function(e){return e.alive;}).forEach(function(e){e.x+=e.dx;if(e.x<14||e.x>SW-14)hw=true;});
   if(hw)sEn.forEach(function(e){e.dx*=-1;e.y+=12;});
   sEB=sEB.filter(function(b){return b.y<SH+10;});
-  sEB.forEach(function(b){b.y+=6+sSt*0.4;});
+  sEB.forEach(function(b){b.y+=b.bonus?(12+sSt*0.8):(6+sSt*0.4);});
   sBul.forEach(function(b){
     sEn.filter(function(e){return e.alive;}).forEach(function(e){
       if(Math.abs(b.x-e.x)<14&&Math.abs(b.y-e.y)<14){e.alive=false;b.y=-999;sSc+=20;document.getElementById('s-sc').textContent=sSc;}
@@ -403,7 +521,10 @@ function sStep(){
   });
   var hit=false;
   sEB.forEach(function(b){
-    if(sInv===0&&Math.abs(b.x-sPl.x)<16&&Math.abs(b.y-sPl.y)<16){
+    if(b.bonus&&Math.abs(b.x-sPl.x)<16&&Math.abs(b.y-sPl.y)<16){
+      b.y=SH+999;sLi++;sUI();return;
+    }
+    if(sInv===0&&!b.bonus&&Math.abs(b.x-sPl.x)<16&&Math.abs(b.y-sPl.y)<16){
       b.y=SH+999;sLi--;document.getElementById('s-li').textContent=sLi;
       if(sLi<=0){sStt='dead';sDT=0;hit=true;}
       else{sPl.x=SW/2;sInv=80;}
@@ -425,7 +546,16 @@ function sDraw(){
   sctx.fillStyle='#ff6688';sctx.font='bold 12px serif';
   sBul.forEach(function(b){sctx.fillText('♥',b.x,b.y);});
   sctx.fillStyle='#6699ff';
-  sEB.forEach(function(b){sctx.fillRect(b.x-2,b.y-5,4,10);});
+  sEB.forEach(function(b){
+    if(b.bonus){
+      sctx.fillStyle='#ff1111';sctx.font='bold 16px serif';
+      sctx.textAlign='center';sctx.textBaseline='middle';
+      sctx.fillText('♥',b.x,b.y);
+      sctx.fillStyle='#6699ff';
+    } else {
+      sctx.fillRect(b.x-2,b.y-5,4,10);
+    }
+  });
   drawBanner(sctx,SW,SH,sBan);
   if(sStt==='dead')drawGameOver(sctx,SW,SH,sSc,sDT);
 }
