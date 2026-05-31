@@ -39,13 +39,13 @@
       justify-content: center;
     }
     .ftag {
-      font-size: 12px; color: rgba(255,255,255,0.55);
+      font-size: clamp(6.5px, 1.2vw, 11px); color: rgba(255,255,255,0.55);
       border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
-      padding: 5px 12px; background: transparent;
+      padding: 2px 6px; background: transparent;
       cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer;
       transition: background 0.15s, color 0.15s, border-color 0.15s;
       font-family: 'Nanum Gothic', sans-serif; letter-spacing: 0.5px;
-      white-space: nowrap;
+      white-space: nowrap; line-height: 1.4;
     }
     .ftag:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
     .ftag.active {
