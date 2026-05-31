@@ -91,6 +91,18 @@
   /* REW / FFW — 하단 버튼 5번(REW), 6번(FFW) 위치 */
   .zone-rew    { left:52%;  top:68%; width:7%; height:24%; }
   .zone-ffw    { left:60%;  top:68%; width:7%; height:24%; }
+  /* GAME — REW보다 왼쪽 */
+  .zone-game   { left:36%;  top:68%; width:7%; height:24%; }
+
+  /* 모바일: 이미지 가로 꽉 채우기 */
+  @media (max-width: 768px) {
+    #img-title {
+      width: 80vw;
+    }
+    #machine-wrap {
+      width: 100vw;
+    }
+  }
 
   /* FFW 팝업 */
   #ffw-popup {
@@ -144,6 +156,7 @@
     <img class="hover-img" id="imgBehind" src="https://art.theworldbyyp.kr/main/main-behind.png" alt="">
     <img class="hover-img" id="imgRew"    src="https://art.theworldbyyp.kr/main/main-REW.png"    alt="">
     <img class="hover-img" id="imgFfw"    src="https://art.theworldbyyp.kr/main/main-FFW.png"    alt="">
+    <img class="hover-img" id="imgGame"   src="https://art.theworldbyyp.kr/main/main-game.png"   alt="">
 
     <!-- 클릭 영역 -->
     <a class="zone zone-home"   href="/home"   onmouseenter="showHover('imgHome')"   onmouseleave="hideAll()"></a>
@@ -155,6 +168,8 @@
     <a class="zone zone-ffw"    href="#"
        onmouseenter="showHover('imgFfw')" onmouseleave="hideAll()"
        onclick="showFfw(); return false;"></a>
+    <a class="zone zone-game"   href="/game"
+       onmouseenter="showHover('imgGame')" onmouseleave="hideAll()"></a>
   </div>
 </div>
 
