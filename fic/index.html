@@ -32,6 +32,61 @@
 
     /* 카드 목록 - 1.2배: max-width 672 */
     .page-wrap { max-width: 672px; margin: 0 auto; padding: 0 20px; }
+
+    /* 태그 필터 */
+    .filter-wrap {
+      padding: 16px 0 14px 0;
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center;
+    }
+    .ftag {
+      font-size: 12px; color: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+      padding: 5px 12px; background: transparent;
+      cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      font-family: 'Nanum Gothic', sans-serif; letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .ftag:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
+    .ftag.active {
+      background: rgba(255,255,255,0.15);
+      color: #fff; border-color: rgba(255,255,255,0.7);
+    }
+    .card.hidden { display: none; }
+
+    /* 모바일 필터 토글 */
+    .filter-toggle {
+      display: none;
+      width: 100%; margin: 7px 0 0 0;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 0;
+      color: rgba(255,255,255,0.6); font-size: 12px;
+      font-family: 'Nanum Gothic', sans-serif; letter-spacing: 1.5px;
+      padding: 8px 16px; text-align: center;
+      cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer;
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .filter-toggle .arrow { transition: transform 0.3s; display: inline-block; }
+    .filter-toggle.open .arrow { transform: rotate(180deg); }
+    .filter-tags {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center; padding: 0;
+    }
+    .filter-tags.open { max-height: 400px; padding: 16px 0 8px 0; }
+
+    @media (min-width: 769px) {
+      .filter-toggle { display: flex !important; }
+      .filter-tags { display: flex; }
+    }
+    @media (max-width: 768px) {
+      .filter-wrap { display: block; padding: 20px 0 12px 0; }
+      .filter-toggle { display: flex; }
+      .filter-tags { display: flex; }
+    }
     .list { display: flex; flex-direction: column; gap: 12px; }
 
     .card, .card * {
@@ -123,6 +178,36 @@
 
   <!-- 카드 목록 -->
   <div class="page-wrap">
+    <!-- 태그 필터 -->
+    <div class="filter-wrap" id="filter-wrap">
+      <button class="filter-toggle" id="filter-toggle" onclick="toggleFilter()">
+        <span style="letter-spacing:4px;">전체</span><span class="arrow" style="position:absolute; right:16px;">▼</span>
+      </button>
+      <div class="filter-tags" id="filter-tags">
+        <button class="ftag active" data-tag="전체">전체</button>
+        <button class="ftag" data-tag="SF">SF</button>
+        <button class="ftag" data-tag="고전물">고전물</button>
+        <button class="ftag" data-tag="공략물">공략물</button>
+        <button class="ftag" data-tag="군부물">군부물</button>
+        <button class="ftag" data-tag="근미래물">근미래물</button>
+        <button class="ftag" data-tag="네임버스">네임버스</button>
+        <button class="ftag" data-tag="디스토피아">디스토피아</button>
+        <button class="ftag" data-tag="멀티버스">멀티버스</button>
+        <button class="ftag" data-tag="센티넬버스">센티넬버스</button>
+        <button class="ftag" data-tag="시대물">시대물</button>
+        <button class="ftag" data-tag="오메가버스">오메가버스</button>
+        <button class="ftag" data-tag="오컬트">오컬트</button>
+        <button class="ftag" data-tag="이능력물">이능력물</button>
+        <button class="ftag" data-tag="인외물">인외물</button>
+        <button class="ftag" data-tag="정치물">정치물</button>
+        <button class="ftag" data-tag="조직물">조직물</button>
+        <button class="ftag" data-tag="케이크버스">케이크버스</button>
+        <button class="ftag" data-tag="타임리프">타임리프</button>
+        <button class="ftag" data-tag="포스트 아포칼립스">포스트 아포칼립스</button>
+        <button class="ftag" data-tag="환생물">환생물</button>
+        <button class="ftag" data-tag="회귀물">회귀물</button>
+      </div>
+    </div>
     <div class="list">
     <a class="card" href="/fic/01">
       <img class="bg" src="https://art.theworldbyyp.kr/main/tape19.png" alt="">
@@ -363,6 +448,30 @@
     window.addEventListener('scroll', function() {
       document.getElementById('top-btn').classList.toggle('visible', window.scrollY > 200);
     });
+
+    // 태그 필터
+    document.querySelectorAll('.ftag').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var tag = this.dataset.tag;
+        document.querySelectorAll('.ftag').forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        document.querySelectorAll('.card').forEach(function(card) {
+          if (tag === '전체') {
+            card.classList.remove('hidden');
+          } else {
+            var tags = Array.from(card.querySelectorAll('.tag')).map(function(t) { return t.textContent; });
+            card.classList.toggle('hidden', tags.indexOf(tag) === -1);
+          }
+        });
+      });
+    });
+
+    function toggleFilter() {
+      var toggle = document.getElementById('filter-toggle');
+      var tags = document.getElementById('filter-tags');
+      toggle.classList.toggle('open');
+      tags.classList.toggle('open');
+    }
   </script>
 
 <!-- FFW 팝업 -->
