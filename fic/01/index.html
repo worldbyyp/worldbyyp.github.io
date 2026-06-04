@@ -101,7 +101,7 @@
   .bgm-btn {
     width: 48px;
     height: 32px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--text);
     background: transparent;
     color: var(--text);
     font-size: 14px;
@@ -109,10 +109,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: border-color 0.2s, color 0.2s;
+    opacity: 0.3;
+    transition: opacity 0.2s;
     cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
   }
-  .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
 
   /* 톱니바퀴 + 패널 */
   #settings-wrap {
@@ -381,9 +381,9 @@
   <div id="adult-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0b0b14;z-index:9999;display:flex;align-items:center;justify-content:center;font-family:'Nanum Gothic',sans-serif;">
     <div style="display:flex;flex-direction:column;align-items:center;gap:24px;">
       <div style="color:#aaaaaa;font-size:13px;letter-spacing:2px;">비밀번호를 입력하세요</div>
-      <a href="https://posty.pe/7kuplk" target="_blank" style="background:transparent;border:1px solid #444444;color:#666666;font-size:11px;padding:6px 18px;letter-spacing:1px;text-decoration:none;" onmouseover="this.style.borderColor='#888';this.style.color='#aaa'" onmouseout="this.style.borderColor='#444';this.style.color='#666'">비밀번호 확인하기</a>
+      <a href="https://posty.pe/7kuplk" target="_blank" style="background:transparent;border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.5);font-size:11px;padding:6px 18px;letter-spacing:1px;text-decoration:none;transition:border-color 0.2s,color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.8)';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)';this.style.color='rgba(255,255,255,0.5)'">비밀번호 확인하기</a>
       <div style="display:flex;gap:10px;align-items:flex-end;">
-        <input type="password" id="adultPw" maxlength="6" placeholder="······" style="background:transparent;border:none;border-bottom:1px solid #555555;color:#ffffff;font-size:20px;letter-spacing:6px;width:140px;padding:8px 4px;text-align:center;font-family:'Nanum Gothic',sans-serif;outline:none;" readonly onfocus="this.removeAttribute('readonly'); this.style.borderBottomColor='#ffffff'" onblur="this.style.borderBottomColor='#555555'">
+        <input type="password" id="adultPw" maxlength="6" placeholder="······" style="background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.3);color:#ffffff;font-size:20px;letter-spacing:6px;width:140px;padding:8px 4px;text-align:center;font-family:'Nanum Gothic',sans-serif;outline:none;" readonly onfocus="this.removeAttribute('readonly'); this.style.borderBottomColor='rgba(255,255,255,0.8)'" onblur="this.style.borderBottomColor='rgba(255,255,255,0.3)'">
         <button onclick="checkAdultPw()" style="background:transparent;border:1px solid #555555;color:#aaaaaa;font-size:13px;padding:8px 24px;letter-spacing:1px;font-family:'Nanum Gothic',sans-serif;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff'" onmouseout="this.style.borderColor='#555';this.style.color='#aaa'">입력</button>
       </div>
       <div id="adultErr" style="color:#cc4444;font-size:12px;letter-spacing:1px;height:16px;"></div>
@@ -865,7 +865,7 @@
 </div>
 
 <!-- TOP 버튼 -->
-<button id="bookmark-btn" onclick="saveBookmark()" title="책갈피 저장">🔖</button>
+<button id="bookmark-btn" onclick="saveBookmark()">🔖</button>
 <button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
 
 <script>
@@ -955,7 +955,8 @@
     }
   }
 
-  function closeBookmarkPopup() {
+  function closeBookmarkPopup(deleteKey) {
+    if (deleteKey) localStorage.removeItem(BOOKMARK_KEY);
     var p = document.getElementById('bookmark-popup');
     p.classList.remove('visible');
     setTimeout(function() { p.classList.remove('show'); }, 300);
@@ -972,6 +973,18 @@
     var pw = document.getElementById('adultPw');
     if (pw) pw.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); checkAdultPw(); } });
   });
+  // btn-wrap 보이면 북마크 삭제
+  var _bmObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        localStorage.removeItem(BOOKMARK_KEY);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.addEventListener('DOMContentLoaded', function() {
+    var bw = document.getElementById('btn-wrap') || document.querySelector('.btn-wrap');
+    if (bw) _bmObserver.observe(bw);
+  });
 </script>
 
 <!-- 저장 알림 -->
@@ -982,7 +995,7 @@
   <p>저장된 위치가 있습니다.<br>이어서 읽으시겠습니까?</p>
   <div class="bookmark-popup-btns">
     <button onclick="resumeBookmark()" tabindex="-1">이어읽기</button>
-    <button onclick="closeBookmarkPopup()" tabindex="-1">처음부터</button>
+    <button onclick="closeBookmarkPopup(true)" tabindex="-1">처음부터</button>
   </div>
 </div>
 </body>
