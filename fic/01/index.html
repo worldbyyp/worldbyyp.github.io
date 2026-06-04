@@ -970,15 +970,7 @@
 </html>
 <script>
 
-    function checkAdultPw() {
-      var val = document.getElementById('adultPw').value.trim();
-      if (val === '616479') {
-        document.getElementById('adult-overlay').style.display = 'none';
-      } else {
-        document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
-        document.getElementById('adultPw').value = '';
-      }
-    }
+    
     document.addEventListener('DOMContentLoaded', function() {
       var pw = document.getElementById('adultPw');
       if (pw) pw.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAdultPw(); });
