@@ -3,10 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>나의 히어로, XXXXX</title>
+<title>나의 히어로, XXXXX ─ 영필 웹진 : 세계世界2</title>
+<!-- OG 태그 -->
+<meta http-equiv="Cache-Control" content="no-store">
+<meta property="og:title" content="나의 히어로, XXXXX — YOUNGPIL Webzine 世界2">
+<meta property="og:description" content="콜프 / YOUNGPIL Webzine 世界2">
+<meta property="og:image" content="https://art.theworldbyyp.kr/main/og.png">
+<meta property="og:url" content="https://theworldbyyp.kr/fic/21/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://art.theworldbyyp.kr/main/og.png">
+<link rel="icon" href="/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
+    --border-color: rgba(128,128,128,0.35);
     --bg: #ffffff;
     --text: #222222;
     --header-bg: #0b0b14;
@@ -99,10 +110,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: border-color 0.2s, color 0.2s;
+    opacity: 0.3;
+    transition: opacity 0.2s;
     cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
   }
-  .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
 
   /* 톱니바퀴 + 패널 */
   #settings-wrap {
@@ -117,7 +128,7 @@
   }
   #settings-panel {
     background: rgba(30, 30, 40, 0.82);
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid var(--border-color);
     backdrop-filter: blur(6px);
     padding: 12px 14px;
     display: flex;
@@ -150,7 +161,7 @@
     user-select: none !important;
   }
   .ctrl-btn {
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid var(--border-color);
     background: transparent;
     color: #cccccc;
     font-family: 'Nanum Gothic', sans-serif;
@@ -171,7 +182,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5);
+    border: 1px solid var(--border-color);
     background: rgba(20, 20, 30, 0.55);
     color: rgba(200,200,200,0.7);
     font-size: 15px;
@@ -246,7 +257,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5);
+    border: 1px solid var(--border-color);
     background: rgba(20, 20, 30, 0.55);
     color: rgba(200,200,200,0.7);
     font-size: 11px;
@@ -271,6 +282,99 @@
     .header h1 { font-size: 22px; }
     .content { padding: 30px 18px 50px; }
   }
+  /* 책갈피 버튼 */
+  #bookmark-btn {
+    position: fixed;
+    bottom: 36px;
+    right: 70px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 999;
+    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
+  }
+  #bookmark-btn.visible { opacity: 1; pointer-events: auto; }
+  #bookmark-btn:hover { background: rgba(40,40,55,0.8); color: rgba(255,255,255,0.9); }
+
+  /* 저장 알림 팝업 */
+  #bookmark-toast {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(11,11,20,0.88);
+    border: 1px solid var(--border-color);
+    color: #ffffff;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 20px 36px;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    font-family: 'Nanum Gothic', sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+  #bookmark-toast.show { display: flex; }
+  #bookmark-toast.visible { opacity: 1; }
+
+  /* 이어읽기 팝업 */
+  #bookmark-popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(11,11,20,0.92);
+    border: 1px solid var(--border-color);
+    color: #ffffff;
+    z-index: 10000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 52px;
+    backdrop-filter: blur(6px);
+    font-family: 'Nanum Gothic', sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-align: center;
+    width: 90%;
+    max-width: 340px;
+    box-sizing: border-box;
+  }
+  @media (max-width: 480px) {
+    #bookmark-popup { padding: 32px 28px; gap: 16px; }
+    #bookmark-popup p { font-size: 12px; }
+    .bookmark-popup-btns button { font-size: 11px; padding: 7px 18px; letter-spacing: 1px; }
+  }
+  #bookmark-popup.show { display: flex; }
+  #bookmark-popup.visible { opacity: 1; }
+  #bookmark-popup p { font-size: 13px; letter-spacing: 1px; line-height: 2; color: rgba(255,255,255,0.8); }
+  .bookmark-popup-btns { display: flex; gap: 12px; }
+  .bookmark-popup-btns button {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 8px 24px;
+    font-family: 'Nanum Gothic', sans-serif;
+    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .bookmark-popup-btns button:hover { border-color: #fff; color: #fff; }
 </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
@@ -781,7 +885,12 @@
 <p>XXXXX</p>
 <p>Fin</p>
 <p class="empty">&nbsp;</p>
-
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
 </div>
 <!-- 본문 끝 -->
 
@@ -816,6 +925,7 @@
 </div>
 
 <!-- TOP 버튼 -->
+<button id="bookmark-btn" onclick="saveBookmark()">🔖</button>
 <button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
 
 <script>
@@ -863,6 +973,89 @@
   }
 
 
+
+    // 책갈피
+  var BOOKMARK_KEY = 'bookmark_' + location.pathname;
+
+  function saveBookmark() {
+    localStorage.setItem(BOOKMARK_KEY, window.scrollY);
+    showToast();
+  }
+
+  function showToast() {
+    var t = document.getElementById('bookmark-toast');
+    t.classList.add('show');
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { t.classList.add('visible'); });
+    });
+    setTimeout(function() {
+      t.classList.remove('visible');
+      setTimeout(function() { t.classList.remove('show'); }, 300);
+    }, 2000);
+  }
+
+  function showBookmarkPopup() {
+    var saved = localStorage.getItem(BOOKMARK_KEY);
+    if (!saved) return;
+    if (document.activeElement) document.activeElement.blur();
+    var p = document.getElementById('bookmark-popup');
+    p.classList.add('show');
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { p.classList.add('visible'); });
+    });
+  }
+
+  function resumeBookmark() {
+    var saved = localStorage.getItem(BOOKMARK_KEY);
+    closeBookmarkPopup();
+    if (saved) {
+      setTimeout(function() {
+        window.scrollTo({ top: parseInt(saved), behavior: 'smooth' });
+      }, 300);
+    }
+  }
+
+  function closeBookmarkPopup(deleteKey) {
+    if (deleteKey) localStorage.removeItem(BOOKMARK_KEY);
+    var p = document.getElementById('bookmark-popup');
+    p.classList.remove('visible');
+    setTimeout(function() { p.classList.remove('show'); }, 300);
+  }
+
+  // 스크롤 시 bookmark-btn visible
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('bookmark-btn');
+    if (window.scrollY > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(showBookmarkPopup, 200);
+  });
+  // btn-wrap 보이면 북마크 삭제
+  var _bmObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        localStorage.removeItem(BOOKMARK_KEY);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.addEventListener('DOMContentLoaded', function() {
+    var bw = document.getElementById('btn-wrap') || document.querySelector('.btn-wrap');
+    if (bw) _bmObserver.observe(bw);
+  });
 </script>
+
+<!-- 저장 알림 -->
+<div id="bookmark-toast">✓ 저장되었습니다</div>
+
+<!-- 이어읽기 팝업 -->
+<div id="bookmark-popup">
+  <p>저장된 위치가 있습니다.<br>이어서 읽으시겠습니까?</p>
+  <div class="bookmark-popup-btns">
+    <button onclick="resumeBookmark()" tabindex="-1">이어읽기</button>
+    <button onclick="closeBookmarkPopup(true)" tabindex="-1">처음부터</button>
+  </div>
+</div>
 </body>
 </html>

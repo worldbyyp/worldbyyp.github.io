@@ -3,10 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>나를 모르느냐 하지 마시고</title>
+<title>나를 모르느냐 하지 마시고 ─ 영필 웹진 : 세계世界2</title>
+<!-- OG 태그 -->
+<meta http-equiv="Cache-Control" content="no-store">
+<meta property="og:title" content="나를 모르느냐 하지 마시고 — YOUNGPIL Webzine 世界2">
+<meta property="og:description" content="당연 / YOUNGPIL Webzine 世界2">
+<meta property="og:image" content="https://art.theworldbyyp.kr/main/og.png">
+<meta property="og:url" content="https://theworldbyyp.kr/fic/08/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://art.theworldbyyp.kr/main/og.png">
+<link rel="icon" href="/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
+    --border-color: rgba(128,128,128,0.35);
     --bg: #ffffff;
     --text: #222222;
     --header-bg: #0b0b14;
@@ -99,10 +110,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: border-color 0.2s, color 0.2s;
+    opacity: 0.3;
+    transition: opacity 0.2s;
     cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
   }
-  .bgm-btn:hover { border-color: var(--text); color: var(--text); opacity: 0.6; }
 
   /* 톱니바퀴 + 패널 */
   #settings-wrap {
@@ -117,7 +128,7 @@
   }
   #settings-panel {
     background: rgba(30, 30, 40, 0.82);
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid var(--border-color);
     backdrop-filter: blur(6px);
     padding: 12px 14px;
     display: flex;
@@ -150,7 +161,7 @@
     user-select: none !important;
   }
   .ctrl-btn {
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid var(--border-color);
     background: transparent;
     color: #cccccc;
     font-family: 'Nanum Gothic', sans-serif;
@@ -171,7 +182,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5);
+    border: 1px solid var(--border-color);
     background: rgba(20, 20, 30, 0.55);
     color: rgba(200,200,200,0.7);
     font-size: 15px;
@@ -246,7 +257,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5);
+    border: 1px solid var(--border-color);
     background: rgba(20, 20, 30, 0.55);
     color: rgba(200,200,200,0.7);
     font-size: 11px;
@@ -286,6 +297,99 @@
     background: rgba(255,255,255,0.05);
   }
 
+  /* 책갈피 버튼 */
+  #bookmark-btn {
+    position: fixed;
+    bottom: 36px;
+    right: 70px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 999;
+    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
+  }
+  #bookmark-btn.visible { opacity: 1; pointer-events: auto; }
+  #bookmark-btn:hover { background: rgba(40,40,55,0.8); color: rgba(255,255,255,0.9); }
+
+  /* 저장 알림 팝업 */
+  #bookmark-toast {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(11,11,20,0.88);
+    border: 1px solid var(--border-color);
+    color: #ffffff;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 20px 36px;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    font-family: 'Nanum Gothic', sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+  #bookmark-toast.show { display: flex; }
+  #bookmark-toast.visible { opacity: 1; }
+
+  /* 이어읽기 팝업 */
+  #bookmark-popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(11,11,20,0.92);
+    border: 1px solid var(--border-color);
+    color: #ffffff;
+    z-index: 10000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 52px;
+    backdrop-filter: blur(6px);
+    font-family: 'Nanum Gothic', sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-align: center;
+    width: 90%;
+    max-width: 340px;
+    box-sizing: border-box;
+  }
+  @media (max-width: 480px) {
+    #bookmark-popup { padding: 32px 28px; gap: 16px; }
+    #bookmark-popup p { font-size: 12px; }
+    .bookmark-popup-btns button { font-size: 11px; padding: 7px 18px; letter-spacing: 1px; }
+  }
+  #bookmark-popup.show { display: flex; }
+  #bookmark-popup.visible { opacity: 1; }
+  #bookmark-popup p { font-size: 13px; letter-spacing: 1px; line-height: 2; color: rgba(255,255,255,0.8); }
+  .bookmark-popup-btns { display: flex; gap: 12px; }
+  .bookmark-popup-btns button {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 8px 24px;
+    font-family: 'Nanum Gothic', sans-serif;
+    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .bookmark-popup-btns button:hover { border-color: #fff; color: #fff; }
 </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
@@ -323,7 +427,7 @@
 <p class="empty">&nbsp;</p>
 <p>그날, 원필의 세계는 완전히 뒤바뀌었다. 가이드 확진을 받은 뒤 원필에겐 앨리스에 대한 풋사랑도, 공들여 쌓아온 학업적 성과도 더 이상 중요하지 않았다. 원필은 부모님께 가이딩 스쿨로 전학 가고 싶다는 뜻을 전했다. 부모님은 갑작스러운 통보에 당황했지만, 가이드라는 자부심으로 눈을 빛내는 아들의 고집을 꺾을 수는 없었다.</p>
 <p class="empty">&nbsp;</p>
-<p>원필은 부모님과 머리를 맞대고 엘리트 가이드 코스를 밟을 수 있는 학교를 꼼꼼히 골랐다. 아버지는 각 학교의 역사와 커리큘럼을 분석했고, 어머니는 기숙사 시설과 안전 등급을 확인했다. '로열 하모니 인스티튜트'와 '더 프라임 아카데미'를 제치고 원필이 직접 선택한 곳은 '세인트 가이딩 스쿨'이었다. 유치원 '무비 데이' 때 보았던 센티넬 영화 속 가이드는 원필에게 진정한 히어로였다. 아무리 강력한 괴력 센티넬이라도 가이드의 손길 없이는 폭주하는 시한폭탄에 불과했다. 약골로 태어나 늘 보호받는 쪽이었던 원필에게, 누군가의 생존을 책임지는 '구원자'가 될 수 있다는 사실은 어린 원필의 심장을 처음으로 뜨겁게 뛰게 만들었다. 부모님은 아들이 타인을 수호하는 영웅이 되고 싶어 한다는 사실을 존중하며, 그가 수석 졸업생이 될 때까지 묵묵히 뒷바라지했다. 원필은 자신이 영화 속 주인공 같은 센티넬의 완벽한 파트너가 될 것을 믿어 의심치 않았다.</p>
+<p>원필은 부모님과 머리를 맞대고 엘리트 가이드 코스를 밟을 수 있는 학교를 꼼꼼히 골랐다. 아버지는 각 학교의 역사와 커리큘럼을 분석했고, 어머니는 기숙사 시설과 안전 등급을 확인했다. '로열 하모니 인스티튜트'와 '더 프라임 아카데미'를 제치고 원필이 직접 선택한 곳은 '세인트 가이딩 스쿨'이었다. 유치원 '무비 데이' 때 보았던 센티넬 영화 속 가이드는 원필에게 진정한 히어로였다. 아무리 강력한 괴력 센티넬이라도 가이드의 손길 없이는 폭주하는 시한폭탄에 불과했다. 약골로 태어나 늘 보호받는 쪽이었던 원필에게, 누군가의 생존을 책임지는 구원자가 될 수 있다는 사실은 어린 원필의 심장을 처음으로 뜨겁게 만들었다. 부모님은 아들이 타인을 수호하는 영웅이 되고 싶어 한다는 사실을 존중하며, 그가 수석 졸업생이 될 때까지 묵묵히 뒷바라지했다. 원필은 자신이 영화 속 주인공 같은 센티넬의 완벽한 파트너가 될 것을 믿어 의심치 않았다.</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p>그러나, 현실은 영화가 아니었다.</p>
@@ -1134,7 +1238,7 @@
 <p class="empty">&nbsp;</p>
 <p>“...아.”</p>
 <p class="empty">&nbsp;</p>
-<p>순진하다 못해 멍청한 소리를 뱉었다는 자각이 뒤늦게 밀려왔지만, 이미 엎질러진 물이었다.영현이야 전담 가이드 없이 가이딩 팩이나 공중 보건 가이드에게 방사 가이딩을 받는 게 다였지만, 원필은 가이드로서 여러 센티넬을 접해봤을 터였다. 제게는 처음 생긴 가이드라 원필도 자신이 처음일 거라 착각했다. 그러나 우진과의 사이에 흐르는 기류를 읽지 못할 만큼 순진한 건 아니었다. 원필의 말대로 과거에 잠깐 같이 일 한 사이라고 칭하기엔 둘 사이에 흐르는 감정의 골이 깊어 보였다. 왜 제대로 말해주지 않냐 따져 묻고 싶었다. 하지만 제게 그럴 자격이 있는 걸까? 영현은 정해진 기한이 끝나면 종료될 제 처지를 뼈아프게 실감하며 입을 굳게 다물었다.</p>
+<p>순진하다 못해 멍청한 소리를 뱉었다는 자각이 뒤늦게 밀려왔지만, 이미 엎질러진 물이었다. 영현이야 전담 가이드 없이 가이딩 팩이나 공중 보건 가이드에게 방사 가이딩을 받는 게 다였지만, 원필은 가이드로서 여러 센티넬을 접해봤을 터였다. 제게는 처음 생긴 가이드라 원필도 자신이 처음일 거라 착각했다. 그러나 우진과의 사이에 흐르는 기류를 읽지 못할 만큼 순진한 건 아니었다. 원필의 말대로 과거에 잠깐 같이 일 한 사이라고 칭하기엔 둘 사이에 흐르는 감정의 골이 깊어 보였다. 왜 제대로 말해주지 않냐 따져 묻고 싶었다. 하지만 제게 그럴 자격이 있는 걸까? 영현은 정해진 기한이 끝나면 종료될 제 처지를 뼈아프게 실감하며 입을 굳게 다물었다.</p>
 <p class="empty">&nbsp;</p>
 <p>우진이 활약하는 모습을 현장에서 직접 보았다. 얇은 물줄기로 나무 사이에 잔열이나 끄는 영현과 달리, 우진은 하늘을 날아다니며 폭포수 같은 물줄기를 쏟아부었다. 그의 손길 한 번에 거대한 불씨가 잠식되었다. 센티넬 발현 후 처음으로 인정받은 현장에서, 동시에 자신의 초라함을 실감했다.</p>
 <p class="empty">&nbsp;</p>
@@ -1146,7 +1250,7 @@
 <p class="empty">&nbsp;</p>
 <p>“또 이런다, 또…. 그렇게 큰 상처 아니거든요?”</p>
 <p class="empty">&nbsp;</p>
-<p>평소 같으면 원필의 타박에 꿍얼거림이 따라붙어야 하는데, 어쩐 일인지 조용했다. 이곳에 도착한 뒤로 그에게 드리워진 그늘을 모르는 바가 아니었다. 영현은 줄곧 우진을 신경 쓰고 있었다. 괜한 오해를 사기 전에 우진과의 사이를 설명했지만, 영현은 곧이곧대로 믿지 않는 모양이었다. 그에게 설명한 것처럼 우진과 단순히 일만 한 사이는 아니었다. 하지만 지금은 아무 감정도 남아있지 않았다. 괜한 변명은 오해를 증폭시킬 뿐. 더군다나 영현은 우진에 대해 아무것도 묻지 않았다. 우진과 함께 있는 모습을 보이고, 멸시 앞에 그를 방치했다는 죄책감이 원필을 짓눌렀다. 회복 탄력성이 좋은 영현이 전에 없이 가라앉은 모습에 영 마음이 쓰였다.</p>
+<p>평소 같으면 원필의 타박에 꿍얼거림이 따라붙어야 하는데, 어쩐 일인지 조용했다. 이곳에 도착한 뒤로 그에게 드리워진 그늘을 모르는 바가 아니었다. 영현은 줄곧 우진을 신경 쓰고 있었다. 오해를 사기 전에 우진과의 사이를 설명했지만, 영현은 곧이곧대로 믿지 않는 모양이었다. 그에게 설명한 것처럼 우진과 단순히 일만 한 사이는 아니었다. 하지만 지금은 아무 감정도 남아있지 않았다. 괜한 변명은 오해를 증폭시킬 뿐. 더군다나 영현은 우진에 대해 아무것도 묻지 않았다. 우진과 함께 있는 모습을 보이고, 멸시 앞에 그를 방치했다는 죄책감이 원필을 짓눌렀다. 회복 탄력성이 좋은 영현이 전에 없이 가라앉은 모습에 영 마음이 쓰였다.</p>
 <p>영현을 품에 안고 파장을 흘려보내던 원필이 잠시 머뭇거렸다. 영현이 어떻게 받아들일지 몰라 걱정이 되었다. 간신히 용기를 쥐어 짜낸 원필이 천천히 고개를 숙여 영현의 상처에 입술을 가져다 댔다.</p>
 <p class="empty">&nbsp;</p>
 <p>순간 영현의 몸이 굳었다. 그 반응이 느껴지자, 원필은 오히려 팔에 힘을 더 주었다. 가이딩을 핑계로 한 입맞춤에 제 마음을 알아줬으면 하는 건 욕심일지 몰랐다. 그래도 그가 밀어낸다면, 그건 꽤 오래 속상할 것 같았다. 볼에 난 상처가 사라질 때쯤 겨우 영현과 눈을 맞출 수 있었다. 먹구름이 완전히 걷히진 않았지만, 상기 된 두 볼에 화색이 도는 듯했다.</p>
@@ -1500,6 +1604,14 @@
 <p class="empty">&nbsp;</p>
 <p style="text-align:right;">-fin.-</p>
 
+
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
 </div>
 <!-- 본문 끝 -->
 
@@ -1534,6 +1646,7 @@
 </div>
 
 <!-- TOP 버튼 -->
+<button id="bookmark-btn" onclick="saveBookmark()">🔖</button>
 <button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
 
 <script>
@@ -1581,6 +1694,89 @@
   }
 
 
+
+    // 책갈피
+  var BOOKMARK_KEY = 'bookmark_' + location.pathname;
+
+  function saveBookmark() {
+    localStorage.setItem(BOOKMARK_KEY, window.scrollY);
+    showToast();
+  }
+
+  function showToast() {
+    var t = document.getElementById('bookmark-toast');
+    t.classList.add('show');
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { t.classList.add('visible'); });
+    });
+    setTimeout(function() {
+      t.classList.remove('visible');
+      setTimeout(function() { t.classList.remove('show'); }, 300);
+    }, 2000);
+  }
+
+  function showBookmarkPopup() {
+    var saved = localStorage.getItem(BOOKMARK_KEY);
+    if (!saved) return;
+    if (document.activeElement) document.activeElement.blur();
+    var p = document.getElementById('bookmark-popup');
+    p.classList.add('show');
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { p.classList.add('visible'); });
+    });
+  }
+
+  function resumeBookmark() {
+    var saved = localStorage.getItem(BOOKMARK_KEY);
+    closeBookmarkPopup();
+    if (saved) {
+      setTimeout(function() {
+        window.scrollTo({ top: parseInt(saved), behavior: 'smooth' });
+      }, 300);
+    }
+  }
+
+  function closeBookmarkPopup(deleteKey) {
+    if (deleteKey) localStorage.removeItem(BOOKMARK_KEY);
+    var p = document.getElementById('bookmark-popup');
+    p.classList.remove('visible');
+    setTimeout(function() { p.classList.remove('show'); }, 300);
+  }
+
+  // 스크롤 시 bookmark-btn visible
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('bookmark-btn');
+    if (window.scrollY > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(showBookmarkPopup, 200);
+  });
+  // btn-wrap 보이면 북마크 삭제
+  var _bmObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        localStorage.removeItem(BOOKMARK_KEY);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.addEventListener('DOMContentLoaded', function() {
+    var bw = document.getElementById('btn-wrap') || document.querySelector('.btn-wrap');
+    if (bw) _bmObserver.observe(bw);
+  });
 </script>
+
+<!-- 저장 알림 -->
+<div id="bookmark-toast">✓ 저장되었습니다</div>
+
+<!-- 이어읽기 팝업 -->
+<div id="bookmark-popup">
+  <p>저장된 위치가 있습니다.<br>이어서 읽으시겠습니까?</p>
+  <div class="bookmark-popup-btns">
+    <button onclick="resumeBookmark()" tabindex="-1">이어읽기</button>
+    <button onclick="closeBookmarkPopup(true)" tabindex="-1">처음부터</button>
+  </div>
+</div>
 </body>
 </html>
