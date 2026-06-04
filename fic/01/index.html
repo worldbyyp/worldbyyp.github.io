@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>도취 — YOUNGPIL Webzine 世界2</title>
 <!-- OG 태그 -->
@@ -393,16 +394,13 @@
       var val = document.getElementById('adultPw').value.trim();
       if (val === '616479') {
         document.getElementById('adult-overlay').style.display = 'none';
-        if (!_bookmarkPopupShown) { _bookmarkPopupShown = true; setTimeout(showBookmarkPopup, 150); }
+        setTimeout(showBookmarkPopup, 200);
       } else {
         document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
         document.getElementById('adultPw').value = '';
       }
     }
-    document.addEventListener('DOMContentLoaded', function() {
-      var pw = document.getElementById('adultPw');
-      if (pw) pw.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAdultPw(); });
-    });
+    
   </script>
 
 <!-- 진행바 -->
@@ -965,21 +963,8 @@
     else btn.classList.remove('visible');
   });
 
-  // 페이지 진입 시 (뒤로가기/bfcache 포함)
-  var _bookmarkPopupShown = false;
-  window.addEventListener('pageshow', function(e) {
-    _bookmarkPopupShown = false;
-    setTimeout(function() {
-      var overlay = document.getElementById('adult-overlay');
-      // overlay 없거나 숨겨진 상태면 바로 팝업
-      if (!overlay || overlay.style.display === 'none') {
-        if (!_bookmarkPopupShown) {
-          _bookmarkPopupShown = true;
-          showBookmarkPopup();
-        }
-      }
-    }, 200);
-  });
+  // 페이지 로드 시 팝업 처리
+  
 </script>
 </body>
 </html>
