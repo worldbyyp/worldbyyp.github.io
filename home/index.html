@@ -7,15 +7,16 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box;
     cursor: url('https://art.theworldbyyp.kr/main/mouse-basic.png'), default; }
-  body { background: #0b0b14; background-image: url('https://art.theworldbyyp.kr/main/background.png'); background-size: cover; background-position: center; background-attachment: fixed; background-repeat: no-repeat; font-family: 'Nanum Gothic', sans-serif;
+  body { background: #0b0b14 url('https://art.theworldbyyp.kr/main/background.png') center/cover fixed no-repeat; font-family: 'Nanum Gothic', sans-serif;
     overflow: hidden; }
 
   /* ── 영상 화면 ── */
   #video-screen {
     position: fixed; inset: 0;
-    display: flex; align-items: center; justify-content: center;
+    display: block;
     background: #0b0b14; z-index: 100;
     transition: opacity 0.6s;
+    overflow: hidden;
   }
   #video-screen.hidden { opacity: 0; pointer-events: none; }
 
@@ -109,7 +110,7 @@
 
   /* 모바일: 이미지 가로 꽉 채우기 */
   @media (max-width: 768px) {
-    body { background-attachment: scroll; background-size: cover; }
+    body { background-attachment: scroll; }
     #img-title {
       width: 50vw;
     }
@@ -305,6 +306,7 @@
 
   // iOS 자동재생 강제 시도
   function tryPlay() {
+    _video.muted = true;
     var p = _video.play();
     if (p !== undefined) {
       p.catch(function() {
