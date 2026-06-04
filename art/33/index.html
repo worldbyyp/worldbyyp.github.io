@@ -3,10 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>적당한 상실</title>
+<title>나에게서 당신에게 ─ 영필 웹진 : 세계世界2</title>
+<!-- OG 태그 -->
+<meta http-equiv="Cache-Control" content="no-store">
+<meta property="og:title" content="YOUNGPIL Webzine 世界2">
+<meta property="og:description" content="YOUNGPIL Webzine 世界2">
+<meta property="og:image" content="https://art.theworldbyyp.kr/main/og.png">
+<meta property="og:url" content="https://theworldbyyp.kr/art/34/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://art.theworldbyyp.kr/main/og.png">
+<link rel="icon" href="/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
+    --border-color: rgba(128,128,128,0.35);
     --bg: #ffffff;
     --text: #222222;
     --header-bg: #0b0b14;
@@ -60,20 +71,22 @@
     padding: 30px 20px 0; transition: background 0.3s;
   }
   .bgm-btn {
-    width: 48px; height: 32px; border: 1px solid var(--text);
-    background: transparent; color: var(--text); font-size: 14px;
-    font-family: 'Nanum Gothic', sans-serif;
+    width: 48px; height: 32px;
+    border: 1px solid var(--text);
+    background: transparent; color: var(--text);
+    font-size: 14px; font-family: 'Nanum Gothic', sans-serif;
     display: flex; align-items: center; justify-content: center;
-    transition: border-color 0.2s, color 0.2s;
+    opacity: 0.3; transition: opacity 0.2s;
     cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
   }
-  .bgm-btn:hover { opacity: 0.6; }
+  .bgm-btn:hover { opacity: 0.7; }
+  .bgm-btn.playing { opacity: 1; }
   #settings-wrap {
     position: fixed; bottom: 36px; left: 28px; z-index: 999;
     display: flex; flex-direction: row; align-items: flex-end; gap: 8px;
   }
   #settings-panel {
-    background: rgba(30,30,40,0.82); border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(30,30,40,0.82); border: 1px solid var(--border-color);
     backdrop-filter: blur(6px); padding: 12px 14px;
     display: flex; flex-direction: column; gap: 10px;
     opacity: 0; pointer-events: none; transform: translateX(-10px);
@@ -83,7 +96,7 @@
   .panel-row { display: flex; flex-direction: row; align-items: center; gap: 6px; }
   .panel-row:last-child { justify-content: center; }
   .ctrl-btn {
-    border: 1px solid rgba(255,255,255,0.2); background: transparent; color: #cccccc;
+    border: 1px solid var(--border-color); background: transparent; color: #cccccc;
     font-family: 'Nanum Gothic', sans-serif; padding: 3px 10px; height: 26px;
     display: flex; align-items: center; justify-content: center;
     transition: border-color 0.2s, color 0.2s;
@@ -93,7 +106,7 @@
   .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); color: #ffffff; }
   #gear-btn {
     width: 36px; height: 36px; border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5); background: rgba(20,20,30,0.55);
+    border: 1px solid var(--border-color); background: rgba(20,20,30,0.55);
     color: rgba(200,200,200,0.7); font-size: 15px;
     display: flex; align-items: center; justify-content: center;
     backdrop-filter: blur(4px); transition: background 0.2s, color 0.2s;
@@ -125,7 +138,7 @@
   #top-btn {
     position: fixed; bottom: 36px; right: 28px;
     width: 36px; height: 36px; border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5); background: rgba(20,20,30,0.55);
+    border: 1px solid var(--border-color); background: rgba(20,20,30,0.55);
     color: rgba(200,200,200,0.7); font-size: 11px;
     font-family: 'Nanum Gothic', sans-serif;
     display: flex; align-items: center; justify-content: center;
@@ -144,30 +157,29 @@
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
-
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
+  <iframe id="ytplayer_YSm8nVlGp5Y"
+    src="https://www.youtube.com/embed/YSm8nVlGp5Y?enablejsapi=1&autoplay=0"
+    allow="autoplay" allowfullscreen>
+  </iframe>
+</div>
 <div id="progress-bar"></div>
 <div class="header">
   <div class="header-img-wrap">
     <img src="/images/head-world.png" alt="" style="width:70px; height:auto;">
   </div>
-  <h1>적당한 상실</h1>
-  <div class="author">따불</div>
-  <div class="trigger" style="font-size:13px; color:#888888;">*Trigger Warning</div>
+  <h1>나에게서 당신에게</h1>
+  <div class="author">마카</div>
+  <div class="trigger" style="font-size:13px; color:#0b0b14;">*No Trigger Warning</div>
 </div>
-
+<div class="bgm-wrap">
+  <button class="bgm-btn" id="bgmBtn_top_34" onclick="toggleBGM('YSm8nVlGp5Y', 'top_34')">▶</button>
+</div>
 <div class="content">
-    <img src="https://art.theworldbyyp.kr/33/33(1).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(2).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(3).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(4).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(5).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(6).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(7).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(8).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(9).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(10).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(11).jpeg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/33/33(12).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/34/34(1).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/34/34(2).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/34/34(3).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/34/34(4).jpg" alt="" style="width:100%; height:auto; display:block;">
 </div>
 
 <div class="btn-wrap">
@@ -218,7 +230,27 @@
       document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
   }
 
-
+  var players = {};
+  var isPlaying = {};
+  isPlaying['YSm8nVlGp5Y'] = false;
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+  function onYouTubeIframeAPIReady() {
+    players['YSm8nVlGp5Y'] = new YT.Player('ytplayer_YSm8nVlGp5Y', {events: {'onReady': function(e) {}}});
+  }
+  function toggleBGM(ytId, btnId) {
+    var btn = document.getElementById('bgmBtn_' + btnId);
+    if (!isPlaying[ytId]) {
+      if (players[ytId] && players[ytId].playVideo) players[ytId].playVideo();
+      btn.textContent = '■'; btn.classList.add('playing');
+      isPlaying[ytId] = true;
+    } else {
+      if (players[ytId] && players[ytId].stopVideo) players[ytId].stopVideo();
+      btn.textContent = '▶'; btn.classList.remove('playing');
+      isPlaying[ytId] = false;
+    }
+  }
 </script>
 </body>
 </html>
