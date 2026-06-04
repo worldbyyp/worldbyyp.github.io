@@ -4,7 +4,7 @@
 
 
 <meta charset="UTF-8">
-<meta name="viewport" content="interactive-widget=resizes-content, width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>배덕(背徳)</title>
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -291,6 +291,12 @@
       if (val === '616479') {
         document.activeElement.blur();
         document.getElementById('adult-overlay').style.display = 'none';
+        window.scrollTo(0, 0);
+        document.getElementById('main-content').style.visibility = 'visible';
+        var bw = document.getElementById('btn-wrap');
+        var mf = document.getElementById('main-footer');
+        if (bw) bw.style.visibility = 'visible';
+        if (mf) mf.style.visibility = 'visible';
       } else {
         document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
         document.getElementById('adultPw').value = '';
@@ -323,7 +329,7 @@
 
 
 <!-- 본문 시작 -->
-<div class="content">
+<div class="content" id="main-content" style="visibility:hidden;">
 
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -957,7 +963,7 @@
 <!-- 본문 끝 -->
 
 <!-- 하단 버튼 -->
-<div class="btn-wrap">
+<div class="btn-wrap" id="btn-wrap" style="visibility:hidden;">
   <a class="btn" href="/fic/">
     <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
     목록으로
@@ -968,7 +974,7 @@
   </a>
 </div>
 
-<div class="footer">© 2026 @worldbyyp. All Rights Reserved.</div>
+<div class="footer" id="main-footer" style="visibility:hidden;">© 2026 @worldbyyp. All Rights Reserved.</div>
 
 <!-- 설정 패널 -->
 <div id="settings-wrap">
