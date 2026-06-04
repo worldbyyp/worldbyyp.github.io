@@ -384,7 +384,7 @@
       var val = document.getElementById('adultPw').value.trim();
       if (val === '616479') {
         document.getElementById('adult-overlay').style.display = 'none';
-        showBookmarkPopup();
+        setTimeout(showBookmarkPopup, 100);
       } else {
         document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
         document.getElementById('adultPw').value = '';
