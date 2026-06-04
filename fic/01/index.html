@@ -393,13 +393,13 @@
       var val = document.getElementById('adultPw').value.trim();
       if (val === '616479') {
         document.activeElement.blur();
-        document.getElementById('adult-overlay').style.display = 'none';
         window.scrollTo(0, 0);
         document.getElementById('main-content').style.visibility = 'visible';
         var bw = document.getElementById('btn-wrap');
         var mf = document.getElementById('main-footer');
         if (bw) bw.style.visibility = 'visible';
         if (mf) mf.style.visibility = 'visible';
+        document.getElementById('adult-overlay').style.display = 'none';
         setTimeout(showBookmarkPopup, 100);
       } else {
         document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
