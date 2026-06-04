@@ -1,496 +1,740 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BEHIND — YOUNGPIL Webzine : 世界2</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box;
-      cursor: url('https://art.theworldbyyp.kr/main/mouse-basic.png'), default;
-    }
-    body { background: #0b0b14; font-family: 'Nanum Gothic', sans-serif; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Mini Game ─ 영필 웹진 : 세계世界2</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:#0b0b14 url('https://art.theworldbyyp.kr/main/background.png') center/cover no-repeat fixed;font-family:'Nanum Gothic',sans-serif;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;overflow-x:hidden;}
+.game-tabs{display:flex;width:100%;max-width:360px;margin:12px 0 8px;}
+.gtab{flex:1;padding:9px 0;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);cursor:pointer;font-size:12px;letter-spacing:1px;font-family:'Nanum Gothic',sans-serif;}
+.gtab.active{border-color:#fff;color:#fff;background:rgba(255,255,255,0.05);}
+.game-wrap{display:none;flex-direction:column;align-items:center;width:100%;max-width:360px;background:rgba(11,11,20,0.7);backdrop-filter:blur(8px);padding:20px 16px 24px;}
+.game-wrap.active{display:flex;}
+.info-bar{display:flex;gap:0;justify-content:space-around;margin-bottom:6px;font-size:12px;letter-spacing:1px;color:rgba(255,255,255,0.5);width:340px;}
+.info-bar span{color:#fff;font-weight:700;}
+.canvas-wrap{position:relative;line-height:0;}
+canvas{display:block;}
+.overlay{position:absolute;inset:0;background:rgba(11,11,20,0.93);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px 100px;gap:16px;cursor:pointer;z-index:10;border-radius:2px;}
+.ov-title{font-size:18px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:20px;}
+.ov-body{font-size:12px;color:#fff;letter-spacing:1px;line-height:2.2;text-align:center;}
+.ov-body b{font-weight:700;color:#aaa;}
+.ov-start{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);font-size:14px;font-weight:700;color:#0b0b14;letter-spacing:3px;background:#ffffff;border:none;padding:21px 36px;border-radius:3px;white-space:nowrap;font-family:'Nanum Gothic',sans-serif;}
+.dbtn{width:46px;height:46px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#aaa;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;user-select:none;font-family:'Nanum Gothic',sans-serif;}
+.dbtn:active{background:rgba(255,255,255,0.15);border-color:#fff;color:#fff;}
+.sbtn{width:46px;height:46px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#aaa;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;user-select:none;}
+.sbtn:active{background:rgba(255,255,255,0.15);border-color:#fff;}
+.firebtn{width:135px;height:46px;border:1px solid #ff6688;background:rgba(255,102,136,0.08);color:#ff6688;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;user-select:none;}
+.firebtn:active{background:rgba(255,102,136,0.25);}
+.gmsg{display:none;}
 
-    /* 네비 */
-    .nav-outer { padding: 80px 0 60px 0; }
-    .nav-wrap {
-      position: relative;
-      width: 100%; max-width: 672px;
-      margin: 0 auto; line-height: 0;
-    }
-    .nav-wrap img { display: block; width: 100%; height: auto; pointer-events: none; }
-    .nav-wrap img.hover-img { position: absolute; top:0; left:0; opacity:0; transition: opacity 0.1s; }
-    .zone {
-      position: absolute; z-index: 10; text-decoration: none;
-      cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer;
-    }
-    .zone-home   { left:0%;   top:0%;  width:13%; height:100%; }
-    .zone-fic    { left:76%;  top:0%;  width:7%;  height:70%; }
-    .zone-art    { left:84%;  top:0%;  width:7%;  height:70%; }
-    .zone-behind { left:88%;  top:55%; width:7%;  height:17%; }
-    .zone-rew    { left:52%;  top:68%; width:7%; height:24%; }
-    .zone-ffw    { left:60%;  top:68%; width:7%; height:24%; }
-    .zone-game   { left:30%;  top:68%; width:8.5%; height:24%; }
+  .tutorial-ov{position:absolute;inset:0;background:rgba(11,11,20,0.75);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:12;cursor:pointer;}
+  .tut-box{background:rgba(20,20,40,0.95);border:1px solid rgba(255,255,255,0.15);padding:32px 28px;max-width:280px;width:80%;text-align:center;}
+  .tut-line{font-size:12px;color:#fff;letter-spacing:1px;line-height:2.2;}
+  .tut-line b{color:#aaa;font-weight:700;}
+  .tut-note{font-size:11px;color:#888;letter-spacing:0.5px;line-height:1.8;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);}
+  .tut-hint{font-size:11px;color:#555;letter-spacing:2px;margin-top:20px;}
+  100%{opacity:0;transform:translateY(520px) rotate(720deg)}}
 
-    /* 본문 */
-    .page-wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
-
-    /* 버튼 그리드 */
-    .btn-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 40px;
-    }
-    .author-btn {
-      width: 80px;
-      height: 36px;
-      background: rgba(11,11,20,0.5);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: rgba(255,255,255,0.6);
-      font-size: 12px;
-      font-family: 'Nanum Gothic', sans-serif;
-      letter-spacing: 1px;
-      cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer;
-      transition: border-color 0.2s, color 0.2s, background 0.2s;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .author-btn:hover { border-color: #ffffff; color: #ffffff; }
-    .author-btn.active { border-color: #ffffff; color: #ffffff; }
-
-    /* 후기 박스 */
-    .review-box {
-      display: none;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(11,11,20,0.6);
-      backdrop-filter: blur(4px);
-      padding: 32px 36px;
-      margin-bottom: 40px;
-      color: #cccccc;
-      font-size: 14px;
-      line-height: 2;
-      letter-spacing: 0.5px;
-      animation: fadeIn 0.3s ease;
-    }
-    .review-box.show { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .review-name {
-      font-size: 16px;
-      color: #ffffff;
-      letter-spacing: 2px;
-      margin-bottom: 4px;
-      font-weight: 700;
-    }
-    .review-title {
-      font-size: 12px;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 1px;
-      margin-bottom: 20px;
-    }
-
-    /* 하단 */
-    .footer-area {
-      height: 300px; display: flex;
-      align-items: flex-end; justify-content: center;
-      padding-bottom: 40px;
-    }
-    .copyright { font-size: 12px; color: #ffffff; font-family: 'Nanum Gothic', sans-serif; text-align: center; }
-
-    #top-btn {
-      position: fixed; bottom: 36px; right: 28px;
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #888; font-size: 11px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer;
-      text-decoration: none;
-      opacity: 0; transition: opacity 0.3s;
-    }
-    #top-btn.visible { opacity: 1; }
-    #top-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
-    body { background-image: url('https://art.theworldbyyp.kr/main/background.png'); background-size: cover; background-position: center; background-attachment: fixed; background-repeat: no-repeat; }
 
   @media (max-width: 768px) {
-    body { background-attachment: scroll; }
-  }
+    body { background-attachment: scroll; background-size: auto 100vh; }
+    }
 </style>
-  <!-- Mona12 + Neo둥근모 Pro -->
-  <style>@import url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/mona.css');  /* FFW 팝업 */
-  #ffw-popup {
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(11,11,20,0.88);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #ffffff;
-    z-index: 200;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    padding: 44px 52px 36px;
-    white-space: nowrap;
-    backdrop-filter: blur(6px);
-    opacity: 0;
-    transition: opacity 0.4s;
-  }
-  #ffw-popup.show { display: flex; }
-  #ffw-popup.visible { opacity: 1; }
-
-  /* 글리치 */
-  #ffw-popup.glitch {
-    animation: glitch-box 0.4s steps(1) forwards;
-  }
-  @keyframes glitch-box {
-    0%   { transform: translate(-50%, -50%); clip-path: inset(0 0 0 0); }
-    10%  { transform: translate(-52%, -49%); clip-path: inset(10% 0 60% 0); filter: hue-rotate(90deg); }
-    20%  { transform: translate(-48%, -51%); clip-path: inset(40% 0 20% 0); filter: hue-rotate(-90deg); }
-    30%  { transform: translate(-50%, -50%); clip-path: inset(0 0 0 0); filter: none; }
-    40%  { transform: translate(-51%, -50%); clip-path: inset(70% 0 5% 0); filter: hue-rotate(45deg); }
-    50%  { transform: translate(-50%, -50%); clip-path: inset(0 0 0 0); filter: none; }
-    100% { transform: translate(-50%, -50%); clip-path: inset(0 0 0 0); filter: none; }
-  }
-
-  /* 상단 X 버튼 */
-  #ffw-close {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer;
-    background: none;
-    border: none;
-    color: rgba(255,255,255,0.35);
-    font-size: 14px;
-    line-height: 1;
-    padding: 4px 8px;
-    transition: color 0.2s;
-  }
-  #ffw-close:hover { color: #fff; }
-
-  /* ▶▶ 재생 표시 */
-  .ffw-playing {
-    font-size: 13px;
-    letter-spacing: 4px;
-    color: rgba(255,255,255,0.5);
-    font-weight: 200;
-    margin-top: 6px;
-  }
-
-  /* 타임코드 */
-  .ffw-timecode {
-    font-family: 'NeoDunggeunmo Pro', monospace;
-    font-size: 20px;
-    letter-spacing: 3px;
-    font-weight: 200;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .ffw-season { color: #ffffff; }
-  .ffw-divider { color: #ffffff; }
-  .ffw-digits {
-    font-family: 'NeoDunggeunmo Pro', monospace;
-    font-size: 20px;
-    letter-spacing: 2px;
-    display: inline-flex;
-    align-items: center;
-  }
-  .ffw-digit {
-    display: inline-block;
-    width: 1ch;
-    text-align: center;
-  }
-  .ffw-sep {
-    color: #ffffff;
-    margin: 0 3px;
-  }
-  #ffw-digits-wrap.blink {
-    animation: ffw-blink-all 0.8s steps(1) infinite;
-  }
-  @keyframes ffw-blink-all {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0.25; }
-  }
-</style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/neodgm/neodgm-pro-webfont@1.020/neodgm_pro/style.css">
 
 <!-- OG 태그 -->
 <meta http-equiv="Cache-Control" content="no-store">
-<meta property="og:title" content="BEHIND ─ 영필 웹진 : 세계世界2">
+<meta property="og:title" content="Mini Game ─ 영필 웹진 : 세계世界2">
 <meta property="og:description" content="영필 웹진 : 세계世界2">
 <meta property="og:image" content="https://art.theworldbyyp.kr/main/og.png">
-<meta property="og:url" content="https://theworldbyyp.kr/behind/">
+<meta property="og:url" content="https://theworldbyyp.kr/game/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://art.theworldbyyp.kr/main/og.png">
 <link rel="icon" href="/favicon.ico">
 </head>
 <body>
-  <div class="nav-outer">
-    <div class="nav-wrap">
-      <img class="base" src="https://art.theworldbyyp.kr/main/main-basic.png" alt="">
-      <img class="hover-img" id="imgHome"   src="https://art.theworldbyyp.kr/main/main-home.png" alt="">
-      <img class="hover-img" id="imgFic"    src="https://art.theworldbyyp.kr/main/main-fic.png" alt="">
-      <img class="hover-img" id="imgArt"    src="https://art.theworldbyyp.kr/main/main-art.png" alt="">
-      <img class="hover-img" id="imgBehind" src="https://art.theworldbyyp.kr/main/main-behind.png" alt="">
-      <img class="hover-img" id="imgRew" src="https://art.theworldbyyp.kr/main/main-REW.png" alt="">
-      <img class="hover-img" id="imgFfw" src="https://art.theworldbyyp.kr/main/main-FFW.png" alt="">
-      <img class="hover-img" id="imgGame" src="https://art.theworldbyyp.kr/main/main-game.png" alt="">
-      <a class="zone zone-home"   href="/home"   onmouseenter="showHover('imgHome')"   onmouseleave="hideAll()"></a>
-      <a class="zone zone-fic"    href="/fic"    onmouseenter="showHover('imgFic')"    onmouseleave="hideAll()"></a>
-      <a class="zone zone-art"    href="/art"    onmouseenter="showHover('imgArt')"    onmouseleave="hideAll()"></a>
-      <a class="zone zone-behind" href="/behind" onmouseenter="showHover('imgBehind')" onmouseleave="hideAll()"></a>
-      <a class="zone zone-rew" href="https://theworldofyp.web.app/" target="_blank" onmouseenter="showHover('imgRew')" onmouseleave="hideAll()"></a>
-      <a class="zone zone-ffw" href="#" onmouseenter="showHover('imgFfw')" onmouseleave="hideAll()" onclick="showFfw(); return false;"></a>
-      <a class="zone zone-game" href="/game" onmouseenter="showHover('imgGame')" onmouseleave="hideAll()"></a>
+<div class="game-tabs">
+  <button class="gtab active" onclick="switchGame(0)">Game 1</button>
+  <button class="gtab" onclick="switchGame(1)">Game 2</button>
+  <button class="gtab" onclick="switchGame(2)">Game 3</button>
+</div>
+
+<!-- GAME 1 -->
+<div class="game-wrap active" id="g0">
+  <div class="info-bar">SCORE <span id="p-sc">0</span>&nbsp;&nbsp;STAGE <span id="p-st">1</span>&nbsp;&nbsp;LIFE <span id="p-li">3</span></div>
+  <div class="canvas-wrap" id="p-wrap" style="width:340px;height:480px;display:flex;align-items:center;justify-content:center;">
+    <canvas id="pc" width="304" height="400"></canvas>
+    <div class="overlay" id="p-ov" onclick="pShowTut()">
+      <div class="ov-title">🦊 Zombie 🐰</div>
+      <div class="ov-body">🧟는 피하고 ❤️는 먹으며<br>🐰를 구하러 가요</div>
+      <div class="ov-start" onclick="event.stopPropagation();pShowTut()" style="cursor:pointer;">START</div>
+    </div>
+    <div class="tutorial-ov" id="p-tut" onclick="pDismissTut()">
+      <div class="tut-box">
+        <div class="tut-line"><b>PC</b> 이동 : 방향키</div>
+        <div class="tut-line"><b>모바일</b> 이동 : 하단 버튼</div>
+        <div class="tut-note">※ 방향키·버튼은 한 번 누르면 전진하며,<br>같은 방향을 한 번 더 누르면 멈춥니다.</div>
+        <div class="tut-hint">탭하여 시작</div>
+      </div>
     </div>
   </div>
-
-  <div class="page-wrap">
-    <div class="btn-grid">
-      <!-- fic 01~27 -->
-            <button class="author-btn" onclick="toggleReview('r01')">김수한무</button>
-      <button class="author-btn" onclick="toggleReview('r02')">나른</button>
-      <button class="author-btn" onclick="toggleReview('r03')">나선</button>
-      <button class="author-btn" onclick="toggleReview('r04')">네보름</button>
-      <button class="author-btn" onclick="toggleReview('r05')">노스</button>
-      <button class="author-btn" onclick="toggleReview('r06')">노원</button>
-      <button class="author-btn" onclick="toggleReview('r07')">달링</button>
-      <button class="author-btn" onclick="toggleReview('r08')">당연</button>
-      <button class="author-btn" onclick="toggleReview('r09')">대상</button>
-      <button class="author-btn" onclick="toggleReview('r10')">마치</button>
-      <button class="author-btn" onclick="toggleReview('r11')">멜란지</button>
-      <button class="author-btn" onclick="toggleReview('r12')">박타</button>
-      <button class="author-btn" onclick="toggleReview('r13')">부이</button>
-      <button class="author-btn" onclick="toggleReview('r14')">삐룸</button>
-      <button class="author-btn" onclick="toggleReview('r15')">온즈</button>
-      <button class="author-btn" onclick="toggleReview('r16')">요일</button>
-      <button class="author-btn" onclick="toggleReview('r17')">이칠</button>
-      <button class="author-btn" onclick="toggleReview('r18')">주포스</button>
-      <button class="author-btn" onclick="toggleReview('r19')">쥐양이</button>
-      <button class="author-btn" onclick="toggleReview('r20')">채원</button>
-      <button class="author-btn" onclick="toggleReview('r21')">콜프</button>
-      <button class="author-btn" onclick="toggleReview('r22')">키나</button>
-      <button class="author-btn" onclick="toggleReview('r23')">페달</button>
-      <button class="author-btn" onclick="toggleReview('r24')">필름</button>
-      <button class="author-btn" onclick="toggleReview('r25')">하테</button>
-      <button class="author-btn" onclick="toggleReview('r26')">KaKi</button>
-      <button class="author-btn" onclick="toggleReview('r27')">track</button>
-      <!-- art 28~44 -->
-      <button class="author-btn" onclick="toggleReview('r28')">김끼잉</button>
-      <button class="author-btn" onclick="toggleReview('r29')">나흘</button>
-      <button class="author-btn" onclick="toggleReview('r30')">덕수</button>
-      <button class="author-btn" onclick="toggleReview('r31')">두덩</button>
-      <button class="author-btn" onclick="toggleReview('r32')">두부</button>
-      <button class="author-btn" onclick="toggleReview('r33')">따불</button>
-      <button class="author-btn" onclick="toggleReview('r34')">마카</button>
-      <button class="author-btn" onclick="toggleReview('r35')">빠삐</button>
-      <button class="author-btn" onclick="toggleReview('r36')">뽀동</button>
-      <button class="author-btn" onclick="toggleReview('r37')">음이</button>
-      <button class="author-btn" onclick="toggleReview('r38')">청바</button>
-      <button class="author-btn" onclick="toggleReview('r39')">필폭스</button>
-      <button class="author-btn" onclick="toggleReview('r40')" style="letter-spacing:-0.3px;">loveubettter</button>
-      <button class="author-btn" onclick="toggleReview('r41')">mai</button>
-      <button class="author-btn" onclick="toggleReview('r42')">ravie</button>
-      <button class="author-btn" onclick="toggleReview('r43')">Shark</button>
-      <button class="author-btn" onclick="toggleReview('r44')">uyoonim</button>
-    <button class="author-btn" onclick="toggleReview('r45')">世界</button>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;width:340px;margin-top:10px;padding:0;">
+    <div class="dbtn" ontouchstart="pDir(-1,0);event.preventDefault()" onclick="pDir(-1,0)">◀</div>
+    <div style="display:flex;gap:10px;">
+      <div class="dbtn" ontouchstart="pDir(0,-1);event.preventDefault()" onclick="pDir(0,-1)">▲</div>
+      <div class="dbtn" ontouchstart="pDir(0,1);event.preventDefault()" onclick="pDir(0,1)">▼</div>
     </div>
+    <div class="dbtn" ontouchstart="pDir(1,0);event.preventDefault()" onclick="pDir(1,0)">▶</div>
+  </div>
+  <div class="gmsg" id="p-msg"></div>
+</div>
 
-    <!-- 후기 박스들 (나중에 내용 채우기) -->
-    <div class="review-box" id="r01"><div class="review-name">김수한무</div><div class="review-title">도취</div>안녕하세요. 이번 영필 웹진에 '도취'로 참여한 김수한무입니다. 도취는 陶醉, 徒取, 盜臭, 導臭 라는 네 가지의 한자 단어(뒤의 두 가지는 이야기를 위해 지었습니다.)를 아우릅니다.<br>운명적인 이끌림에 관한, 결국 아주 빤한 내용인데요. 남의 물건을 훔쳐다 팔고 일용직 현장을 전전하며 입에 풀칠 하지만 스스로는 물이 흐르는 것처럼 살아 가는 영현과, 내로라하는 집안 출신이지만 그 존재를 거부 당하고 자유를 거세 당한 원필의 이야기입니다.<br>좀처럼 만날 일 없을 것 같은, 완전히 다른 상황의 두 사람이 자석의 반대 극 끼리가 맞물리듯 서로에게 이끌리는 이야기는 시공간을 막론하고 우리에게 늘 설렘을 주는 것 같습니다. 사람 사는 곳이면 그게 어떤 세계든 관통을 하는 이야기겠지요. 그게 비록 오메가버스 세계관의, 70년대 서울이라 할지도요. <br><br>가랑비에 옷 젖는 줄 모른다는 말처럼 시나브로 서로에게 끌리는 이야기를 적고자 했는데요. 욕심은 많고 필력은 부족한지라.. 제가 그리고자 했던 두 사람의 이야기가 충분히 전달되지 못한 것 같아 못내 아쉽습니다. 자꾸만 후기 란에 변명을 적게 되는 듯하네요..😅 그래도 제가 상상하고 옮기고자 했던, 70년대 서울의 풍경과 그 속을 살아가는 둘의 모습이 읽으시는 분들께 조금이나마 선명히 전달이 되었으면 좋겠습니다.<br><br>그리고 제게 이런 귀한 기회 주시고 기다려 주신 주최자분께 진심으로 감사드립니다. 애써 주신 데에 부응하는 글이 아닌 것 같아 죄송스럽기도 하지만은.. 개인적으론 글을 적으면서 반 세기 전의 서울 한복판을 그려 볼 수 있어 참으로 설렜고, 또 귀중한 프로젝트에 참여할 수 있어 영광스럽습니다. 정말로 감사합니다.<br><br>더불어서, 본문에 직간접적으로 등장하기도 하고, 제가 글을 적으면서 들었던 노래들은 아래 공유 드립니다. 본문에 직접 삽입하게 되면 지나치게 상투적이게 될 것 같아 후기로 남기니, 자유롭고 편하게 감상해 주세요.<br><br>송창식-고래사냥<br>송창식-밤 눈<br>트윈폴리오-웨딩케익<br>트윈폴리오-사랑의 기쁨<br>윤형주-어제 내린 비<br>양희은-아름다운 것들<br>한대수-행복의 나라로<br>이장희-나 그대에게 모두 드리리<br>이장희-이젠 잊기로 해요<br>김세환-사랑하는 마음<br>전영록-애심<br>4월과 5월-등불<br>현경과 영애-그리워라<br><br>참 많이 부족한 글이지만 재미있게 읽어 주시는 분이 계신다면 정말 감사하겠습니다. 더워지는 날씨에 모두 건강 유의하세요.<br>감사합니다! 영필 화이팅<3</div>
-    <div class="review-box" id="r02"><div class="review-name">나른</div><div class="review-title">형제의 방식</div>와 재밌었다! ㅋㅋ 재작년, 영필을 시작하고 얼마 되지 않아 열린 웹진을 보면서 가오 쩐다… 생각했었는데 이번에 참여진으로 함께할 수 있어 정말 영광이고 기뻤답니다. 영필 대잔치에 끼워주셔서 감사드립니다. 제가 쓴 것이 누를 끼치는 일은 아니기를 바랍니다. 후기로 쓰고픈 말이 많았는데 다 완성하고 나니 이것으로 충분하다는 생각이 듭니다. 부담이 아예 없진 않았으나, 이러한 영필을 보고 싶은 마음에 욕심껏 썼고 만족합니다! 재밌게 읽으셨기를 소원해 봅니다. (후기부터 보고 계시다면 재밌게 읽으시기를…) 자리 마련해주신 주최진 분들께 다시 한번 감사인사 드리며, 저도 이제 즐겨보도록 하겠습니다~ 고맙습니다. 사랑해요 모두~</div>
-    <div class="review-box" id="r03"><div class="review-name">나선</div><div class="review-title">배덕(背徳)</div>씨피를 대표하는 웹진에 제가 참여를 한다는 게 무척 영광입니다. 좋은 글은 될 수 없고 재밌는 글이라도 되길 빕니다. 읽어주시는 모든 분들, 웹진 주최진 분들 감사합니다.</div>
-    <div class="review-box" id="r04"><div class="review-name">네보름</div><div class="review-title">만월의 낙원</div>안녕하세요, 네보름입니다.<br><br>정말 생각지도 못한 기회가 제게 닿아, 아주 오래전부터 쓰고 지우기를 반복했던 두 사람의 세계를 써 내려갈 수 있었음에, 그리고 그러한 자리를 마련해주신 주최님께 감사한 마음을 전합니다.<br><br>늘 머릿속에 생각이 많은데, 그걸 밖으로 꺼내어 내비추고 표현하는 게 어려워서 포기했던 이야기들이 아주 많았습니다. 만월의 낙원 역시 제게는 그런 글 중 하나였던 것 같습니다. 글을 쓰기 시작했을 때부터 몇 번이고 도전했지만 결국 마무리 짓지 못했던 글이었는데, '다양한 세계'라는 주제로 두 사람을 그려낼 기회가 생겼음에 큰 용기를 내보았습니다.<br><br>그저 제가 보고 싶은 글을 쓰다 보니 특별한 재주도 없고, 특유의 감성은 더더욱이나 부족해서 쓰다 보니 한계에 여러 번 부딪혔지만, 그래도 많은 분들과 함께 웹진을 통해 영필을 사랑하는 사람으로서 참여하고 싶다-! 라는 욕심이 들어서 어찌어찌 끝까지 달려오게 되었네요.<br><br>비록 제가 그려낸 영이와 필이의 세계는 축축하고 어두컴컴했을지라도, 원필이라는 만월에게 영현이라는 낙원이 생겼으니 아픔에서 벗어나기를 소원하고, 서로에게 구원이 되어 그렇게 서로에게 아주 오래 낙원이 되기를 바라봅니다.<br><br>마지막으로, 원필이가 연주했던 곡은 베토벤의 비창입니다. 원제는 비장(Pathétique)인데 오역이 되어 비창이 되었다고 하더라구요. 슬픔 속에서도 단단하고, 상반되는 감정이 녹아 있는 게 꼭 영이와 필이의 모습 같아 보여 해당 음악을 고르게 되었습니다.<br><br>읽어주셔서 감사합니다. 용감하게 사랑하세요, 영필하세요!</div>
-    <div class="review-box" id="r05"><div class="review-name">노스</div><div class="review-title">피어나라, 이솝 학원!</div>많은 분들과 웹진을 함께 할 수 있어서 영광이었습니다. 부족한 글로 누가 되지 않을까 걱정이 앞서지만 잊지 못할 추억이 될 것 같습니다. 주최진 여러분들 고생 많으셨습니다.</div>
-    <div class="review-box" id="r06"><div class="review-name">노원</div><div class="review-title">반쪽짜리 둘을 합한다 하여도</div>안녕하세요, 노원입니다.<br>모든 것에 결핍이 있고, 사랑이란 건 결국 그 결핍의 요철을 맞추는 가장 강력한 매개체가 아닐까? 둘이 합해 하나가 아니라 각자 둘이라는 것을 인정할 때 건강한 사랑이 아닐까? 같은 소소하고 시덥지 않은 생각으로 쓰기 시작한 글이었는데 영필에 맞게 더 멋지고 성대했으면 좋지 않았을까 아쉬움이 남습니다. 하지만 영필의 사랑이 계속 되고 있으니, 아쉬움은 지금에 두고 영필로 아쉬움의 빈자리를 채우겠습니다. 멋진 기회 주신 주최자분들, 읽어주신 영필러분들께 감사드립니다. 모두 영필 안에서 영원히 행복하시길 바랍니다 :)</div>
-    <div class="review-box" id="r07"><div class="review-name">달링</div><div class="review-title">파흔(破痕)</div><img src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1780244705/07-behind_ycmtiq.jpg" style="max-width: 100%; height: auto;"></div>
-    <div class="review-box" id="r08"><div class="review-name">당연</div><div class="review-title">나를 모르느냐 하지 마시고</div><img src="https://res.cloudinary.com/dcaiskf8f/image/upload/v1780244735/08-behind_ru3pud.jpg" style="max-width: 100%; height: auto;"></div>
-    <div class="review-box" id="r09"><div class="review-name">대상</div><div class="review-title">동류(動流)</div>닮았다는 생각조차 착각이었을 수 있겠지만,<br>사랑했다는 것만은 부정할 수 없는 사실</div>
-    <div class="review-box" id="r10"><div class="review-name">마치</div><div class="review-title">사바의 연</div>세계1 글 쓰면서 제일 많이 한 말<br>: 나 다~시는 웹진 안 해ㅠㅠ<br><br>세계2 글 쓰면서 제일 많이 한 말<br>: 나 다~시는 웹진 안 해ㅠㅠ<br><br>왜 인간의 욕심은 끝이 없고 같은 실수를 반복할까요?</div>
-    <div class="review-box" id="r11"><div class="review-name">멜란지</div><div class="review-title">그럼에도 불구하고</div>안녕하세요 멜란지입니다.. ♡ 그동안 잘 지내셨나요? 작년 가을부터(..) 보물상자에 잠들어있던 글을, 감사한 기회를 통해 영필 웹진 시즌2, <世界> 라는 멋진 무대에서 완성해 보여드릴 수 있어 영광스럽습니다. 먼 이별이라는 주제에 관해 고민도 오래 했었지만, 상실과 실패에도 불구하고 다시 살아갈 수 있게 하는 힘은 곧 사랑과 희망이라는 메시지를 꾸준히 전달해 와 준 영앤필이 이 이야기의 주인공이기에, 조심스럽게 작업을 시작하고 잘 마칠 수 있었던 것 같습니다. 부족한 글이지만, 긴 호흡에도 불구하고 끝까지 읽어주신 모든 분들께 진심으로 감사드립니다. 그리고 이 자리를 빌어 장기간 고생해주신 웹진 주최진 분들께도 감사의 말씀을 전하고 싶습니다. 오늘도 좋은 하루 되시고, 늘 건강하시길 바랍니다 ♡</div>
-    <div class="review-box" id="r12"><div class="review-name">박타</div><div class="review-title">애인과 만나고 싶으면 애인을 공략하랍니다.</div>안녕하세요! 박타입니다... 어디 내놓기 부끄러운 글이라 부끄럽고 부끄럽지만.. 조금이라도 재밌게 읽어주셨으면 좋겠습니다. 웹진 열어주신 주최진 분들께 정말 감사하고 읽어주신 모든 분들께도 감사의 말씀 올립니다. 영필포에버~~S2</div>
-    <div class="review-box" id="r13"><div class="review-name">부이</div><div class="review-title">낭만주의</div>원필에게.<br><br>네가 그곳에서 손끝으로 녹음을 피우며 세상을 구하는 동안, 내가 사는 세계의 김원필은 목소리로 세상을 밝히고 있어. 김원필과 김원필의 낭만을 사랑해주는 강영현 또한 이곳에도 있단다. 네가 가진 낭만이 어떤 세계에서든 통한다는 걸 꼭 말해주고 싶었어. 마지막으로 너는 모르겠지만 내가 사는 이 세계의 원필이가 자주 해주는 말을 해줄게! 몸도 마음도 다치지 않고 잘 살아가길 바라. 사랑해! 뿅. ♥</div>
-    <div class="review-box" id="r14"><div class="review-name">삐룸</div><div class="review-title">푸른 바다의 이방인</div>안녕하세요 삐룸입니다.<br>저는 글 쓰는 재주도 없고 후기 쓰는 재주도 없습니다.<br>그런데도 이렇게 또 한 번 이렇게 많은..대단한 분들과 함께 나란히 영필 웹진 참여진 목록에 이름을 올리게 되었네요. 영광입니다.<br><br>센티넬버스라고 뭔가 대단한 걸 기대하신 분들이 계시다면 죄송하다는 사죄의 말씀을 드립니다.<br>뭔가 계속 설정을 하나 넣고 두 개 넣고 하면서 늘려가다보니까 제 생각보다 글이 길어져서 민망한데...<br>그래도 끝까지 읽어주신 분이 계시다면 부족한 글 읽어주셔서 감사하다는 말씀 드리고 싶습니다.<br><br>다들 행복하시길 바랍니다 ♥</div>
-    <div class="review-box" id="r15"><div class="review-name">온즈</div><div class="review-title">불온한 명명법</div>안녕하세요, 웹진에 이렇게 참여하게 되어 무한영광입니다...//<br><불온한 명명법>은 이전부터 네임버스로 꼭 써보고 싶었던 이야기였던지라, 고민하지 않고 바로 내용 구상을 시작했던 거 같습니다.<br>창작의 고통을 마구 겪으며 써내려갔던 기억인데, 완성된 작품을 보니 무사히 마감을 해서 다행이라는 생각입니다.<br>작품에 대해 자유롭게 이야기 해주세요, 너무 좋을 거 같습니다.///<br>좋아하는 작가님들 곁에 함께 라인업 될 수 있어서 뿌듯했습니다.<br>모두 좋은 작품들 만끽하며 행복한 하루 보내시길 바라겠습니다!</div>
-    <div class="review-box" id="r16"><div class="review-name">요일</div><div class="review-title">멸망지구 (滅亡地球)</div>안녕하세요! 요일입니다.<br>우선 시즌 1에 이어 2까지 함께할 수 있어 정말 감사한 마음입니다.<br>이런저런 상황 때문에 하차할 뻔했지만 겨우겨우 완주를 끝내고 아직까지도 헥헥거리며 숨을 고르는 중이네요.<br><br>언젠가 타임워프물을 써야지, SF물을 써야지 하고 막연히 생각만 하다가 이번 기회에 도전하게 됐는데 어쩐지 제가 정해놓은 설정값들에 발이 묶여 참 쉽지 않은 작업이었습니다. SF를 사랑하긴 하지만 쓰는 건 정말 다른 일이더라구요. 그래서 바라는 게 하나 있다면 설정의 빈틈보다는 부디 두 사람의 감정에 조금 더 집중해 주시기를 무책임하게나마 바라봅니다.<br><br>글 쓰는 사람 중에 후기 싫어하는 사람 없다고 이 이야기를 어떻게 보셨을지 너무 궁금하고 두근두근 떨리네요. 부족한 글이지만 어디로든 남겨주시면 감사한 마음으로 읽겠습니다!<br><br>웹진주님도 웹진 열어주시고 도움 많이 주셔서 다시 한번 감사드리고, 모두 건강 잘 챙기시고 늘 행복하시길 바랄게요. 그럼 우리 또 봐요!</div>
-    <div class="review-box" id="r17"><div class="review-name">이칠</div><div class="review-title">천사의 날개를 떼는 방법</div>안녕하세요, 이칠입니다.<br>축제 같은 영필 웹진에 참여할 수 있어서 기쁘고 감사했습니다.<br>센티넬버스 세계관인데 센티넬이라는 단어는 한 번도 안 나오고, 가이드도 마지막에서야 딱 한 번 나오는, 짧지도 않은 이상한 팬픽을 썼습니다.<br>이런 사랑 이야기도 괜찮을까요? 다양한 사랑을 노래하고 보여주는 영필이니 저도 거기에 한 번 기대보겠습니다.<br>슬프게도 저는 팬픽이든 후기든 뭐든 글 쓰는 재주가 없습니다.<br>따로 글에 삽입하진 않았지만 대신 쓰면서 들었던 노래들을 알려드리는 것으로 마무리하고자 합니다.<br>읽어주셔서 감사합니다.<br><br>Young K - what is..<br>원필 - 외딴섬의 외톨이<br>라쿠나 - YOU<br>알라리깡숑 - 허튼소리<br>sogumm & 차울 - Waters of March</div>
-    <div class="review-box" id="r18"><div class="review-name">주포스</div><div class="review-title">파이널 피스</div>제 머릿속에 있는 모든 것을 글로 풀어내기에는 시간과 역량이 부족하여 용두사망의 결과를 초래하였습니다. 이럴 때는 미래의 주포스에게 모든 것을 일임하고 책임을 전가한 뒤, 이 순간을 즐기면 됩니다. 지금의 주포스는 티켓팅에만 전념하겠습니다. 감사합니다.</div>
-    <div class="review-box" id="r19"><div class="review-name">쥐양이</div><div class="review-title">영영</div>안녕하세요. 쥐양이입니다. 누군가를 좋아하면서 이렇게 많은 경험을 해볼 수 있는 건 정말 감사한 일인 것 같아요. 좋은 기회를 주신 주최진 분들께 감사드립니다. 마지막까지 어떤 글을 쓸지 많이 고민하다가 제가 엿볼 수 있는 세계들 중 가장 보여드리고 싶은 곳을 골라 보았습니다. 어떠셨나요? 마지막으로 웹진을 준비하면서 떠올랐던 시를 짧게 인용하며 마칩니다.<br><br>사랑했던 그대여<br>나는 세계와 그 너머의 세계에 대해<br>아주 잠시 생각해보았던 것일 뿐이네<br>— 최승자, <세계는> 中<br><br>같은 세계를 공유할 수 있어서 정말 행운이었습니다.</div>
-    <div class="review-box" id="r20"><div class="review-name">채원</div><div class="review-title">不時着</div>불시착은 열린 엔딩이 아닌 해피엔딩이랍니다.<br>처음은 비상착륙이었을지라도 이제는 그곳이 온전한 도착지임을 알기 때문이지요.</div>
-    <div class="review-box" id="r21"><div class="review-name">콜프</div><div class="review-title">나의 히어로, XXXXX</div>안녕하세요!<br>호기롭게 제안을 수락했는데, 수락을 기점으로 감당 못할 일복이 터져 결국 이런 것밖에 쓰지 못한 사람입니다. 중반부쯤에 이러면 안 될 것 같다고 느꼈지만... (죄송합니다...)<br>본격적으로 겨우 쓰기 시작한 기점이 '프로젝트 헤일메리' 영화를 보고 난 뒤였던 걸로 기억합니다. 자아를 찾는 이야기와 생명찬가, 쌍방구원에 대한 이야기를 더더욱 사랑하게 되었습니다. 혹시 보였을까요?<br><br>다른 분들의 작품을 너무 기대하며 새벽 두 시에 이 글을 씁니다.<br>제 건 별 거 없고… 쓰는 동안 들었던 노래 몇 곡을 공유드립니다.<br>해리 스타일스 - Sign of the time, rosa walton - I really want to stay at your home, O.O.O - 시소, 이승윤 - 펑크캐논/꿈의 거처<br><br>아무튼 길고 재미없지만 끝까지 읽어주셔서 감사합니다!<br>행복하세요.</div>
-    <div class="review-box" id="r22"><div class="review-name">키나</div><div class="review-title">Tango Down</div>이건 아마도 전쟁같은 사랑.</div>
-    <div class="review-box" id="r23"><div class="review-name">페달</div><div class="review-title">마진 콜</div>긴 글 읽어주셨다면 감사합니다. 분량 조절에 실패하여 송구스러운 마음인데, 생각해보니 영필도 지겹도록 긴 시간 동안, 매일같이, 길고 진득하게, 아주 빈번하게 서로에 대한 사랑을 표현하는데 저라고 안될까요? (죄송합니다.) 웹진을 읽으시는 모든 분이 질리도록 사랑하고 사랑받기를 바랍니다. 나쁜 기억 모두 영필로 덮을 만큼 앞으로도 둘이 쌍방 순애 성애를 잘 보여줬으면 하고 소망합니다. 웹진을 만들어주신 분들과 읽어주신 분들 모두에게 진심으로 다시 한번 감사의 말씀을 전합니다.</div>
-    <div class="review-box" id="r24"><div class="review-name">필름</div><div class="review-title">영원</div>다양한 영원의 방식을 어떻게 표현해낼 수 있을까 많이 고민했습니다.<br>그리고 남겨지는 것, 떠나는 것에 대해서도요.<br>초여름에 공개될 웹진이지만 여러분에게 지나간 봄도, 앞으로 다가올 봄도 설렘으로 가득했으면 좋겠습니다.<br>영원 속 문장처럼 하루하루가 짧고 소중해 돌아보고 싶을 정도로요.<br>다들 건강하고 행복하세요!</div>
-    <div class="review-box" id="r25"><div class="review-name">하테</div><div class="review-title">비나이다, 비나이다</div>마침이라는 두 글자를 쓰는데 이토록 가슴이 미어지는 건 처음이었던 것 같아요. 원필의 마음에 영현의 흔적이 영원히 가시질 않는 것처럼 비나이다, 비나이다도 제 마음에 흔적이 될 것 같습니다.<br>제가 재미있게 보았던 웹진에 참여할 수 있게 되어 너무나도 영광이었습니다. 부디 읽어주시는 분들의 마음속엔 영필이 행복하게 남았으면 좋겠습니다. 감사합니다.</div>
-    <div class="review-box" id="r26"><div class="review-name">KaKi</div><div class="review-title">절대 사랑보존의 법칙</div>안녕하세요, 카키입니다. 새로운 글은 정말 오랜만인 것 같습니다. 글을 기다려주신 분들이 있다면 감사하다는 말씀 먼저 드리고 싶어요.<br><절대 사랑보존의 법칙>은 생각보다 오래 전 시작된 글입니다. 작년 여름 10주년 앨범이 발매되었을 때, 타이틀곡 꿈의 버스 뮤비가 나오고 한창 뜨거웠던 판교왹져붐이 일었을 때부터 써두었던 연성이었습니다. 뮤비의 스토리에서 비틀어 뒤집어, ‘기존의 [판교회사원이자 평범한 인간인 영현과 외계인인 원필이], 사실은 반대로 [인간외의 존재인 영현]과 [평범한 인간 원필]이었다는 반전을 주면 어떨까?’ 라는 연상에서 출발한 글이에요 ㅎㅎ 처음엔 딱 6000자만 쓰고 현생이 너무 바빠 대략적인 스토리만을 생각한 채 뒤를 도저히 더 이을 수 없었는데(그렇게 1년을 임시저장함에서만 묵혀있었습니다..) 웹진에 참여하게 되며 저도 이 스토리를 마무리지을 수 있었다는 게 새롭네요.<br>많은 고민과 오마주, 각색 등이 반영된 글이지만, <절대 사랑보존의 법칙> 글의 모든 것은, ’원필이라면, 인간외의 존재에게도 결국 사랑을 알려줄 것 같다‘는 가정에서 출발했습니다. 영현은 상상하시는 어떤 것도 될 수 있을 것 같아요. 여러분이 생각하시고 읽으신 존재는 무엇일지도 궁금하네요. 중요한 건, 그게 누구든, 어떤 존재이든 그가 처음 경험하고 만난 유일무이함은 김원필이라는 절대성이라는 거겠죠. 그리고 그건 제목처럼 영원히 보존될 것이구요.</div>
-    <div class="review-box" id="r27"><div class="review-name">track</div><div class="review-title">우리가 잃어버린 것에 대하여</div>안녕하세요 track입니다. 우선 영필러로서 이렇게 소중한 협업을 제안해주신 웹진 제작진분들께 감사드립니다. 연락문제도 그렇고 수월하지 못했기 때문에 죄송한 마음이 큽니다. 죄송하고 또 감사합니다.<br><br>너무 오랜만에 쓰는 글이고 (제 기준) 너무 방대한 상상력을 요하는 글이라서 생각보다 쓰는 데에 시간이 오래 걸렸습니다. 소재는 제가 예전에 트위터에도 얘기를 했던 적이 있었지만 그때 올렸던 조각메모와는 거의 모든 내용을 바꿨습니다. 다만 제목은 바꾸지 못했습니다. 저 같이 제목을 못 짓는 사람에게는 이 이상의 제목이 떠오르지 않았기 때문입니다.<br><br>부디 읽으시는 분들께 튀지 않고 쉽게 읽혀지길 바라며 썼지만은 아무래도 세계관이나 생소한 내용이 있을 것이기 때문에 약간의 설명을 드립니다.<br><br>본문 내에 무의식과 관련된 부분은 영화 인셉선의 컨셉에서 큰 영향을 받았습니다. 토템, 1단계~3단계 무의식, 림보는 모두 그 영화가 아니었다면 생각하지 못했을 거예요. 그리고 센트럴과 센트럴을 방사형으로 둘러싼 안전구역은 영화 헝거게임의 오마주입니다. 중앙으로 갈수록 번쩍이지만 그 주변은 모든 자유가 박탈된 세상. 센가물로 썼지만 디스토피아이기 때문에 아무래도 제가 많이 영향을 받은 콘텐츠들로부터 많은 부분들이 기인했음을 알려드립니다.<br><br>글이 다섯 개의 챕터로 구성되어 있습니다. 첫번째(폐쇄구역)와 두번째(센트럴) 챕터는 영이의 무의식, 세 번째(드림워커)와 네번째(we're all gonna die)챕터는 현실입니다. 그리고 마지막 챕터는 읽으시는 분들의 상상에 맡깁니다.<br><br>사실 이렇게까지 막 벌려놓고 싶진 않았는데, 은혜로운 제작진분들께서 "세계관"이라는 재밌어서 글을 쓰는 사람에게는 어찌보면 그냥 지나치지 못할 판을 깔아주셔서 있는대로 상상을 해보았습니다. 제가 할 수 있는 선에서는 최대한 확장도 해보았고요. 물론 저는 이제 상상력이 많이 닳은 어른이지만 어쨌든 쓸 수 있는 만큼 넓혀봤습니다.<br><br>그리고 항상 제가 쓰는 영이와 필이는 서로가 서로에게 원앤온리이고 서로에 의해서 살아가고 이렇게까지 지독하게 사랑을 한다고? 입니다. 그러다보니 자가복제가 좀 심한 거 같긴 한데 제가 좋아하는 형태의 러브스토리가 그런 극단적 사랑이기도 하고, 영이랑 필이는 그런 극단적 사랑마저도 가능할 거 같은 아이들이라서 제가 못 참는 경향이 있습니다. 지독한 해피엔딩충이지만 오픈엔딩으로 쓴 이유도 이 글에는 그것만이 유일한 엔딩이라 생각하여 그렇게 해보았습니다.<br><br>또 그 초반에 인용한 니체의 문장은 사실 밑에 붙인 해석과는 원문의 뉘앙스가 좀 다릅니다. 최대한 제 얘기에 맞춰서 해석을 좀 꾸몄습니다. 니체선생님께 심심한 사과를 드립니다.<br><br>그리고 글 전체를 관통하는 소재라고 볼 순 없지만 기독교 소재가 일부 포함되어 있습니다. 글속에서는 구원은 영이와 필이 서로가 서로를 구원하지만, 뭔가 좀 디스토피아, 망해가는 세상에 대해서 생각을 하다보니 클래식하긴 하지만 망하고 위태롭더라도 그들만의 안식처가 필요하다는 생각에 이미지를 좀 빌려왔습니다. 개인적으로는 무교에 가까운 사람이지만 저는 세상 모든 종교를 존중하는 편이고 조심스럽게 빌려왔지만 혹시 거슬리는 부분이었다면 너그러이 받아주셨으면 하는 마음입니다.<br><br>이렇게 호흡이 긴 글을 한 다 쓰고 나면 검토를 하는 데도 시간이 좀 오래 걸리는 편입니다. 쓰는데 기력이 다 빠져서 아무리 읽어봐도 더 좋은 표현이 생각이 나지 않더라고요. 첫 장면을 쓸 때부터 마지막 장면까지 의도한 내용은 다 썼습니다만 아마 몇달 후에 제가 쓴 글을 다시 읽으면 아 이 부분을 이렇게 썼으면 더 좋았을 걸 하는 후회와 아쉬움이 분명히 있을 겁니다.<br><br>그렇지만, 언젠가 센가물을 쓸 거라고 했는데 이제 원없이 다 써보았습니다. 후기를 마무리하면서도 제가 쓴 글이 너무 길었다는 점에 또 송구하고, 너무 어렵진 않았을까 걱정도 됩니다만은 걱정을 품고 마무리해보고자 합니다.<br><br>저는 여러분과 영필을 하게 되어 너무 즐겁습니다.<br>오늘도 읽어주셔서 감사하고, 평온한 하루 되시길.</div>
-    <div class="review-box" id="r28"><div class="review-name">김끼잉</div><div class="review-title">여름 키우기</div>올해 여름도 엄청 덥다고 하네요.<br>수박, 아이스크림, 빙수, 그리고 영필까지, 아무리 뜨거워도 각자의 시원함과 달콤함을 잃지 않는 여름이 되시길 바라겠습니다!<br><br>웹진 주최진분들과 잠깐의 틈을 내어 제 만화를 봐주신 분들께 너무 너무 감사드리며 지치지 말고 사랑하기 딱 좋은 이 더위를 즐겨보아요.</div>
-    <div class="review-box" id="r29"><div class="review-name">나흘</div><div class="review-title">천계의 사랑!</div>우여곡절이 많았던 만화였는데요, 더 그리고 싶었던 이야기도 있었고, 하지만 일정 상 분량을 줄이다보니 설명이 부족해지기도 했고, 거의 다 완성했는데 콘티 상 오류를 발견하기도 하고(그냥 킵고잉 했습니다..), 처음 설정대로 원필이가 천사인 편이 쉬웠으려나 고민하기도 했지만, 보시는 분들께서 부족한 부분을 상상으로 채워주시며 재밌게 봐주셨으면 좋겠습니다!</div>
-    <div class="review-box" id="r30"><div class="review-name">덕수</div><div class="review-title">소원이 머물다 간 자리</div>안녕하세요. 덕수입니다. 이번에 좋은 기회로 여러분께 제 작품을 보여드릴 수 있게 되어 정말 영광입니다!<br><br>평소에 늘 해피엔딩을 좋아하고 또 그런 결말만을 그려왔기 때문에 이번 엔딩은 고민이 참 많았습니다. 아무래도 외계인이라는 존재의 설정상 필연적인 이별이 찾아올 수밖에 없다고 생각했거든요. 그러고 결국 두 사람의 헤어짐을 그리게 되었지만, 이 이별은 영원한 헤어짐이 아니라는 이야기를 꼭 전하고 싶습니다. 시간이 얼마나 걸릴지라도 영현과 원필은 서로에게 다시 돌아갈 것이고 저는 그 두 사람의 재회를 굳게 믿고 있습니다.<br><br>이번 웹진에서 다 보여드리지 못한 두 사람의 비하인드 스토리는 시간 날 때마다 그려 올리겠습니다ㅎㅎ 조금은 서툴고 부족함이 많은 작품이었음에도 불구하고 끝까지 읽어주셔서 정말 진심으로 감사합니다!</div>
-    <div class="review-box" id="r31"><div class="review-name">두덩</div><div class="review-title">형은 가끔</div>안녕하세요 두덩입니다! 영필웹진에 한번 더 참여할수있게되어 영광입니다<br>총대님들, 함께 웹진에 참여하신 많은 영필러분들, 그리고 작품을 봐주시는 더 많은 영필러분들 모두 정말 감사하고 늘 함께할수있어 행복합니다...｡o♡<br><br>늘 이보다 더 할수있나? 싶으면 그보다 더 더 더한걸 끓여오면서도 그들만이 주는 안정감때문에 오래오래 함께할수있는것같아요<br>날이 슬슬 더워지고있는데 항상 건강 잘 챙기시고 어느덧 절반정도 남은 2026년도 영필과 함께 잘 보내보아요.. 정말 감사합니다! ♥</div>
-    <div class="review-box" id="r32"><div class="review-name">두부</div><div class="review-title">페어</div>세계2에 사랑하는 작가님들과 이렇게 참여하게 되어 신기합니다. 그림일기를 목표로 거의 365일 그림을 그리던 제가, 한 작품만을 위한 영필 세계에 폭빠져 살던 두 달. 센가 영필도 이제 안녕이군요. 쌍쌍바도 큰 쪽 푸리 줄 거 같은 영이. 콩 한쪽도 나눠먹으며 잘 살길 바라요.</div>
-    <div class="review-box" id="r33"><div class="review-name">따불</div><div class="review-title">적당한 상실</div>안녕하세요 따불입니다.<br>먼저 영필 웹진에 이렇게 또 한번 참여할 수 있게 되어 정말 감사할 따름입니다. 금손분들 사이에 부족한 실력으로 이름을 올리게 되어 작업하는 내내 긴장되고 떨렸지만, 그만큼 즐겁게 몰입할 수 있었던 시간이었습니다.<br><br>이번 작업은 처음 세계관을 정하는 단계부터 고민이 정말 많았습니다. 사실 이번에도 소원에 대해 쓰게 되었는데요. 제가 좀 양심없이 바라기만 하는 걸 좋아합니다.<br><br>마지막으로 끝까지 읽어주신 모든 분들께 진심으로 감사드립니다.</div>
-    <div class="review-box" id="r34"><div class="review-name">마카</div><div class="review-title">나에게서 당신에게</div>안녕하세요! 마카입니다<br>이런 대축제에 참여할 수 있게 되다니 진심으로 영광입니다.. 저에게 연락을 주실 줄은 정말 몰랐어서 너무너무 기뻤어요..<br>시간이 없어 급하게 그리느라 엉성하고.. 제가 만화를 처음 그려봐서 많이 어색할 수 있지만.. 그저 즐겁게 봐주시면.. 정말 감사하겠습니다<br>나당신은 정우 - 나에게서 당신에게 노래를 듣고 생각한 만화예요 가사도 정말 이쁘니까 나중에 시간되시면 읽어주세요<br>열심히 준비해 주신 주최진분들과 감상해 주신 분들 모두 감사합니다<br>나를 한 번만 더 달에 데려다 줘~~</div>
-    <div class="review-box" id="r35"><div class="review-name">빠삐</div><div class="review-title">59.5AU</div>처음으로 웹진을 참가해 보는데 정말 친절히 가르쳐 주셔서 재밌게 작업했습니다🥹 처음 작업해보는거라 많이 미숙하지만 열심히 해봤습니다🥺 공개되고 조금 뒤 외전을 조금씩 가져올 계획입니다. 그때도 잘 부탁드립니다🥰🥰</div>
-    <div class="review-box" id="r36"><div class="review-name">뽀동</div><div class="review-title">만개의 조건</div>뜬금포 + 다소 누추한 성인물로 오랜만에 인사드립니다... 여러번 꼭 그려오겠다고 말했었는데 드디어!! 많이 짧고 내용도 빈약하지만, 모쪼록 즐겨봐주시면 감사하겠습니다... 너무너무 멋진 분들이랑 함께하는 웹진이니 다른 작품들도 함께 즐겨요!! 마지막으로 이렇게 행복한 웹진 열어주신 주최진분들께 감사드리며... 다들 행복하시길 바랍니다!! 하트하트~~~</div>
-    <div class="review-box" id="r37"><div class="review-name">음이</div><div class="review-title">龍虎相搏</div>안녕하세요, 음이입니다. 우선 좋은 기회를 주신 영필 웹진 주최님들께 감사드립니다! 그리고 싶었던 것이 더 있었는데, 이것이 참... 바쁜 일은 항상 겹치는 법이더라고요. ㅎ..ㅎ 아무튼! 즐겁게 참여했습니다! 이제 마음 편히 즐길 수 있음에 감사합니다. 점말로! 우하하!</div>
-    <div class="review-box" id="r38"><div class="review-name">청바</div><div class="review-title">천사는 오늘도 일합니다</div>안녕하세요. 봐주셔서 감사합니다... 그리고 웹진을 다시 한 번 열어주신 분도 감사드리고 웹진 내주신 분들도 감사해요... 축제같아요. 정말 기대되고 기쁩니다.<br><br>내용이 이해가 안 가실 수 있습니다. 어떡하죠... 그냥 흘려보셔도 됩니다. 마블시리즈의 드라마 로키 느낌이라 하면 이해가 가실 지 모르겠습니다...🦧 설정이 세계관인지라 좀 욕심 부려 멀티버스 뭐 그런 걸 담고 싶었는데 어떻게 이런 천사짬뽕물이 나왔네요.<br><br>웹진 재밌게 즐기시길 바랍니다!</div>
-    <div class="review-box" id="r39"><div class="review-name">필폭스</div><div class="review-title">그 여름을 기억해</div>드디어 끝을 냈네요...이야...장정 4월부터 제안 받은 프로젝트를 끝냈습니다.. 일단 영광스러운 기회를 주시고 참여할 수 있게 되어서 너무 감격스럽게 감사드립니다.<br><br>이 만화를 보시는 분들도 여름의 향기를 느끼며, 힐링을 받는 기분을 느끼시면 좋겠습니다. 제 만화를 봐주신 모든 분들, 고생하신 웹진 운영진분들, 같이 참여하신 많은 작가님들과 함께할 수 있어 영광이였습니다. 모두모두 감사합니다! 해피 영필~!</div>
-    <div class="review-box" id="r40"><div class="review-name">loveubettter</div><div class="review-title">At the sight of thee</div>No words needed—just a quiet sanctuary where all constraints fade away at the sight of thee.</div>
-    <div class="review-box" id="r41"><div class="review-name">mai</div><div class="review-title">up all (k)night</div>hello i'm mai (@pinkspringbun) and i'm very happy to share this work with all youngpil friends for my first YP zine ever. this is a regency era AU in which wonpil is a prince and younghyun is his knight. i used wonpil's "up all night" lyrics to display them falling for each other at first sight and navigating their passionate love in spite of prejudice and expectations. thank you for enjoying and supporting my work, and having me amongst so many talented yp artists and authors!! 🩷</div>
-    <div class="review-box" id="r42"><div class="review-name">ravie</div><div class="review-title">Server Maintenance</div>시간이 많이 없었지만 정말 열심히만들었습니다! 저와 계속소통하려고 해주셔서 감사합니다! 그리는동안 정말 행복했고 혼자 많이 웃었어요 ^^ 이런시간을 만들어주셔서 감사합니다!♡</div>
-    <div class="review-box" id="r43"><div class="review-name">Shark</div><div class="review-title">Our Home, One Day</div>Hi, I'm Shark. It's a great honor to participate in YOUNGPIL Webzine: World 2.<br>This is my first time joining a YOUNGPIL fanwork project, and also my first time creating a short comic, so there may still be some rough edges. I hope everyone enjoys reading it .❤️<br><br>안녕하세요, Shark입니다. YOUNGPIL Webzine : 세계2.에 참여하게 되어 정말 영광입니다.<br>이번이 처음으로 참여하는 YOUNGPIL 동인 창작 활동이자, 처음으로 그리는 단편 만화라 아직 부족한 점이 있을 수도 있지만, 즐겁게 봐주시면 감사하겠습니다</div>
-    <div class="review-box" id="r44"><div class="review-name">uyoonim</div><div class="review-title">From that rainy night</div>서울병원 간호사 김원필은 막 근무를 마치고 집으로 돌아가는 길이었다. 좁은 골목길을 지나던 중, 그곳에 의식을 잃고 쓰러져 있는 요원 강영현을 발견했다. 온통 상처와 피투성이인 남자의 모습에 원필은 덜컥 겁이 났지만, 늦은 밤 비까지 내리고 있어 그를 홀로 내버려 둘 수는 없었다. 원필은 영현을 집으로 데려와 붕대를 감아주었다. 남자에게는 조금 작아 보였지만 자신의 파자마로 갈아입혀 주기도 했다. 자신의 침대에서 곤히 잠든 남자를 보자 원필은 갑자기 피로가 몰려왔고, 이 만남이 자신의 인생을 완전히 뒤바꿔 놓을 것이라는 사실은 꿈에도 모른 채 침대 곁에서 그대로 잠이 들었다.<br><br>(저는 그저 김원필이 강영현을 발견해 치료해주고, 그 보답으로 원필 역시 치유받고 듬뿍 사랑받는 그런 세계를 보고 싶었어요. 영필 웹진에서 모두 즐거운 시간 보내시길 바라며, 영필을 사랑해주셔서 감사합니다♡)</div>
-    <div class="review-box" id="r45"><div class="review-name">世界</div><div class="review-title">주최</div>영필이 계속되는 한, 세계世界도 계속됩니다.</div>
-
-    <div class="footer-area">
-      <p class="copyright">© 2026 @worldbyyp. All Rights Reserved.</p>
+<!-- GAME 2 -->
+<div class="game-wrap" id="g1">
+  <div class="info-bar">SCORE <span id="s-sc">0</span>&nbsp;&nbsp;STAGE <span id="s-st">1</span>&nbsp;&nbsp;LIFE <span id="s-li">3</span></div>
+  <div class="canvas-wrap">
+    <canvas id="sc" width="340" height="480"></canvas>
+    <div class="overlay" id="s-ov" onclick="sShowTut()">
+      <div class="ov-title">🦊 Shoot me 🐰</div>
+      <div class="ov-body">🐰의 거절을 피하며<br>❤️를 쏴서 🐰를 공략해요</div>
+      <div class="ov-start" onclick="event.stopPropagation();sShowTut()" style="cursor:pointer;">START</div>
+    </div>
+    <div class="tutorial-ov" id="s-tut" onclick="sDismissTut()">
+      <div class="tut-box">
+        <div class="tut-line"><b>PC</b> 이동 : 방향키&nbsp;&nbsp;발사 : Space키</div>
+        <div class="tut-line"><b>모바일</b> 이동·발사 : 하단 버튼</div>
+        <div class="tut-note">※ <span style="color:#ff6688;">♥</span> 버튼은 한 번 누르면 연속 발사되며,<br>같은 버튼을 한 번 더 누르면 중단됩니다.</div>
+        <div class="tut-hint">탭하여 시작</div>
+      </div>
     </div>
   </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;width:340px;margin-top:10px;padding:0;">
+    <div class="sbtn" ontouchstart="sK.l=true;event.preventDefault()" ontouchend="sK.l=false" onmousedown="sK.l=true" onmouseup="sK.l=false">◀</div>
+    <div class="firebtn" id="fireBtn" ontouchstart="toggleAutoFire();event.preventDefault()" onclick="toggleAutoFire()">♥</div>
+    <div class="sbtn" ontouchstart="sK.r=true;event.preventDefault()" ontouchend="sK.r=false" onmousedown="sK.r=true" onmouseup="sK.r=false">▶</div>
+  </div>
+  <div class="gmsg" id="s-msg"></div>
+</div>
 
-  <a id="top-btn" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">TOP</a>
+<!-- GAME 3 -->
+<div class="game-wrap" id="g2">
+  <div class="info-bar">SCORE <span id="f-sc">0</span>&nbsp;&nbsp;STAGE <span id="f-st3">1</span>&nbsp;&nbsp;LIFE <span id="f-li">3</span></div>
+  <div class="canvas-wrap">
+    <canvas id="fc" width="340" height="536"></canvas>
+    <div class="overlay" id="f-ov" onclick="fShowTut()" style="padding-bottom:156px;">
+      <div class="ov-title">🦊 Sweet Chaos 🐰</div>
+      <div class="ov-body">달콤한 혼란 속에서<br>🦊와 🐰만 잡아요</div>
+      <div class="ov-start" onclick="event.stopPropagation();fShowTut()" style="cursor:pointer;bottom:88px;">START</div>
+    </div>
+    <div class="tutorial-ov" id="f-tut" onclick="fDismissTut()" style="padding-bottom:56px;">
+      <div class="tut-box">
+        <div class="tut-line"><b>PC</b> 잡기 : 클릭</div>
+        <div class="tut-line"><b>모바일</b> 잡기 : 터치</div>
+        <div class="tut-note">※ BONUS 🦊🐰을 누르면<br>LIFE가 +1 추가됩니다.</div>
+        <div class="tut-hint">탭하여 시작</div>
+      </div>
+    </div>
+  </div>
+  <div class="gmsg" id="f-msg"></div>
+</div>
 
-  <script>
-    var cur = null;
-    function showHover(id) {
-      if (cur === id) return;
-      cur = id;
-      document.querySelectorAll('.hover-img').forEach(function(el){ el.style.opacity='0'; });
-      document.getElementById(id).style.opacity = '1';
+<script>
+var pcCanvas,pctx,scCanvas,sctx,fcCanvas,fctx;
+
+
+var pTutShown=false,sTutShown=false,fTutShown=false;
+function pShowTut(){if(!pTutShown){document.getElementById('p-ov').style.display='none';document.getElementById('p-tut').style.display='flex';}else{startPacman();}}
+function pDismissTut(){pTutShown=true;document.getElementById('p-tut').style.display='none';startPacman();}
+function sShowTut(){if(!sTutShown){document.getElementById('s-ov').style.display='none';document.getElementById('s-tut').style.display='flex';}else{startShoot();}}
+function sDismissTut(){sTutShown=true;document.getElementById('s-tut').style.display='none';startShoot();}
+function fShowTut(){if(!fTutShown){document.getElementById('f-ov').style.display='none';document.getElementById('f-tut').style.display='flex';}else{startFlappy();}}
+function fDismissTut(){fTutShown=true;document.getElementById('f-tut').style.display='none';startFlappy();}
+
+
+function showFireworks(ctx,W,H,cb,drawFn){
+  if(!ctx){cb();return;}
+  var pieces=[];
+  var syms=['▲','▼','◀','▶'];
+  var cols=['#ff6688','#66aaff','#ffcc44'];
+  for(var i=0;i<30;i++){
+    pieces.push({
+      x:Math.random()*W,
+      y:-20-Math.random()*H*0.5,
+      vx:(Math.random()-0.5)*2.5,
+      vy:2+Math.random()*3,
+      rot:Math.random()*Math.PI*2,
+      rotV:(Math.random()-0.5)*0.2,
+      sym:syms[Math.floor(Math.random()*syms.length)],
+      col:cols[Math.floor(Math.random()*cols.length)],
+      sz:10+Math.random()*10,
+      life:1
+    });
+  }
+  var frame=0,maxF=52;
+  var iv=setInterval(function(){
+    frame++;
+    if(typeof drawFn==='function')drawFn();else{ctx.clearRect(0,0,W,H);ctx.fillStyle="#0b0b14";ctx.fillRect(0,0,W,H);}
+    pieces.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;p.rot+=p.rotV;p.vy+=0.07;
+      if(frame>35)p.life-=0.06;
+      if(p.life<=0)return;
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha=p.life;
+      ctx.fillStyle=p.col;
+      ctx.font='bold '+p.sz+'px serif';
+      ctx.textAlign='center';
+      ctx.textBaseline='middle';
+      ctx.fillText(p.sym,0,0);
+      ctx.restore();
+    });
+    ctx.globalAlpha=1;
+    if(frame>=maxF){clearInterval(iv);cb();}
+  },28);
+}
+
+function switchGame(i){
+  clearInterval(pLoop);clearInterval(sLoop);clearInterval(fLoop);clearInterval(fTL3);
+  sAutoFire=false;if(sAutoIv){clearInterval(sAutoIv);sAutoIv=null;}
+  var fb=document.getElementById('fireBtn');if(fb)fb.style.background='rgba(255,102,136,0.08)';
+  pStt=null;sStt=null;fStt=null;pTutShown=false;sTutShown=false;fTutShown=false;
+  var ovIds=['p-ov','s-ov','f-ov'];
+  var showFns=[function(){pShowTut();},function(){sShowTut();},function(){fShowTut();}];
+  ovIds.forEach(function(id,j){
+    var ov=document.getElementById(id);
+    if(!ov)return;
+    if(j===i){
+      ov.style.display='flex';
+      var btn=ov.querySelector('.ov-start');
+      if(btn){btn.textContent='START';btn.onclick=function(e){e.stopPropagation();showFns[j]();};}
+      ov.onclick=showFns[j];
+    } else {
+      ov.style.display='none';
     }
-    function hideAll() {
-      cur = null;
-      document.querySelectorAll('.hover-img').forEach(function(el){ el.style.opacity='0'; });
+  });
+  document.querySelectorAll('.game-wrap').forEach(function(el,j){el.classList.toggle('active',j===i);});
+  document.querySelectorAll('.gtab').forEach(function(el,j){el.classList.toggle('active',j===i);});
+}
+
+function setupCanvas(canvas,w,h){
+  var dpr=window.devicePixelRatio||1;
+  canvas.width=w*dpr;canvas.height=h*dpr;
+  canvas.style.width=w+'px';canvas.style.height=h+'px';
+  var ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);return ctx;
+}
+
+function showRetry(ovId){
+  var ov=document.getElementById(ovId);
+  ov.style.display='flex';
+  var btn=ov.querySelector('.ov-start');
+  btn.textContent='RESTART';
+  if(ovId==='p-ov'){ov.onclick=startPacman;btn.onclick=function(e){e.stopPropagation();startPacman();};}
+  if(ovId==='s-ov'){ov.onclick=startShoot;btn.onclick=function(e){e.stopPropagation();startShoot();};}
+  if(ovId==='f-ov'){ov.onclick=startFlappy;btn.onclick=function(e){e.stopPropagation();startFlappy();};}
+}
+
+function rrect(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
+  ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h-r);
+  ctx.arcTo(x+w,y+h,x+w-r,y+h,r);ctx.lineTo(x+r,y+h);
+  ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+r);
+  ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+}
+  function drawBanner(c,W,H,ban){if(!ban||ban.life<=0)return;var ba=Math.min(1,ban.life/400);c.fillStyle='#0b0b14';c.globalAlpha=ba;c.fillRect(0,0,W,H);c.globalAlpha=1;c.textAlign='center';c.textBaseline='middle';c.fillStyle='rgba(255,255,255,'+ba+')';c.font='bold 14px Nanum Gothic';var bl=ban.t.split('\n');c.fillText(bl[0],W/2,H/2-12);c.fillText(bl[1]||'',W/2,H/2+12);}
+function drawGameOver(ctx,W,H,score,deadTick){
+  ctx.fillStyle='rgba(0,0,0,0.82)';ctx.fillRect(0,0,W,H);
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  var cy=H/2-20;
+  ctx.fillStyle='#fff';ctx.font='bold 22px Nanum Gothic';
+  ctx.fillText('G A M E',W/2,cy-46);
+  ctx.fillText('O V E R',W/2,cy-18);
+  ctx.fillStyle='#555';ctx.font='bold 13px Nanum Gothic';
+  ctx.fillText('SCORE',W/2,cy+50);
+  ctx.fillStyle='#fff';ctx.font='bold 32px Nanum Gothic';
+  ctx.fillText(score,W/2,cy+88);
+  var alpha=0.4+0.6*Math.abs(Math.sin(Date.now()*0.003));
+  ctx.globalAlpha=alpha;
+  ctx.fillStyle='#aaaaaa';ctx.font='12px Nanum Gothic';
+  ctx.fillText('TRY AGAIN?',W/2,H-40);
+  ctx.globalAlpha=1;
+  ctx.textBaseline='alphabetic';
+}
+
+// == GAME 1: PACMAN ==
+var CELL=16,COLS=19,ROWS=25,pOX=0,pOY=0;
+
+
+
+function pBFSNext(zc,zr,tc,tr){
+  // BFS로 목표(tc,tr)까지 최단경로의 다음 한 칸 반환
+  if(zc===tc&&zr===tr)return null;
+  var visited={};
+  var queue=[{c:zc,r:zr,path:[]}];
+  visited[zr+','+zc]=true;
+  var dirs=[[1,0],[-1,0],[0,1],[0,-1]];
+  while(queue.length){
+    var cur=queue.shift();
+    for(var i=0;i<dirs.length;i++){
+      var nc=cur.c+dirs[i][0],nr=cur.r+dirs[i][1];
+      if(pIsWall(nc,nr)||visited[nr+','+nc])continue;
+      visited[nr+','+nc]=true;
+      var newPath=cur.path.concat([{c:nc,r:nr}]);
+      if(nc===tc&&nr===tr)return newPath[0];
+      queue.push({c:nc,r:nr,path:newPath});
     }
-    function toggleReview(id) {
-      var box = document.getElementById(id);
-      var allBoxes = document.querySelectorAll('.review-box');
-      var allBtns = document.querySelectorAll('.author-btn');
-      var isOpen = box.classList.contains('show');
-      // 모두 닫기
-      allBoxes.forEach(function(b){ b.classList.remove('show'); });
-      allBtns.forEach(function(b){ b.classList.remove('active'); });
-      // 이미 열려있으면 닫기, 아니면 열기
-      if (!isOpen) {
-        box.classList.add('show');
-        event.target.classList.add('active');
-        // 박스 위치로 스크롤
-        setTimeout(function(){ box.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 50);
+  }
+  return null;
+}
+function getMazeConfig(st){
+  var cfgs=[
+    {cols:11,rows:13},
+    {cols:13,rows:17},
+    {cols:15,rows:21},
+    {cols:17,rows:23},
+    {cols:19,rows:25}
+  ];
+  var cfg=cfgs[Math.min(st-1,cfgs.length-1)];
+  var cell=Math.min(Math.floor(304/cfg.cols),Math.floor(400/cfg.rows));
+  var ox=Math.floor((304-cfg.cols*cell)/2);
+  var oy=Math.floor((400-cfg.rows*cell)/2);
+  return {cols:cfg.cols,rows:cfg.rows,cell:cell,ox:ox,oy:oy};
+}
+function generateMaze(cols, rows) {
+  // 전체 벽으로 초기화 (홀수 좌표만 셀, 짝수는 벽)
+  var maze = [];
+  for(var r=0;r<rows;r++){
+    maze[r]=[];
+    for(var c=0;c<cols;c++) maze[r][c]=1;
+  }
+  // DFS로 미로 생성
+  function carve(c,r){
+    maze[r][c]=0;
+    var dirs=[[0,-2],[0,2],[-2,0],[2,0]];
+    // 섞기
+    for(var i=dirs.length-1;i>0;i--){
+      var j=Math.floor(Math.random()*(i+1));
+      var tmp=dirs[i];dirs[i]=dirs[j];dirs[j]=tmp;
+    }
+    dirs.forEach(function(d){
+      var nc=c+d[0],nr=r+d[1];
+      if(nr>0&&nr<rows-1&&nc>0&&nc<cols-1&&maze[nr][nc]===1){
+        maze[r+d[1]/2][c+d[0]/2]=0; // 벽 제거
+        carve(nc,nr);
+      }
+    });
+  }
+  carve(1,1);
+  // 테두리 벽 보장
+  for(var r=0;r<rows;r++){maze[r][0]=1;maze[r][cols-1]=1;}
+  for(var c=0;c<cols;c++){maze[0][c]=1;maze[rows-1][c]=1;}
+  // 추가 벽 제거 - 우회로 생성 (벽 약 30% 추가 제거)
+  for(var r=1;r<rows-1;r++){
+    for(var c=1;c<cols-1;c++){
+      if(maze[r][c]===1&&Math.random()<0.15){
+        var adj=0;
+        if(maze[r-1][c]===0)adj++;if(maze[r+1][c]===0)adj++;
+        if(maze[r][c-1]===0)adj++;if(maze[r][c+1]===0)adj++;
+        if(adj>=2) maze[r][c]=0;
       }
     }
-    window.addEventListener('scroll', function() {
-      document.getElementById('top-btn').classList.toggle('visible', window.scrollY > 200);
-    });
-  </script>
-
-<!-- FFW 팝업 -->
-<div id="ffw-popup">
-  <button id="ffw-close" onclick="hideFfw()">✕</button>
-  <div class="ffw-playing">▶▶</div>
-  <div class="ffw-timecode">
-    <span class="ffw-season" id="ffw-season-text">세계<span style="font-family:'Mona12',monospace; font-size:15px; vertical-align:middle;">世界</span>2</span>
-    <span class="ffw-divider">:</span>
-    <div class="ffw-digits" id="ffw-digits-wrap">
-      <span class="ffw-digit">2</span>
-      <span class="ffw-digit">0</span>
-      <span class="ffw-digit" id="fd-y2">2</span>
-      <span class="ffw-digit" id="fd-y3">6</span>
-      <span class="ffw-sep">:</span>
-      <span class="ffw-digit" id="fd-m0">0</span>
-      <span class="ffw-digit" id="fd-m1">6</span>
-      <span class="ffw-sep">:</span>
-      <span class="ffw-digit" id="fd-d0">0</span>
-      <span class="ffw-digit" id="fd-d1">6</span>
-    </div>
-  </div>
-</div>
-<script>
-  function showFfw() {
-    var p = document.getElementById('ffw-popup');
-    p.classList.remove('glitch');
-    p.classList.add('show');
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        p.classList.add('visible');
-        // 글리치 등장
-        setTimeout(function() {
-          p.classList.add('glitch');
-          setTimeout(function() { p.classList.remove('glitch'); }, 450);
-        }, 100);
-        startFfwAnimation();
-      });
-    });
   }
-  function hideFfw() {
-    var p = document.getElementById('ffw-popup');
-    p.classList.remove('visible');
-    setTimeout(function() { p.classList.remove('show'); }, 400);
-    clearFfwTimers();
+  // 테두리 재보장
+  for(var r=0;r<rows;r++){maze[r][0]=1;maze[r][cols-1]=1;}
+  for(var c=0;c<cols;c++){maze[0][c]=1;maze[rows-1][c]=1;}
+  // 🐰 목표 위치 (우하단 통로)
+  var gr=rows-2, gc=cols-2;
+  if(maze[gr][gc]===1){maze[gr][gc]=0;}
+  if(maze[gr-1][gc]===1&&maze[gr][gc-1]===1){maze[gr-1][gc]=0;}
+  maze[gr][gc]=2;
+  return maze;
+}
+
+var pMaze,pDots,pPl,pZoms,pSc,pSt,pLi,pLoop,pStt,pInv,pNdc,pNdr,pDT,pBan={t:"",life:0};
+
+function pIsWall(c,r){if(r<0||r>=ROWS||c<0||c>=COLS)return true;return pMaze[r][c]===1;}
+function pMsg(t){document.getElementById('p-msg').textContent=t;}
+function pUI(){document.getElementById('p-sc').textContent=pSc;document.getElementById('p-st').textContent=pSt;document.getElementById('p-li').textContent=pLi;}
+
+function startPacman(){
+  document.getElementById('p-ov').style.display='none';
+  pSc=0;pSt=1;pLi=3;pBan={t:'S T A G E\n1',life:1400};pUI();pInitStage();
+}
+function pInitStage(){
+  clearInterval(pLoop);
+  var cfg=getMazeConfig(pSt);
+  COLS=cfg.cols;ROWS=cfg.rows;CELL=cfg.cell;pOX=cfg.ox;pOY=cfg.oy;
+  pMaze=generateMaze(COLS,ROWS);
+  pDots=[];
+  for(var r=0;r<ROWS;r++)for(var c=0;c<COLS;c++)if(pMaze[r][c]===0)pDots.push({c:c,r:r,e:false});
+  pPl={c:1,r:1,dc:0,dr:0};pNdc=0;pNdr=0;pInv=0;pDT=0;pStt='playing';pBH=null;
+  var zIdx=Math.min(pSt-1,4); // 0~4
+  var znBase=[2,3,4,5,6]; // stage1~5 기본 좀비 수
+  var zn=Math.min(znBase[zIdx]+(pSt>5?pSt-5:0),9);
+  var mv=Math.max(4-Math.floor(pSt/2),2);
+  // 통로 중 플레이어 시작점(1,1)과 멀리 떨어진 곳에 랜덤 배치
+  var openCells=[];
+  for(var _r=0;_r<ROWS;_r++) for(var _c=0;_c<COLS;_c++){
+    if(pMaze[_r][_c]===0){
+      var dist=Math.abs(_r-1)+Math.abs(_c-1);
+      if(dist>10) openCells.push({c:_c,r:_r});
+    }
   }
-
-  var ffwTimers = [];
-  function clearFfwTimers() {
-    ffwTimers.forEach(function(t) { clearInterval(t); clearTimeout(t); });
-    ffwTimers = [];
-  }
-
-  function startFfwAnimation() {
-    clearFfwTimers();
-    var allIds = ['fd-y2','fd-y3','fd-m0','fd-m1','fd-d0','fd-d1'];
-    var startVals = ['2','6','0','6','0','6'];
-    var endVals   = ['2','8','?','?','?','?'];
-
-    // 초기화
-    allIds.forEach(function(id, i) {
-      var el = document.getElementById(id);
-      el.textContent = startVals[i];
-      el.style.color = '#ffffff';
-    });
-    document.getElementById('ffw-season-text').innerHTML = '세계<span style="font-family:\'Mona12\',monospace;font-size:15px;vertical-align:middle;">世界</span>2';
-    document.getElementById('ffw-digits-wrap').classList.remove('blink');
-
-    // 0.8초 후 전체 동시 롤링 시작
-    ffwTimers.push(setTimeout(function() {
-      var interval = 50;
-      var duration = 900;
-      var elapsed = 0;
-      var nums = '0123456789'.split('');
-
-      var t = setInterval(function() {
-        elapsed += interval;
-        // 전체 자리 동시에 랜덤 숫자
-        allIds.forEach(function(id) {
-          document.getElementById(id).textContent = nums[Math.floor(Math.random() * 10)];
-        });
-
-        if (elapsed >= duration) {
-          clearInterval(t);
-          // 최종값 고정
-          allIds.forEach(function(id, i) {
-            document.getElementById(id).textContent = endVals[i];
-            document.getElementById(id).style.color = '#ffffff';
-          });
-          document.getElementById('ffw-season-text').innerHTML = '세계<span style="font-family:\'Mona12\',monospace;font-size:15px;vertical-align:middle;">世界</span>3';
-
-          // 글리치 한번 더
-          var p = document.getElementById('ffw-popup');
-          p.classList.add('glitch');
-          ffwTimers.push(setTimeout(function() {
-            p.classList.remove('glitch');
-            // 전체 깜빡임 시작
-            document.getElementById('ffw-digits-wrap').classList.add('blink');
-          }, 450));
+  // 섞기
+  for(var i=openCells.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=openCells[i];openCells[i]=openCells[j];openCells[j]=tmp;}
+  pZoms=[];
+  for(var i=0;i<zn&&i<openCells.length;i++)pZoms.push({c:openCells[i].c,r:openCells[i].r,t:0,mv:mv+i});
+  
+  pDraw();pLoop=setInterval(pStep,110);
+}
+function pStep(){
+  if(!pctx)return;
+  if(pStt==='dead'){pDT++;pDraw();return;}
+  if(pStt!=='playing')return;
+  if(pInv>0)pInv--;if(pBan&&pBan.life>0)pBan.life-=110;
+  if(!pIsWall(pPl.c+pNdc,pPl.r+pNdr)){pPl.dc=pNdc;pPl.dr=pNdr;}
+  var nc=pPl.c+pPl.dc,nr=pPl.r+pPl.dr;
+  if(!pIsWall(nc,nr)){pPl.c=nc;pPl.r=nr;}
+  // 이동 직후 즉시 충돌 체크
+  if(pInv===0){
+    for(var _i=0;_i<pZoms.length;_i++){
+      if(pZoms[_i].c===pPl.c&&pZoms[_i].r===pPl.r){
+        pLi--;pUI();
+        if(pLi<=0){pStt='dead';clearInterval(pLoop);pDraw();
+          setTimeout(function(){var ov=document.getElementById('p-ov');ov.style.display='flex';ov.querySelector('.ov-start').textContent='RESTART';ov.onclick=startPacman;ov.querySelector('.ov-start').onclick=function(e){e.stopPropagation();startPacman();};},1500);
+          return;
         }
-      }, interval);
-      ffwTimers.push(t);
-    }, 800));
+        pInv=20;pPl.c=1;pPl.r=1;pPl.dc=0;pPl.dr=0;
+        break;
+      }
+    }
   }
+  pDots.forEach(function(d){if(!d.e&&d.c===pPl.c&&d.r===pPl.r){d.e=true;pSc+=5;pUI();}});
+  // 보너스 하트 (생명 1개일 때만)
+  if(pLi===1&&!pBH){
+    var open=pDots.filter(function(d){return !d.e;});
+    if(open.length){var pick=open[Math.floor(Math.random()*open.length)];pBH={c:pick.c,r:pick.r,t:0};}
+  }
+  if(pBH){
+    pBH.t++;
+    if(pBH.t>=91){// ~10초 (91*110ms)
+      var open2=pDots.filter(function(d){return !d.e;});
+      if(open2.length){var pick2=open2[Math.floor(Math.random()*open2.length)];pBH.c=pick2.c;pBH.r=pick2.r;}
+      pBH.t=0;
+    }
+    if(pBH.c===pPl.c&&pBH.r===pPl.r){pLi++;pUI();pBH=null;}
+  }
+  if(pLi>1)pBH=null;
+  var pr=Math.max(0,Math.min(ROWS-1,pPl.r)),pc2=Math.max(0,Math.min(COLS-1,pPl.c));
+  if(pMaze[pr][pc2]===2){
+    pStt='clear';clearInterval(pLoop);pUI();
+    showFireworks(pctx,COLS*CELL,ROWS*CELL,function(){pSt++;pUI();pInitStage();},pDraw);return;
+  }
+  pZoms.forEach(function(z){
+    z.t++;if(z.t<z.mv)return;z.t=0;
+    var dirs=[[1,0],[-1,0],[0,1],[0,-1]],best=null,bd=9999;
+    if(Math.random()<0.82){dirs.forEach(function(d){var nc2=z.c+d[0],nr2=z.r+d[1];if(!pIsWall(nc2,nr2)){var dist=Math.abs(nc2-pPl.c)+Math.abs(nr2-pPl.r);if(dist<bd){bd=dist;best=d;}}});}
+    if(!best){var v=dirs.filter(function(d){return !pIsWall(z.c+d[0],z.r+d[1]);});if(v.length)best=v[Math.floor(Math.random()*v.length)];}
+    if(best){z.c+=best[0];z.r+=best[1];}
+    if(pInv===0&&z.c===pPl.c&&z.r===pPl.r){
+      pLi--;pUI();
+      if(pLi<=0){pStt='dead';pDT=0;return;}
+      pInv=20;pPl.c=1;pPl.r=1;pPl.dc=0;pPl.dr=0;
+    }
+  });
+  pDraw();
+}
+function pDraw(){
+  if(!pctx)return;
+  var W=304,H=400;
+  pctx.clearRect(0,0,W,H);
+  pctx.fillStyle='#0b0b14';pctx.fillRect(0,0,W,H);
+  for(var r=0;r<ROWS;r++)for(var c=0;c<COLS;c++){
+    if(pMaze[r][c]===1){pctx.fillStyle='#1e1e40';pctx.fillRect(pOX+c*CELL,pOY+r*CELL,CELL,CELL);pctx.strokeStyle='#2e2e58';pctx.lineWidth=0.5;pctx.strokeRect(pOX+c*CELL+0.5,pOY+r*CELL+0.5,CELL-1,CELL-1);}
+  }
+  pctx.fillStyle='#ff6688';pctx.font='bold 7px serif';pctx.textAlign='center';pctx.textBaseline='middle';
+  pDots.forEach(function(d){if(!d.e)pctx.fillText('♥',pOX+d.c*CELL+CELL/2,pOY+d.r*CELL+CELL/2);});
+  // 보너스 하트
+  if(pBH&&Math.floor(Date.now()/350)%2===0){
+    pctx.fillStyle='#ff1111';
+    pctx.font='bold 13px serif';
+    pctx.textAlign='center';pctx.textBaseline='middle';
+    pctx.fillText('♥',pOX+pBH.c*CELL+CELL/2,pOY+pBH.r*CELL+CELL/2);
+  }
+  pctx.font=CELL+'px serif';pctx.globalAlpha=1;pctx.fillStyle='#fff';
+  // 🐰 목표 위치 동적 탐색
+  for(var _r=0;_r<ROWS;_r++)for(var _c=0;_c<COLS;_c++){
+    if(pMaze[_r]&&pMaze[_r][_c]===2) pctx.fillText('🐰',pOX+_c*CELL+CELL/2,pOY+_r*CELL+CELL/2);
+  }
+  if(pInv===0||Math.floor(pInv/3)%2===0)pctx.fillText('🦊',pOX+pPl.c*CELL+CELL/2,pOY+pPl.r*CELL+CELL/2);
+  pZoms.forEach(function(z){pctx.fillText('🧟',pOX+z.c*CELL+CELL/2,pOY+z.r*CELL+CELL/2);});
+  drawBanner(pctx,W,H,pBan);
+  if(pStt==='dead')drawGameOver(pctx,W,H,pSc,pDT);
+}
+function pDir(dc,dr){if(pPl&&pPl.dc===dc&&pPl.dr===dr){pPl.dc=0;pPl.dr=0;pNdc=0;pNdr=0;}else{pNdc=dc;pNdr=dr;}}
+
+// == GAME 2: SHOOTING ==
+var SW=340,SH=480;
+var sPl,sBul,sEn,sEB,sSc,sSt,sLi,sLoop,sStt,sTk,sCool,sDT,sInv,sBan={t:"",life:0};
+var sK={l:false,r:false};
+var fireIv=null,sAutoFire=false,sAutoIv=null;
+
+function startFire(){sShoot();fireIv=setInterval(sShoot,180);}
+function stopFire(){if(fireIv){clearInterval(fireIv);fireIv=null;}}
+function toggleAutoFire(){sAutoFire=!sAutoFire;var btn=document.getElementById('fireBtn');if(sAutoFire){sShoot();sAutoIv=setInterval(sShoot,150);if(btn){btn.style.background='rgba(255,102,136,0.35)';}}else{clearInterval(sAutoIv);sAutoIv=null;if(btn){btn.style.background='rgba(255,102,136,0.08)';}}}
+function sMsg(t){document.getElementById('s-msg').textContent=t;}
+function sUI(){document.getElementById('s-sc').textContent=sSc;document.getElementById('s-st').textContent=sSt;document.getElementById('s-li').textContent=sLi;}
+
+function startShoot(){
+  document.getElementById('s-ov').style.display='none';
+  sSc=0;sSt=1;sLi=3;sStt='playing';sTk=0;sCool=0;sDT=0;
+  sAutoFire=false;clearInterval(sAutoIv);sAutoIv=null;sPl={x:SW/2,y:SH-45};sBul=[];sEB=[];sEn=[];sInv=0;sBonusUsed=false;sBan={t:'S T A G E\n1',life:1400};
+  sSpawnWave();clearInterval(sLoop);sDraw();sLoop=setInterval(sStep,33);
+}
+function sSpawnWave(){
+  sEn=[];
+  var cols=Math.min(5+sSt,8),rows=Math.min(3+Math.floor(sSt/2),6),sp=(SW-40)/cols;
+  for(var r=0;r<rows;r++)for(var c=0;c<cols;c++)sEn.push({x:20+c*sp+sp/2,y:36+r*42,alive:true,dx:(sSt%2===0?-1:1)*(0.4+sSt*0.1)});
+  sUI();sBan={t:'S T A G E\n'+sSt,life:1400};sMsg('STAGE '+sSt);setTimeout(function(){if(sStt==='playing')sMsg('');},1000);
+}
+function sShoot(){
+  if(sStt!=='playing')return;if(sCool>0)return;
+  sBul.push({x:sPl.x,y:sPl.y-16});sCool=Math.max(4-Math.floor(sSt/2),1);
+}
+function sStep(){
+  if(!sctx)return;
+  if(sStt==='dead'){sDT++;sDraw();return;}
+  if(sStt!=='playing')return;
+  sTk++;if(sCool>0)sCool--;if(sInv>0)sInv--;if(sBan&&sBan.life>0)sBan.life-=33;
+  if(sK.l&&sPl.x>18)sPl.x-=5;
+  if(sK.r&&sPl.x<SW-18)sPl.x+=5;
+  sBul=sBul.filter(function(b){return b.y>-10;});
+  sBul.forEach(function(b){b.y-=11;});
+  var fe=Math.max(38-sSt*4,10);
+  // 보너스 하트 총알 (생명 1개, 아직 안 씀, 화면에 없을 때)
+  if(sLi===1&&!sEB.some(function(b){return b.bonus;})&&sTk>0&&sTk%Math.max(fe*3,30)===0){
+    var alive2=sEn.filter(function(e){return e.alive;});
+    if(alive2.length){var be=alive2[Math.floor(Math.random()*alive2.length)];sEB.push({x:be.x,y:be.y+12,bonus:true});}
+  }
+  if(sTk%fe===0){
+    var alive=sEn.filter(function(e){return e.alive;}),front={};
+    alive.forEach(function(e){var col=Math.round(e.x/44);if(!front[col]||e.y>front[col].y)front[col]=e;});
+    Object.keys(front).forEach(function(k){if(Math.random()<0.65)sEB.push({x:front[k].x,y:front[k].y+12});});
+  }
+  var hw=false;
+  sEn.filter(function(e){return e.alive;}).forEach(function(e){e.x+=e.dx;if(e.x<14||e.x>SW-14)hw=true;});
+  if(hw)sEn.forEach(function(e){e.dx*=-1;e.y+=12;});
+  sEB=sEB.filter(function(b){return b.y<SH+10;});
+  sEB.forEach(function(b){b.y+=b.bonus?(12+sSt*0.4):(6+sSt*0.4);});
+  sBul.forEach(function(b){
+    sEn.filter(function(e){return e.alive;}).forEach(function(e){
+      if(Math.abs(b.x-e.x)<14&&Math.abs(b.y-e.y)<14){e.alive=false;b.y=-999;sSc+=20;document.getElementById('s-sc').textContent=sSc;}
+    });
+  });
+  var hit=false;
+  sEB.forEach(function(b){
+    if(b.bonus&&Math.abs(b.x-sPl.x)<16&&Math.abs(b.y-sPl.y)<16){
+      b.y=SH+999;sLi++;sUI();return;
+    }
+    if(sInv===0&&!b.bonus&&Math.abs(b.x-sPl.x)<16&&Math.abs(b.y-sPl.y)<16){
+      b.y=SH+999;sLi--;document.getElementById('s-li').textContent=sLi;
+      if(sLi<=0){sStt='dead';sDT=0;hit=true;}
+      else{sPl.x=SW/2;sInv=80;}
+    }
+  });
+  if(hit){sDraw();return;}
+  if(sEn.filter(function(e){return e.alive;}).some(function(e){return e.y>SH-75;})){sStt='dead';sDT=0;return;}
+  if(sEn.every(function(e){return !e.alive;})){sSt++;sSc+=sSt*300;document.getElementById('s-sc').textContent=sSc;sStt='clear';showFireworks(sctx,SW,SH,function(){sBul=[];sEB=[];sSpawnWave();sStt='playing';},sDraw);}
+  sDraw();
+}
+function sDraw(){
+  if(!sctx)return;
+  sctx.clearRect(0,0,SW,SH);
+  sctx.font='22px serif';sctx.textAlign='center';sctx.textBaseline='middle';
+  sctx.fillStyle='rgba(255,255,255,0.1)';sctx.beginPath();sctx.arc(sPl.x,sPl.y,20,0,Math.PI*2);sctx.fill();
+  sctx.globalAlpha=1;sctx.fillStyle='#fff';
+  if(sInv===0||Math.floor(sInv/5)%2===0) sctx.fillText('🦊',sPl.x,sPl.y);
+  sEn.filter(function(e){return e.alive;}).forEach(function(e){sctx.globalAlpha=1;sctx.fillStyle='#fff';sctx.fillText('🐰',e.x,e.y);});
+  sctx.fillStyle='#ff6688';sctx.font='bold 12px serif';
+  sBul.forEach(function(b){sctx.fillText('♥',b.x,b.y);});
+  sctx.fillStyle='#6699ff';
+  sEB.forEach(function(b){
+    if(b.bonus){
+      sctx.fillStyle='#ff1111';sctx.font='bold 16px serif';
+      sctx.textAlign='center';sctx.textBaseline='middle';
+      sctx.fillText('♥',b.x,b.y);
+      sctx.fillStyle='#6699ff';
+    } else {
+      sctx.fillRect(b.x-2,b.y-5,4,10);
+    }
+  });
+  drawBanner(sctx,SW,SH,sBan);
+  if(sStt==='dead')drawGameOver(sctx,SW,SH,sSc,sDT);
+}
+
+// == GAME 3: SWEET CHAOS ==
+var COLS3=4,ROWS3=6,CELL3=76,RAD3=26;
+var OX3=(340-COLS3*CELL3)/2+CELL3/2,OY3=97;
+var FOX3=['🧡','🐯','🐅','🏀','🟠','🍪','🍞'];
+var RAB3=['🤍','🐺','🐑','🏐','⚪','🌑','🥛'];
+function gPool3(s,el){var p=[{e:'🦊',w:5,t:true},{e:'🐰',w:5,t:true},{e:'🐸',w:2,t:false}];if(s>=3){var n=Math.min(s-2,FOX3.length);for(var i=0;i<n;i++){var w=Math.max(0.2,0.6-i*0.1);p.push({e:FOX3[i],w:w,t:false});p.push({e:RAB3[i],w:w,t:false});}}return p;}
+function pick3(p){var t=p.reduce(function(a,b){return a+b.w;},0),r=Math.random()*t,a=0;for(var i=0;i<p.length;i++){a+=p[i].w;if(r<a)return p[i];}return p[0];}
+function sm3(s){return Math.max(1400-s*150,600);}function wm3(s){return Math.max(5000-s*400,1800);}
+function gp3(i){return{x:OX3+(i%COLS3)*CELL3,y:OY3+Math.floor(i/COLS3)*CELL3};}
+var h3,fSc,fSt3,fLi,fLoop,fTL3,fStt,fPops,fEl,fDT3,fTLeft3=20,fLastTap=0,fIdleWarn=false;
+var fFl={life:0,color:'',max:0},fBon={sp:false,tm:0,hi:-1},fBan={t:'',life:0};
+function fMsg(t){document.getElementById('f-msg').textContent=t;}
+function fUI(){document.getElementById('f-sc').textContent=fSc;document.getElementById('f-st3').textContent=fSt3;document.getElementById('f-li').textContent=fLi;}
+function startFlappy(){
+  document.getElementById('f-ov').style.display='none';
+  fSc=0;fSt3=1;fLi=3;fStt='playing';fPops=[];fEl=0;fDT3=0;fTLeft3=20;
+  fFl={life:0,color:'',max:0};fBan={t:'S T A G E\n1',life:1400};
+  fUI();fIH3();clearInterval(fLoop);clearInterval(fTL3);
+  fDraw3();fLoop=setInterval(fStep3,50);
+  fTL3=setInterval(function(){if(fStt!=='playing')return;fTLeft3--;if(fTLeft3<=0)fNS3();},1000);
+}
+function fIH3(){
+  h3=[];fEl=0;fTLeft3=20;var itv=wm3(fSt3);
+  for(var i=0;i<COLS3*ROWS3;i++)h3.push({i:i,e:null,v:false,t:false,bon:false,sl:0,wl:Math.random()*itv+itv*0.4,hit:false,hl:0,sc:0});
+  fBon={sp:false,tm:Math.floor(Math.random()*8000)+4000,hi:-1};fLastTap=Date.now();fIdleWarn=false;
+}
+function fNS3(){
+  clearInterval(fTL3);fStt='clear';
+  showFireworks(fctx,340,536,function(){
+    fSt3++;fIH3();fBan={t:'S T A G E\n'+fSt3,life:1400};fUI();fStt='playing';
+    fTL3=setInterval(function(){if(fStt!=='playing')return;fTLeft3--;if(fTLeft3<=0)fNS3();},1000);
+  },fDraw3);
+}
+function fFl3(c){fFl={life:600,max:600,color:c};}
+function fSB3(){var av=h3.filter(function(h){return !h.v&&!h.hit;});if(!av.length)return;var h=av[Math.floor(Math.random()*av.length)];h.v=true;h.sc=0;h.bon=true;h.t=true;h.e=Math.random()<0.5?'🦊':'🐰';h.sl=650;fBon.hi=h.i;fBon.sp=true;}
+function fStep3(){
+  if(!fctx)return;
+  if(fStt==='dead'){fDT3++;fDraw3();return;}
+  if(fStt!=='playing')return;
+  fEl+=50;if(fFl.life>0)fFl.life-=50;if(fBan.life>0)fBan.life-=50;
+  if(Date.now()-fLastTap>10000&&!fIdleWarn){fIdleWarn=true;fLi--;document.getElementById('f-li').textContent=fLi;fFl3('rgba(220,40,40,0.4)');fPops.push({text:'-LIFE',color:'#ff4455',life:800,maxLife:800});fLastTap=Date.now();if(fLi<=0){fStt='dead';fDT3=0;clearInterval(fTL3);}else{setTimeout(function(){fIdleWarn=false;},1000);}}
+  if(!fBon.sp){fBon.tm-=50;if(fBon.tm<=0)fSB3();}
+  var pool=gPool3(fSt3,fEl),s=sm3(fSt3),w=wm3(fSt3);
+  h3.forEach(function(h){
+    if(h.hit){h.hl-=50;if(h.hl<=0){h.hit=false;h.v=false;h.e=null;h.bon=false;h.sc=0;h.wl=Math.random()*w+w*0.5;}return;}
+    if(h.v){h.sl-=50;if(h.sc<1)h.sc=Math.min(1,h.sc+0.18);if(h.sl<=0){h.v=false;h.e=null;h.bon=false;h.sc=0;h.wl=Math.random()*w+w*0.3;}}
+    else{if(h.i===fBon.hi&&fBon.sp)return;h.wl-=50;if(h.wl<=0){var p=pick3(pool);h.v=true;h.sc=0;h.e=p.e;h.t=p.t;h.bon=false;h.sl=s+Math.random()*200;}}
+  });
+  fPops=fPops.filter(function(p){return p.life>0;});fPops.forEach(function(p){p.life-=50;});
+  fDraw3();
+}
+function fTH3(idx){
+  var h=h3[idx];if(!h.v||h.hit)return;h.hit=true;h.hl=360;
+  if(h.bon){fLi++;fUI();fFl3('rgba(80,220,120,0.4)');fPops.push({text:'BONUS +LIFE!',color:'#66ffaa',life:800,maxLife:800});}
+  else if(h.t){fSc+=10;fPops.push({text:'+10',color:'#66ee88',life:600,maxLife:600});}
+  else{fSc-=20;fLi--;document.getElementById('f-li').textContent=fLi;fFl3('rgba(220,40,40,0.4)');fPops.push({text:'-20',color:'#ff4455',life:600,maxLife:600});if(fLi<=0){fStt='dead';fDT3=0;clearInterval(fTL3);}}
+  document.getElementById('f-sc').textContent=fSc;
+}
+function fDraw3(){
+  if(!fctx)return;
+  var W=340,H=536;
+  fctx.clearRect(0,0,W,H);fctx.fillStyle='#0b0b14';fctx.fillRect(0,0,W,H);
+  var bH=16,bX=20,bY=22,bW=W-40,tw=(fTLeft3/20)*bW;
+  fctx.fillStyle='#1a1a3a';fctx.beginPath();fctx.roundRect(bX,bY,bW,bH,bH/2);fctx.fill();
+  fctx.fillStyle=fTLeft3>8?'#4466ff':'#ff4466';if(tw>bH){fctx.beginPath();fctx.roundRect(bX,bY,tw,bH,bH/2);fctx.fill();}
+  fctx.fillStyle='rgba(255,255,255,0.9)';fctx.font='bold 10px Nanum Gothic';fctx.textAlign='center';fctx.textBaseline='middle';fctx.fillText(fTLeft3,bX+bW/2,bY+bH/2);
+  h3.forEach(function(h){
+    var p=gp3(h.i),x=p.x,y=p.y;
+    if(h.v&&h.bon){fctx.fillStyle='rgba(255,210,0,0.18)';fctx.beginPath();fctx.arc(x,y,RAD3+8,0,Math.PI*2);fctx.fill();}
+    fctx.fillStyle='#090916';fctx.beginPath();fctx.arc(x,y,RAD3+3,0,Math.PI*2);fctx.fill();
+    fctx.fillStyle=h.v&&h.bon?'#1a1500':'#111126';fctx.beginPath();fctx.arc(x,y,RAD3,0,Math.PI*2);fctx.fill();
+    fctx.strokeStyle=h.v&&h.bon?'rgba(255,210,0,0.5)':'rgba(255,255,255,0.07)';fctx.lineWidth=h.v&&h.bon?1:0.5;fctx.beginPath();fctx.arc(x,y,RAD3,0,Math.PI*2);fctx.stroke();
+    if(h.v&&!h.hit&&h.e){fctx.save();fctx.translate(x,y);fctx.scale(h.sc,h.sc);fctx.font='30px serif';fctx.textAlign='center';fctx.textBaseline='middle';fctx.globalAlpha=1;fctx.fillStyle='#fff';fctx.fillText(h.e,0,0);if(h.bon){fctx.font='bold 8px Nanum Gothic';fctx.fillStyle='#ffd700';fctx.fillText('BONUS',0,RAD3-4);}fctx.restore();}
+    if(h.hit){
+      fctx.fillStyle=h.t?(h.bon?'rgba(255,210,0,0.35)':'rgba(80,200,80,0.35)'):'rgba(200,40,40,0.35)';
+      fctx.beginPath();fctx.arc(x,y,RAD3,0,Math.PI*2);fctx.fill();
+      fctx.fillStyle=h.t?(h.bon?'#ffd700':'#66ee88'):'#ff4455';
+      fctx.font='bold 14px Nanum Gothic';fctx.textAlign='center';fctx.textBaseline='middle';
+      fctx.fillText(h.bon?'+LIFE':h.t?'+10':'-20',x,y);
+    }
+  });
+  if(fFl.life>0){var fl=fFl.life/fFl.max,pu=Math.abs(Math.sin(fl*Math.PI*3));fctx.fillStyle=fFl.color;fctx.globalAlpha=pu*0.7;fctx.fillRect(0,0,W,H);fctx.globalAlpha=1;}
+
+  if(fBan.life>0){var ba=Math.min(1,fBan.life/400);fctx.fillStyle='rgba(11,11,20,0.82)';fctx.globalAlpha=ba;fctx.fillRect(0,0,W,H);fctx.globalAlpha=1;fctx.textAlign='center';fctx.textBaseline='middle';fctx.fillStyle='rgba(255,255,255,'+ba+')';fctx.font='bold 14px Nanum Gothic';var bl=fBan.t.split('\n');fctx.fillText(bl[0],W/2,H/2-12);fctx.fillText(bl[1]||'',W/2,H/2+12);}
+  if(fStt==='dead'){drawGameOver(fctx,W,H,fSc,fDT3);}
+}
+function fH3(cx,cy){fLastTap=Date.now();fIdleWarn=false;
+  if(fStt==='dead'){var ov=document.getElementById('f-ov');ov.style.display='flex';ov.querySelector('.ov-start').textContent='RESTART';return;}
+  if(fStt!=='playing')return;
+  var r=fcCanvas.getBoundingClientRect(),tx=(cx-r.left)*(340/r.width),ty=(cy-r.top)*(536/r.height);
+  for(var i=0;i<h3.length;i++){var p=gp3(i),dx=tx-p.x,dy=ty-p.y;if(Math.sqrt(dx*dx+dy*dy)<RAD3+8){fTH3(i);return;}}
+}
+
+// -- 키보드
+document.addEventListener('keydown',function(e){
+  var pm={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
+  if(pm[e.key]){e.preventDefault();pDir(pm[e.key][0],pm[e.key][1]);}
+  if(e.key==='ArrowLeft')sK.l=true;
+  if(e.key==='ArrowRight')sK.r=true;
+  if(e.key===' '){
+    if(document.getElementById('g1').classList.contains('active'))toggleAutoFire();
+    
+    e.preventDefault();
+  }
+});
+document.addEventListener('keyup',function(e){if(e.key==='ArrowLeft')sK.l=false;if(e.key==='ArrowRight')sK.r=false;});
+
+// -- 초기화
+
+  // roundRect 폴리필
+  if(!CanvasRenderingContext2D.prototype.roundRect){
+    CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+      this.beginPath();this.moveTo(x+r,y);this.lineTo(x+w-r,y);
+      this.arcTo(x+w,y,x+w,y+r,r);this.lineTo(x+w,y+h-r);
+      this.arcTo(x+w,y+h,x+w-r,y+h,r);this.lineTo(x+r,y+h);
+      this.arcTo(x,y+h,x,y+h-r,r);this.lineTo(x,y+r);
+      this.arcTo(x,y,x+r,y,r);this.closePath();return this;
+    };
+  }
+window.addEventListener('load',function(){
+  pcCanvas=document.getElementById('pc');
+  pctx=setupCanvas(pcCanvas,COLS*CELL,ROWS*CELL);
+  scCanvas=document.getElementById('sc');
+  sctx=setupCanvas(scCanvas,SW,SH);
+  fcCanvas=document.getElementById('fc');
+  fctx=setupCanvas(fcCanvas,340,536);
+  // canvas 클릭: CONTINUE 버튼
+  function makeClickHandler(canvas,getStt,getScore,getDT,ovId,W,H){
+    canvas.addEventListener('click',function(e){
+      if(getStt()!=='dead')return;
+      var r=canvas.getBoundingClientRect();
+      var cx=(e.clientX-r.left)*(W/r.width);
+      var cy=(e.clientY-r.top)*(H/r.height);
+      var bx=W/2-145,by=H-90;
+      if(cx>bx&&cx<bx+180&&cy>by&&cy<by+58)showRetry(ovId);
+    });
+    canvas.addEventListener('touchstart',function(e){
+      if(getStt()!=='dead')return;
+      e.preventDefault();
+      var t=e.changedTouches[0];
+      var r=canvas.getBoundingClientRect();
+      var cx=(t.clientX-r.left)*(W/r.width);
+      var cy=(t.clientY-r.top)*(H/r.height);
+      var bx=W/2-145,by=H-90;
+      if(cx>bx&&cx<bx+180&&cy>by&&cy<by+58)showRetry(ovId);
+    },{passive:false});
+  }
+  makeClickHandler(pcCanvas,function(){return pStt;},function(){return pSc;},function(){return pDT;},'p-ov',COLS*CELL,ROWS*CELL);
+  makeClickHandler(scCanvas,function(){return sStt;},function(){return sSc;},function(){return sDT;},'s-ov',SW,SH);
+
+  // flappy 클릭
+    fcCanvas.addEventListener('click',function(e){fH3(e.clientX,e.clientY);});
+  fcCanvas.addEventListener('touchstart',function(e){e.preventDefault();for(var _i=0;_i<e.changedTouches.length;_i++)fH3(e.changedTouches[_i].clientX,e.changedTouches[_i].clientY);},{passive:false});
+
+  // 초기 화면
+  pctx.fillStyle='#0d0d2b';pctx.fillRect(0,0,COLS*CELL,ROWS*CELL);
+  sctx.fillStyle='#0d0d2b';sctx.fillRect(0,0,SW,SH);
+  fctx.fillStyle='#0b0b14';fctx.fillRect(0,0,340,536);
+
+});
 </script>
 </body>
 </html>
