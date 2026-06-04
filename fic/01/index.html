@@ -395,7 +395,7 @@
       var val = document.getElementById('adultPw').value.trim();
       if (val === '616479') {
         document.getElementById('adult-overlay').style.display = 'none';
-        setTimeout(showBookmarkPopup, 200);
+        setTimeout(showBookmarkPopup, 100);
       } else {
         document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
         document.getElementById('adultPw').value = '';
@@ -854,18 +854,6 @@
 <button id="bookmark-btn" onclick="saveBookmark()" title="책갈피 저장">🔖</button>
 <button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
 
-<!-- 저장 알림 -->
-<div id="bookmark-toast">✓ 저장되었습니다</div>
-
-<!-- 이어읽기 팝업 -->
-<div id="bookmark-popup">
-  <p>저장된 위치가 있습니다.<br>이어서 읽으시겠습니까?</p>
-  <div class="bookmark-popup-btns">
-    <button onclick="resumeBookmark()">이어읽기</button>
-    <button onclick="closeBookmarkPopup()">처음부터</button>
-  </div>
-</div>
-
 <script>
   // 우클릭/드래그 방지
   document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, true);
@@ -934,7 +922,7 @@
   function showBookmarkPopup() {
     var saved = localStorage.getItem(BOOKMARK_KEY);
     if (!saved) return;
-    window.scrollTo(0, 0);
+    if (document.activeElement) document.activeElement.blur();
     var p = document.getElementById('bookmark-popup');
     p.classList.add('show');
     requestAnimationFrame(function() {
@@ -968,16 +956,26 @@
   // 페이지 로드 시 팝업 처리
   
 </script>
+
+<!-- 저장 알림 -->
+<div id="bookmark-toast">✓ 저장되었습니다</div>
+
+<!-- 이어읽기 팝업 -->
+<div id="bookmark-popup">
+  <p>저장된 위치가 있습니다.<br>이어서 읽으시겠습니까?</p>
+  <div class="bookmark-popup-btns">
+    <button onclick="resumeBookmark()" tabindex="-1">이어읽기</button>
+    <button onclick="closeBookmarkPopup()" tabindex="-1">처음부터</button>
+  </div>
+</div>
 </body>
 </html>
 <script>
 
     
     document.addEventListener('DOMContentLoaded', function() {
-      // 브라우저 스크롤 복원 방지 - 항상 맨 위에서 시작
-      window.scrollTo(0, 0);
       var pw = document.getElementById('adultPw');
-      if (pw) pw.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAdultPw(); });
+      if (pw) pw.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); checkAdultPw(); } });
     });
   
 </script>
