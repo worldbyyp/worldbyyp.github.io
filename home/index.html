@@ -300,7 +300,28 @@
 
 <script>
   // 영상 끝나면 메인 화면으로
-  document.getElementById('main-video').addEventListener('ended', showMain);
+  var _video = document.getElementById('main-video');
+  _video.addEventListener('ended', showMain);
+
+  // iOS 자동재생 강제 시도
+  function tryPlay() {
+    var p = _video.play();
+    if (p !== undefined) {
+      p.catch(function() {
+        // 자동재생 실패 시 터치 이벤트로 재생 시도
+        document.addEventListener('touchstart', function onTouch() {
+          _video.play();
+          document.removeEventListener('touchstart', onTouch);
+        }, { once: true });
+      });
+    }
+  }
+
+  if (document.readyState === 'complete') {
+    tryPlay();
+  } else {
+    window.addEventListener('load', tryPlay);
+  }
 
   function showMain() {
     var vs = document.getElementById('video-screen');
