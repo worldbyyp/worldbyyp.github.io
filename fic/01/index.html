@@ -955,6 +955,16 @@
     if (window.scrollY > 300) btn.classList.add('visible');
     else btn.classList.remove('visible');
   });
+
+  // 페이지 진입 시 (뒤로가기/bfcache 포함)
+  window.addEventListener('pageshow', function(e) {
+    var overlay = document.getElementById('adult-overlay');
+    // overlay가 없거나 이미 숨겨진 상태면 바로 팝업
+    if (!overlay || overlay.style.display === 'none') {
+      setTimeout(showBookmarkPopup, 150);
+    }
+    // overlay가 있으면 비번 입력 후 팝업 (checkAdultPw에서 처리)
+  });
 </script>
 </body>
 </html>
