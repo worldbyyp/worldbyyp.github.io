@@ -376,7 +376,6 @@
   }
   .bookmark-popup-btns button:hover { border-color: #fff; color: #fff; }
 </style>
-<script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
   <div id="adult-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0b0b14;z-index:9999;display:flex;align-items:center;justify-content:center;font-family:'Nanum Gothic',sans-serif;">
@@ -394,7 +393,10 @@
     function checkAdultPw() {
       var val = document.getElementById('adultPw').value.trim();
       if (val === '616479') {
-        document.getElementById('adult-overlay').style.display = 'none';
+        var overlay = document.getElementById('adult-overlay');
+        // iOS 키보드 내리기
+        document.activeElement.blur();
+        overlay.style.display = 'none';
         setTimeout(showBookmarkPopup, 100);
       } else {
         document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
