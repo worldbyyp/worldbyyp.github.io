@@ -393,11 +393,12 @@
     function checkAdultPw() {
       var val = document.getElementById('adultPw').value.trim();
       if (val === '616479') {
-        var overlay = document.getElementById('adult-overlay');
-        // iOS 키보드 내리기
         document.activeElement.blur();
-        overlay.style.display = 'none';
-        setTimeout(showBookmarkPopup, 100);
+        // iOS 키보드 내려가고 뷰포트 안정될 때까지 대기
+        setTimeout(function() {
+          document.getElementById('adult-overlay').style.display = 'none';
+          setTimeout(showBookmarkPopup, 100);
+        }, 300);
       } else {
         document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
         document.getElementById('adultPw').value = '';
