@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('https://art.theworldbyyp.kr/main/mouse-basic.png'), default; }
-    body { background: #0b0b14 url('https://art.theworldbyyp.kr/main/background.png') center/cover fixed no-repeat; font-family: 'Nanum Gothic', sans-serif;  }
+    body { background: #0b0b14; font-family: 'Nanum Gothic', sans-serif;  }
 
     /* 네비 - 1.2배: 560*1.2=672 */
     .nav-outer { padding: 80px 0 60px 0; } .top-img-wrap { padding-top: 80px; padding-bottom: 0px; display:flex; justify-content:center; }
@@ -83,7 +83,6 @@
       .filter-tags { display: flex; }
     }
     @media (max-width: 768px) {
-    body { background-attachment: scroll; }
     .filter-wrap { display: block; padding: 16px 0 10px 0; }
       .tag { border-radius: 2px; }
       .filter-toggle { display: flex; }
@@ -157,6 +156,16 @@
     #top-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
 
   
+
+  /* 배경 고정 - 모바일 대응 */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: url('https://art.theworldbyyp.kr/main/background.png') center/cover no-repeat;
+    z-index: -1;
+  }
 </style>
   <!-- Mona12 + Neo둥근모 Pro -->
   <style>@import url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/mona.css');  /* FFW 팝업 */
