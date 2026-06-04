@@ -111,6 +111,106 @@
     #top-btn.visible { opacity: 1; }
     #top-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
   </style>
+  <!-- Mona12 + Neo둥근모 Pro -->
+  <style>@import url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/mona.css');  /* FFW 팝업 */
+  #ffw-popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(11,11,20,0.88);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #ffffff;
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 44px 52px 36px;
+    white-space: nowrap;
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  #ffw-popup.show { display: flex; }
+  #ffw-popup.visible { opacity: 1; }
+
+  /* 글리치 */
+  #ffw-popup.glitch {
+    animation: glitch-box 0.4s steps(1) forwards;
+  }
+  @keyframes glitch-box {
+    0%   { transform: translate(-50%, -50%); clip-path: inset(0 0 0 0); }
+    10%  { transform: translate(-52%, -49%); clip-path: inset(10% 0 60% 0); filter: hue-rotate(90deg); }
+    20%  { transform: translate(-48%, -51%); clip-path: inset(40% 0 20% 0); filter: hue-rotate(-90deg); }
+    30%  { transform: translate(-50%, -50%); clip-path: inset(0 0 0 0); filter: none; }
+    40%  { transform: translate(-51%, -50%); clip-path: inset(70% 0 5% 0); filter: hue-rotate(45deg); }
+    50%  { transform: translate(-50%, -50%); clip-path: inset(0 0 0 0); filter: none; }
+    100% { transform: translate(-50%, -50%); clip-path: inset(0 0 0 0); filter: none; }
+  }
+
+  /* 상단 X 버튼 */
+  #ffw-close {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.35);
+    font-size: 14px;
+    line-height: 1;
+    padding: 4px 8px;
+    transition: color 0.2s;
+  }
+  #ffw-close:hover { color: #fff; }
+
+  /* ▶▶ 재생 표시 */
+  .ffw-playing {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 200;
+    margin-top: 6px;
+  }
+
+  /* 타임코드 */
+  .ffw-timecode {
+    font-family: 'NeoDunggeunmo Pro', monospace;
+    font-size: 20px;
+    letter-spacing: 3px;
+    font-weight: 200;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ffw-season { color: #ffffff; }
+  .ffw-divider { color: #ffffff; }
+  .ffw-digits {
+    font-family: 'NeoDunggeunmo Pro', monospace;
+    font-size: 20px;
+    letter-spacing: 2px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .ffw-digit {
+    display: inline-block;
+    width: 1ch;
+    text-align: center;
+  }
+  .ffw-sep {
+    color: #ffffff;
+    margin: 0 3px;
+  }
+  #ffw-digits-wrap.blink {
+    animation: ffw-blink-all 0.8s steps(1) infinite;
+  }
+  @keyframes ffw-blink-all {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0.25; }
+  }
+</style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/neodgm/neodgm-pro-webfont@1.020/neodgm_pro/style.css">
 </head>
 <body>
   <div class="nav-outer">
@@ -272,24 +372,106 @@
   </script>
 
 <!-- FFW 팝업 -->
-<div id="ffw-popup" style="
-  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-  background:rgba(11,11,20,0.6); border:1px solid rgba(255,255,255,0.2);
-  color:#fff; font-size:16px; letter-spacing:3px; font-weight:200;
-  padding:60px 80px; z-index:200; display:none;
-  align-items:center; gap:24px; white-space:nowrap;
-  backdrop-filter:blur(4px);">
-  <span>세계世界3 : 2028?</span>
-  <button onclick="hideFfw()" style="background:none;border:none;color:#aaa;font-size:16px;cursor:pointer;">✕</button>
+<div id="ffw-popup">
+  <button id="ffw-close" onclick="hideFfw()">✕</button>
+  <div class="ffw-playing">▶▶</div>
+  <div class="ffw-timecode">
+    <span class="ffw-season" id="ffw-season-text">세계<span style="font-family:'Mona12',monospace; font-size:15px; vertical-align:middle;">世界</span>2</span>
+    <span class="ffw-divider">:</span>
+    <div class="ffw-digits" id="ffw-digits-wrap">
+      <span class="ffw-digit">2</span>
+      <span class="ffw-digit">0</span>
+      <span class="ffw-digit" id="fd-y2">2</span>
+      <span class="ffw-digit" id="fd-y3">6</span>
+      <span class="ffw-sep">:</span>
+      <span class="ffw-digit" id="fd-m0">0</span>
+      <span class="ffw-digit" id="fd-m1">6</span>
+      <span class="ffw-sep">:</span>
+      <span class="ffw-digit" id="fd-d0">0</span>
+      <span class="ffw-digit" id="fd-d1">6</span>
+    </div>
+  </div>
 </div>
 <script>
   function showFfw() {
     var p = document.getElementById('ffw-popup');
-    p.style.display = 'flex';
-    setTimeout(function() { hideFfw(); }, 3000);
+    p.classList.remove('glitch');
+    p.classList.add('show');
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        p.classList.add('visible');
+        // 글리치 등장
+        setTimeout(function() {
+          p.classList.add('glitch');
+          setTimeout(function() { p.classList.remove('glitch'); }, 450);
+        }, 100);
+        startFfwAnimation();
+      });
+    });
   }
   function hideFfw() {
-    document.getElementById('ffw-popup').style.display = 'none';
+    var p = document.getElementById('ffw-popup');
+    p.classList.remove('visible');
+    setTimeout(function() { p.classList.remove('show'); }, 400);
+    clearFfwTimers();
+  }
+
+  var ffwTimers = [];
+  function clearFfwTimers() {
+    ffwTimers.forEach(function(t) { clearInterval(t); clearTimeout(t); });
+    ffwTimers = [];
+  }
+
+  function startFfwAnimation() {
+    clearFfwTimers();
+    var allIds = ['fd-y2','fd-y3','fd-m0','fd-m1','fd-d0','fd-d1'];
+    var startVals = ['2','6','0','6','0','6'];
+    var endVals   = ['2','8','?','?','?','?'];
+
+    // 초기화
+    allIds.forEach(function(id, i) {
+      var el = document.getElementById(id);
+      el.textContent = startVals[i];
+      el.style.color = '#ffffff';
+    });
+    document.getElementById('ffw-season-text').innerHTML = '세계<span style="font-family:\'Mona12\',monospace;font-size:15px;vertical-align:middle;">世界</span>2';
+    document.getElementById('ffw-digits-wrap').classList.remove('blink');
+
+    // 0.8초 후 전체 동시 롤링 시작
+    ffwTimers.push(setTimeout(function() {
+      var interval = 50;
+      var duration = 900;
+      var elapsed = 0;
+      var nums = '0123456789'.split('');
+
+      var t = setInterval(function() {
+        elapsed += interval;
+        // 전체 자리 동시에 랜덤 숫자
+        allIds.forEach(function(id) {
+          document.getElementById(id).textContent = nums[Math.floor(Math.random() * 10)];
+        });
+
+        if (elapsed >= duration) {
+          clearInterval(t);
+          // 최종값 고정
+          allIds.forEach(function(id, i) {
+            document.getElementById(id).textContent = endVals[i];
+            document.getElementById(id).style.color = '#ffffff';
+          });
+          document.getElementById('ffw-season-text').innerHTML = '세계<span style="font-family:\'Mona12\',monospace;font-size:15px;vertical-align:middle;">世界</span>3';
+
+          // 글리치 한번 더
+          var p = document.getElementById('ffw-popup');
+          p.classList.add('glitch');
+          ffwTimers.push(setTimeout(function() {
+            p.classList.remove('glitch');
+            // 전체 깜빡임 시작
+            document.getElementById('ffw-digits-wrap').classList.add('blink');
+          }, 450));
+        }
+      }, interval);
+      ffwTimers.push(t);
+    }, 800));
   }
 </script>
 </body>
