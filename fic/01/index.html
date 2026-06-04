@@ -933,6 +933,7 @@
   function showBookmarkPopup() {
     var saved = localStorage.getItem(BOOKMARK_KEY);
     if (!saved) return;
+    window.scrollTo(0, 0);
     var p = document.getElementById('bookmark-popup');
     p.classList.add('show');
     requestAnimationFrame(function() {
