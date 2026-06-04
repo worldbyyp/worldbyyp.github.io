@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>도취</title>
+<title>도취 — YOUNGPIL Webzine 世界2</title>
+<!-- OG 태그 -->
+<meta property="og:title" content="도취 — YOUNGPIL Webzine 世界2">
+<meta property="og:description" content="김수한무 / YOUNGPIL Webzine 世界2">
+<meta property="og:image" content="https://art.theworldbyyp.kr/main/og.png">
+<meta property="og:url" content="https://theworldbyyp.kr/fic/01/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://art.theworldbyyp.kr/main/og.png">
+<link rel="icon" href="/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
 
@@ -271,6 +280,91 @@
     .content { padding: 30px 18px 50px; }
   }
 
+
+  /* 책갈피 버튼 */
+  #bookmark-btn {
+    position: fixed;
+    bottom: 36px;
+    right: 70px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(136,136,136,0.5);
+    background: rgba(20, 20, 30, 0.55);
+    color: rgba(200,200,200,0.7);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 999;
+    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
+  }
+  #bookmark-btn.visible { opacity: 1; pointer-events: auto; }
+  #bookmark-btn:hover { background: rgba(40,40,55,0.8); color: rgba(255,255,255,0.9); }
+
+  /* 저장 알림 팝업 */
+  #bookmark-toast {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(11,11,20,0.88);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #ffffff;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 20px 36px;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    font-family: 'Nanum Gothic', sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  #bookmark-toast.show { display: flex; }
+  #bookmark-toast.visible { opacity: 1; }
+
+  /* 이어읽기 팝업 */
+  #bookmark-popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(11,11,20,0.92);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #ffffff;
+    z-index: 10000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 52px;
+    backdrop-filter: blur(6px);
+    font-family: 'Nanum Gothic', sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-align: center;
+  }
+  #bookmark-popup.show { display: flex; }
+  #bookmark-popup.visible { opacity: 1; }
+  #bookmark-popup p { font-size: 13px; letter-spacing: 1px; line-height: 2; color: rgba(255,255,255,0.8); }
+  .bookmark-popup-btns { display: flex; gap: 12px; }
+  .bookmark-popup-btns button {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 8px 24px;
+    font-family: 'Nanum Gothic', sans-serif;
+    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .bookmark-popup-btns button:hover { border-color: #fff; color: #fff; }
 </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
@@ -290,6 +384,7 @@
       var val = document.getElementById('adultPw').value.trim();
       if (val === '616479') {
         document.getElementById('adult-overlay').style.display = 'none';
+        showBookmarkPopup();
       } else {
         document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
         document.getElementById('adultPw').value = '';
@@ -748,7 +843,20 @@
 </div>
 
 <!-- TOP 버튼 -->
+<button id="bookmark-btn" onclick="saveBookmark()" title="책갈피 저장">🔖</button>
 <button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">TOP</button>
+
+<!-- 저장 알림 -->
+<div id="bookmark-toast">✓ 저장되었습니다</div>
+
+<!-- 이어읽기 팝업 -->
+<div id="bookmark-popup">
+  <p>저장된 위치가 있습니다.<br>이어서 읽으시겠습니까?</p>
+  <div class="bookmark-popup-btns">
+    <button onclick="resumeBookmark()">이어읽기</button>
+    <button onclick="closeBookmarkPopup()">처음부터</button>
+  </div>
+</div>
 
 <script>
   // 우클릭/드래그 방지
@@ -795,6 +903,58 @@
   }
 
 
+  // 책갈피
+  var BOOKMARK_KEY = 'bookmark_' + location.pathname;
+
+  function saveBookmark() {
+    localStorage.setItem(BOOKMARK_KEY, window.scrollY);
+    showToast();
+  }
+
+  function showToast() {
+    var t = document.getElementById('bookmark-toast');
+    t.classList.add('show');
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { t.classList.add('visible'); });
+    });
+    setTimeout(function() {
+      t.classList.remove('visible');
+      setTimeout(function() { t.classList.remove('show'); }, 300);
+    }, 2000);
+  }
+
+  function showBookmarkPopup() {
+    var saved = localStorage.getItem(BOOKMARK_KEY);
+    if (!saved) return;
+    var p = document.getElementById('bookmark-popup');
+    p.classList.add('show');
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { p.classList.add('visible'); });
+    });
+  }
+
+  function resumeBookmark() {
+    var saved = localStorage.getItem(BOOKMARK_KEY);
+    closeBookmarkPopup();
+    if (saved) {
+      setTimeout(function() {
+        window.scrollTo({ top: parseInt(saved), behavior: 'smooth' });
+      }, 300);
+    }
+  }
+
+  function closeBookmarkPopup() {
+    var p = document.getElementById('bookmark-popup');
+    p.classList.remove('visible');
+    setTimeout(function() { p.classList.remove('show'); }, 300);
+  }
+
+  // 스크롤 시 bookmark-btn visible
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('bookmark-btn');
+    if (window.scrollY > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
 </script>
 </body>
 </html>
