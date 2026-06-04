@@ -13,11 +13,12 @@
 <meta property="og:type" content="article">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://art.theworldbyyp.kr/main/og.png">
-<link rel="icon" href="/favicon.png">
+<link rel="icon" href="/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
 
   :root {
+    --border-color: rgba(128,128,128,0.35);
     --bg: #ffffff;
     --text: #222222;
     --header-bg: #0b0b14;
@@ -100,7 +101,7 @@
   .bgm-btn {
     width: 48px;
     height: 32px;
-    border: 1px solid var(--text);
+    border: 1px solid var(--border-color);
     background: transparent;
     color: var(--text);
     font-size: 14px;
@@ -126,7 +127,7 @@
   }
   #settings-panel {
     background: rgba(30, 30, 40, 0.82);
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid var(--border-color);
     backdrop-filter: blur(6px);
     padding: 12px 14px;
     display: flex;
@@ -159,7 +160,7 @@
     user-select: none !important;
   }
   .ctrl-btn {
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid var(--border-color);
     background: transparent;
     color: #cccccc;
     font-family: 'Nanum Gothic', sans-serif;
@@ -180,7 +181,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5);
+    border: 1px solid var(--border-color);
     background: rgba(20, 20, 30, 0.55);
     color: rgba(200,200,200,0.7);
     font-size: 15px;
@@ -255,7 +256,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5);
+    border: 1px solid var(--border-color);
     background: rgba(20, 20, 30, 0.55);
     color: rgba(200,200,200,0.7);
     font-size: 11px;
@@ -289,7 +290,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(136,136,136,0.5);
+    border: 1px solid var(--border-color);
     background: rgba(20, 20, 30, 0.55);
     color: rgba(200,200,200,0.7);
     font-size: 14px;
@@ -312,7 +313,7 @@
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(11,11,20,0.88);
-    border: 1px solid rgba(255,255,255,0.15);
+    border: 1px solid var(--border-color);
     color: #ffffff;
     font-size: 13px;
     letter-spacing: 2px;
@@ -336,7 +337,7 @@
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(11,11,20,0.92);
-    border: 1px solid rgba(255,255,255,0.15);
+    border: 1px solid var(--border-color);
     color: #ffffff;
     z-index: 10000;
     display: none;
@@ -364,7 +365,7 @@
   .bookmark-popup-btns { display: flex; gap: 12px; }
   .bookmark-popup-btns button {
     background: transparent;
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid var(--border-color);
     color: rgba(255,255,255,0.7);
     font-size: 12px;
     letter-spacing: 2px;
@@ -819,6 +820,14 @@
 <p class="empty">&nbsp;</p>
 <p>당차게도 해낸 말 다음엔, 동시에 터져 나온 웃음. 두 마음에 불을 지핀 건 ‘동해 바다’, 그 대양이었으므로 어쩌면 당연한 답이었으나.</p>
 <p>영현이 거친 숨을 고르면서 몸을 수그려 원필의 목덜미에 이마를 묻었다. 그럼 거기선, 이제 앞으로 기껍게 도취陶醉할 여생의 내음이 싱그럽게 피어오른다.</p>
+
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
+<p class="empty">&nbsp;</p>
 </div>
 <!-- 본문 끝 -->
 
@@ -904,6 +913,65 @@
   }
 
 
+
+    // 책갈피
+  var BOOKMARK_KEY = 'bookmark_' + location.pathname;
+
+  function saveBookmark() {
+    localStorage.setItem(BOOKMARK_KEY, window.scrollY);
+    showToast();
+  }
+
+  function showToast() {
+    var t = document.getElementById('bookmark-toast');
+    t.classList.add('show');
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { t.classList.add('visible'); });
+    });
+    setTimeout(function() {
+      t.classList.remove('visible');
+      setTimeout(function() { t.classList.remove('show'); }, 300);
+    }, 2000);
+  }
+
+  function showBookmarkPopup() {
+    var saved = localStorage.getItem(BOOKMARK_KEY);
+    if (!saved) return;
+    if (document.activeElement) document.activeElement.blur();
+    var p = document.getElementById('bookmark-popup');
+    p.classList.add('show');
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { p.classList.add('visible'); });
+    });
+  }
+
+  function resumeBookmark() {
+    var saved = localStorage.getItem(BOOKMARK_KEY);
+    closeBookmarkPopup();
+    if (saved) {
+      setTimeout(function() {
+        window.scrollTo({ top: parseInt(saved), behavior: 'smooth' });
+      }, 300);
+    }
+  }
+
+  function closeBookmarkPopup() {
+    var p = document.getElementById('bookmark-popup');
+    p.classList.remove('visible');
+    setTimeout(function() { p.classList.remove('show'); }, 300);
+  }
+
+  // 스크롤 시 bookmark-btn visible
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('bookmark-btn');
+    if (window.scrollY > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var pw = document.getElementById('adultPw');
+    if (pw) pw.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); checkAdultPw(); } });
+  });
 </script>
 
 <!-- 저장 알림 -->
