@@ -290,9 +290,27 @@
       var val = document.getElementById('adultPw').value.trim();
       if (val === '616479') {
         document.activeElement.blur();
-        setTimeout(function() {
-          document.getElementById('adult-overlay').style.display = 'none';
-        }, 350);
+        // visualViewport로 키보드 완전히 내려간 시점 감지
+        if (window.visualViewport) {
+          var initialHeight = window.visualViewport.height;
+          function onViewportResize() {
+            if (window.visualViewport.height >= initialHeight) {
+              window.visualViewport.removeEventListener('resize', onViewportResize);
+              document.getElementById('adult-overlay').style.display = 'none';
+            }
+          }
+          window.visualViewport.addEventListener('resize', onViewportResize);
+          // fallback: 1초 후에도 안 닫히면 강제로 닫기
+          setTimeout(function() {
+            window.visualViewport.removeEventListener('resize', onViewportResize);
+            document.getElementById('adult-overlay').style.display = 'none';
+          }, 1000);
+        } else {
+          // visualViewport 미지원 브라우저
+          setTimeout(function() {
+            document.getElementById('adult-overlay').style.display = 'none';
+          }, 400);
+        }
       } else {
         document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
         document.getElementById('adultPw').value = '';
