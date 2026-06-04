@@ -325,6 +325,7 @@
     font-family: 'Nanum Gothic', sans-serif;
     opacity: 0;
     transition: opacity 0.3s;
+    white-space: nowrap;
   }
   #bookmark-toast.show { display: flex; }
   #bookmark-toast.visible { opacity: 1; }
@@ -348,6 +349,14 @@
     opacity: 0;
     transition: opacity 0.3s;
     text-align: center;
+    width: 90%;
+    max-width: 340px;
+    box-sizing: border-box;
+  }
+  @media (max-width: 480px) {
+    #bookmark-popup { padding: 32px 28px; gap: 16px; }
+    #bookmark-popup p { font-size: 12px; }
+    .bookmark-popup-btns button { font-size: 11px; padding: 7px 18px; letter-spacing: 1px; }
   }
   #bookmark-popup.show { display: flex; }
   #bookmark-popup.visible { opacity: 1; }
@@ -384,7 +393,7 @@
       var val = document.getElementById('adultPw').value.trim();
       if (val === '616479') {
         document.getElementById('adult-overlay').style.display = 'none';
-        setTimeout(showBookmarkPopup, 100);
+        if (!_bookmarkPopupShown) { _bookmarkPopupShown = true; setTimeout(showBookmarkPopup, 150); }
       } else {
         document.getElementById('adultErr').textContent = '비밀번호가 올바르지 않습니다.';
         document.getElementById('adultPw').value = '';
@@ -957,13 +966,19 @@
   });
 
   // 페이지 진입 시 (뒤로가기/bfcache 포함)
+  var _bookmarkPopupShown = false;
   window.addEventListener('pageshow', function(e) {
-    var overlay = document.getElementById('adult-overlay');
-    // overlay가 없거나 이미 숨겨진 상태면 바로 팝업
-    if (!overlay || overlay.style.display === 'none') {
-      setTimeout(showBookmarkPopup, 150);
-    }
-    // overlay가 있으면 비번 입력 후 팝업 (checkAdultPw에서 처리)
+    _bookmarkPopupShown = false;
+    setTimeout(function() {
+      var overlay = document.getElementById('adult-overlay');
+      // overlay 없거나 숨겨진 상태면 바로 팝업
+      if (!overlay || overlay.style.display === 'none') {
+        if (!_bookmarkPopupShown) {
+          _bookmarkPopupShown = true;
+          showBookmarkPopup();
+        }
+      }
+    }, 200);
   });
 </script>
 </body>
