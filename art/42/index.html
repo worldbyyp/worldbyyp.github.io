@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>up all (k)night ─ 영필 웹진 : 세계世界2</title>
+<title>Server Maintenance ─ 영필 웹진 : 세계世界2</title>
 <!-- OG 태그 -->
 <meta http-equiv="Cache-Control" content="no-store">
 <meta property="og:title" content="YOUNGPIL Webzine 世界2">
 <meta property="og:description" content="YOUNGPIL Webzine 世界2">
 <meta property="og:image" content="https://art.theworldbyyp.kr/main/og.png">
-<meta property="og:url" content="https://theworldbyyp.kr/art/41/">
+<meta property="og:url" content="https://theworldbyyp.kr/art/42/">
 <meta property="og:type" content="article">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://art.theworldbyyp.kr/main/og.png">
@@ -18,27 +18,18 @@
 <style>
   :root {
     --border-color: rgba(128,128,128,0.35);
-    --bg: #ffffff;
-    --text: #222222;
-    --header-bg: #0b0b14;
-    --btn-wrap-bg: #0b0b14;
-    --footer-bg: #0b0b14;
+    --bg: #ffffff; --text: #222222; --header-bg: #0b0b14;
+    --btn-wrap-bg: #0b0b14; --footer-bg: #0b0b14;
   }
   .dark-mode {
-    --bg: #111111;
-    --text: #ffffff;
-    --header-bg: #111120;
-    --btn-wrap-bg: #111120;
-    --footer-bg: #111120;
+    --bg: #111111; --text: #ffffff; --header-bg: #111120;
+    --btn-wrap-bg: #111120; --footer-bg: #111120;
   }
   * { margin: 0; padding: 0; box-sizing: border-box;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important; }
+    -webkit-user-select: none !important; -moz-user-select: none !important;
+    -ms-user-select: none !important; user-select: none !important; }
   html, body {
-    background: var(--bg);
-    font-family: 'Nanum Gothic', sans-serif;
+    background: var(--bg); font-family: 'Nanum Gothic', sans-serif;
     font-size: 16px; line-height: 2; color: var(--text);
     cursor: default; transition: background 0.3s, color 0.3s;
   }
@@ -81,6 +72,20 @@
   }
   .bgm-btn:hover { opacity: 0.7; }
   .bgm-btn.playing { opacity: 1; }
+  .translate-wrap {
+    background: var(--bg); display: flex; justify-content: center;
+    padding: 16px 20px 0; transition: background 0.3s;
+  }
+  .translate-btn {
+    border: 1px solid var(--text); background: transparent; color: var(--text);
+    font-size: 14px; font-family: 'Nanum Gothic', sans-serif;
+    padding: 10px 28px; letter-spacing: 1px;
+    display: flex; align-items: center; gap: 6px;
+    opacity: 0.3; transition: opacity 0.2s;
+    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
+  }
+  .translate-btn:hover { opacity: 0.7; }
+  .translate-btn.active { opacity: 1; }
   #settings-wrap {
     position: fixed; bottom: 36px; left: 28px; z-index: 999;
     display: flex; flex-direction: row; align-items: flex-end; gap: 8px;
@@ -157,22 +162,39 @@
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
-
 <div id="progress-bar"></div>
 <div class="header">
   <div class="header-img-wrap">
     <img src="/images/head-world.png" alt="" style="width:70px; height:auto;">
   </div>
-  <h1>up all (k)night</h1>
-  <div class="author">mai</div>
+  <h1>Server Maintenance</h1>
+  <div class="author">ravie</div>
   <div class="trigger" style="font-size:13px; color:#0b0b14;">*No Trigger Warning</div>
 </div>
 
-<div class="content">
-    <img src="https://art.theworldbyyp.kr/41/41(1).png" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/41/41(2).png" alt="" style="width:100%; height:auto; display:block;">
+<div class="translate-wrap" style="padding: 30px 20px 0;">
+  <button class="translate-btn" id="translateBtn" onclick="toggleTranslation()">文 번역보기</button>
 </div>
-
+<div class="content">
+  <div id="orig-content">
+    <img src="https://art.theworldbyyp.kr/42/42(1).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42(2).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42(3).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42(4).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42(5).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42(6).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42(7).jpg" alt="" style="width:100%; height:auto; display:block;">
+  </div>
+  <div id="kor-content" style="display:none;">
+    <img src="https://art.theworldbyyp.kr/42/42(1).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42kor(2).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42kor(3).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42kor(4).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42kor(5).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42kor(6).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/42/42kor(7).jpg" alt="" style="width:100%; height:auto; display:block;">
+  </div>
+</div>
 <div class="btn-wrap">
   <a class="btn" href="/art/">
     <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
@@ -222,6 +244,32 @@
   }
 
 
+  var isKor = false;
+  function toggleTranslation() {
+    isKor = !isKor;
+    document.getElementById('orig-content').style.display = isKor ? 'none' : 'block';
+    document.getElementById('kor-content').style.display = isKor ? 'block' : 'none';
+    document.getElementById('translateBtn').textContent = isKor ? '文 원본보기' : '文 번역보기';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+</script>
+
+<div id="lang-popup" style="
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  background:rgba(11,11,20,0.6); border:1px solid rgba(255,255,255,0.2);
+  color:#fff; font-size:14px; letter-spacing:1px; font-weight:100;
+  padding:32px 40px; z-index:200;
+  max-width:90vw; width:max-content;
+  display:flex; align-items:center; gap:24px;
+  text-align:center; line-height:2;
+  backdrop-filter:blur(4px);cursor:pointer;" onclick="this.style.display='none'">
+  <span>본 작품은 <span style="font-size:15px; font-weight:700; color:#fff;">영어</span>로 제작되었습니다.<br>한국어 번역을 원하시면<br>상단의 <span style="font-size:15px; font-weight:700; color:#fff;">[번역보기]</span> 버튼을 눌러주세요.</span>
+ </div>
+<script>
+  setTimeout(function() {
+    var p = document.getElementById('lang-popup');
+    if(p) p.style.display = 'none';
+  }, 3000);
 </script>
 </body>
 </html>
