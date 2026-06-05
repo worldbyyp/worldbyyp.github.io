@@ -79,8 +79,6 @@
     pointer-events: none;
     animation: float 4s ease-in-out infinite;
     filter: drop-shadow(0px 60px 30px rgba(11,11,20,0.8));
-    position: relative;
-    z-index: 1;
   }
 
   /* 비디오기계 이미지 래퍼 */
@@ -262,10 +260,7 @@
 
 <!-- 메인 화면 -->
 <div id="main-screen">
-  <!-- 타이틀 이미지 -->
-  <img id="img-title" src="https://art.theworldbyyp.kr/main/main-title.png" alt="">
-
-  <!-- 비디오기계 -->
+<!-- 비디오기계 -->
   <div id="machine-wrap">
     <img class="base" src="https://art.theworldbyyp.kr/main/main-basic.png" alt="">
     <img class="hover-img" id="imgHome"   src="https://art.theworldbyyp.kr/main/main-home.png"   alt="">
@@ -289,6 +284,10 @@
     <a class="zone zone-game"   href="/game"
        onmouseenter="showHover('imgGame')" onmouseleave="hideAll()"></a>
   </div>
+
+  <!-- 타이틀 이미지 -->
+  <img id="img-title" src="https://art.theworldbyyp.kr/main/main-title.png" alt="">
+
 </div>
 
 <!-- FFW 팝업 -->
