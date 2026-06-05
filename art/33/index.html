@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>나에게서 당신에게 ─ 영필 웹진 : 세계世界2</title>
+<title>적당한 상실 ─ 영필 웹진 : 세계世界2</title>
 <!-- OG 태그 -->
 <meta http-equiv="Cache-Control" content="no-store">
 <meta property="og:title" content="YOUNGPIL Webzine 世界2">
 <meta property="og:description" content="YOUNGPIL Webzine 世界2">
 <meta property="og:image" content="https://art.theworldbyyp.kr/main/og.png">
-<meta property="og:url" content="https://theworldbyyp.kr/art/34/">
+<meta property="og:url" content="https://theworldbyyp.kr/art/33/">
 <meta property="og:type" content="article">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://art.theworldbyyp.kr/main/og.png">
@@ -157,29 +157,30 @@
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
-<div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
-  <iframe id="ytplayer_YSm8nVlGp5Y"
-    src="https://www.youtube.com/embed/YSm8nVlGp5Y?enablejsapi=1&autoplay=0"
-    allow="autoplay" allowfullscreen>
-  </iframe>
-</div>
+
 <div id="progress-bar"></div>
 <div class="header">
   <div class="header-img-wrap">
     <img src="/images/head-world.png" alt="" style="width:70px; height:auto;">
   </div>
-  <h1>나에게서 당신에게</h1>
-  <div class="author">마카</div>
-  <div class="trigger" style="font-size:13px; color:#0b0b14;">*No Trigger Warning</div>
+  <h1>적당한 상실</h1>
+  <div class="author">따불</div>
+  <div class="trigger" style="font-size:13px; color:#888888;">*Trigger Warning</div>
 </div>
-<div class="bgm-wrap">
-  <button class="bgm-btn" id="bgmBtn_top_34" onclick="toggleBGM('YSm8nVlGp5Y', 'top_34')">▶</button>
-</div>
+
 <div class="content">
-    <img src="https://art.theworldbyyp.kr/34/34(1).jpg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/34/34(2).jpg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/34/34(3).jpg" alt="" style="width:100%; height:auto; display:block;">
-    <img src="https://art.theworldbyyp.kr/34/34(4).jpg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(1).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(2).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(3).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(4).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(5).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(6).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(7).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(8).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(9).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(10).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(11).jpeg" alt="" style="width:100%; height:auto; display:block;">
+    <img src="https://art.theworldbyyp.kr/33/33(12).jpeg" alt="" style="width:100%; height:auto; display:block;">
 </div>
 
 <div class="btn-wrap">
@@ -230,27 +231,7 @@
       document.body.classList.contains('dark-mode') ? '☀️ 라이트모드' : '🌙 다크모드';
   }
 
-  var players = {};
-  var isPlaying = {};
-  isPlaying['YSm8nVlGp5Y'] = false;
-  var tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(tag);
-  function onYouTubeIframeAPIReady() {
-    players['YSm8nVlGp5Y'] = new YT.Player('ytplayer_YSm8nVlGp5Y', {events: {'onReady': function(e) {}}});
-  }
-  function toggleBGM(ytId, btnId) {
-    var btn = document.getElementById('bgmBtn_' + btnId);
-    if (!isPlaying[ytId]) {
-      if (players[ytId] && players[ytId].playVideo) players[ytId].playVideo();
-      btn.textContent = '■'; btn.classList.add('playing');
-      isPlaying[ytId] = true;
-    } else {
-      if (players[ytId] && players[ytId].stopVideo) players[ytId].stopVideo();
-      btn.textContent = '▶'; btn.classList.remove('playing');
-      isPlaying[ytId] = false;
-    }
-  }
+
 </script>
 </body>
 </html>
