@@ -13,17 +13,17 @@
   /* ── 영상 화면 ── */
   #video-screen {
     position: fixed; inset: 0;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: #0b0b14; z-index: 100;
     transition: opacity 0.6s;
   }
   #video-screen.hidden { opacity: 0; pointer-events: none; }
 
   #main-video {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
+    display: block;
+    width: 100vw;
     height: auto;
   }
 
