@@ -350,6 +350,31 @@
     transition: border-color 0.2s, color 0.2s;
   }
   .bookmark-popup-btns button:hover { border-color: #fff; color: #fff; }
+  /* BGM */
+  .bgm-wrap {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 0;
+    transition: background 0.3s;
+  }
+  .bgm-btn {
+    width: 48px;
+    height: 32px;
+    border: 1px solid var(--text);
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Nanum Gothic', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+    cursor: url('https://art.theworldbyyp.kr/main/mouse-hover.png'), pointer !important;
+  }
+  .bgm-btn:hover { opacity: 0.7; }
+  .bgm-btn.playing { opacity: 1; }
 </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
@@ -386,6 +411,13 @@
   </script>
 
 <!-- 진행바 -->
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
+  <iframe id="ytplayer"
+    src="https://www.youtube.com/embed/YMgFEl5h8nI?enablejsapi=1&autoplay=0"
+    allow="autoplay" allowfullscreen>
+  </iframe>
+</div>
+
 <div id="progress-bar"></div>
 
 <!-- 헤더 -->
@@ -1420,11 +1452,10 @@
 <p class="empty">&nbsp;</p>
 <p>FIN.</p>
 
-
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
-<p class="empty">&nbsp;</p>
+<div class="bgm-wrap"><button class="bgm-btn" id="bgmBtn" onclick="toggleBGM()">▶</button></div>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
 <p class="empty">&nbsp;</p>
@@ -1593,5 +1624,27 @@
     <button onclick="closeBookmarkPopup(true)" tabindex="-1">처음부터</button>
   </div>
 </div>
+<script>
+  var player;
+  var isPlaying = false;
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('ytplayer', { events: { 'onReady': function(e) {} } });
+  }
+  function toggleBGM() {
+    var btn = document.getElementById('bgmBtn');
+    if (!isPlaying) {
+      if (player && player.playVideo) player.playVideo();
+      btn.textContent = '■'; btn.classList.add('playing');
+      isPlaying = true;
+    } else {
+      if (player && player.stopVideo) player.stopVideo();
+      btn.textContent = '▶'; btn.classList.remove('playing');
+      isPlaying = false;
+    }
+  }
+</script>
 </body>
 </html>
