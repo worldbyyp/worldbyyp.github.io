@@ -78,7 +78,9 @@
     height: auto;
     pointer-events: none;
     animation: float 4s ease-in-out infinite;
-    filter: drop-shadow(0px 60px 30px rgba(11,11,20,0.8));
+    filter: drop-shadow(0px 60px 30px rgba(0,0,0,0.4));
+    position: relative;
+    z-index: 1;
   }
 
   /* 비디오기계 이미지 래퍼 */
@@ -220,7 +222,7 @@
   }
 
   @media (max-width: 768px) {
-    #img-title { animation: float-mobile 4s ease-in-out infinite; filter: drop-shadow(0px 40px 20px rgba(11,11,20,0.8)); }
+    #img-title { animation: float-mobile 4s ease-in-out infinite; filter: drop-shadow(0px 40px 20px rgba(0,0,0,0.4)); }
   }
 
   /* 배경 고정 - 모바일 대응 */
